@@ -1,0 +1,558 @@
+:root {
+    --python-blue: #3776AB;
+    --python-yellow: #FFD43B;
+    --python-light: #4B8BBE;
+    --python-dark: #0D2B4E;
+    --python-green: #45824B;
+    --python-gray: #646464;
+    --python-light-bg: #f8f9fa;
+    --completed: #27ae60;
+    --locked: #7f8c8d;
+    --light: #ecf0f1;
+    --dark: #34495e;
+    --path-outline: #306998;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--python-dark);
+    color: var(--light);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Fundo SVG Criativo */
+body::before {
+    content: '';
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    /* O fundo agora é apenas uma cor sólida, a animação é feita por elementos DOM */
+    z-index: -1;
+}
+
+/* --- Nova Animação de Fundo Dinâmica --- */
+#background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.floating-symbol {
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    color: var(--python-blue);
+    opacity: 0; /* Começa invisível */
+    white-space: nowrap;
+}
+
+@keyframes floatAndDrift {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10%, 90% {
+        opacity: 0.15;
+    }
+    50% {
+        transform: translateY(-20px) translateX(30px) rotate(15deg);
+    }
+    100% {
+        transform: translateY(40px) translateX(-50px) rotate(-25deg);
+        opacity: 0;
+    }
+}
+
+.map-header {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(13, 43, 78, 0.85);
+    border-bottom: 3px solid var(--python-yellow);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+.map-header h1 {
+    color: var(--python-yellow);
+    font-family: 'Poppins', sans-serif;
+    font-size: 2.5rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
+
+.map-header p {
+    font-size: 1.1rem;
+    color: #bdc3c7;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.gamification-stats {
+    margin-top: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid var(--python-yellow);
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-avatar {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--python-yellow);
+}
+
+.player-avatar.animate-in {
+    animation: avatar-pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+@keyframes avatar-pop-in {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.player-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.gamification-stats button {
+    background-color: #c0392b;
+    color: var(--light);
+    border: 1px solid #e74c3c;
+    padding: 8px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-left: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.gamification-stats button:hover {
+    background-color: #e74c3c;
+    transform: scale(1.05);
+}
+
+#player-score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--python-yellow);
+}
+
+.map-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 40px auto 80px; /* Adiciona margem inferior */
+    height: 1800px;
+}
+
+.map-path-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.snake-path-outline {
+    fill: none;
+    stroke: var(--path-outline);
+    stroke-width: 18;
+    stroke-linecap: round;
+    stroke-dasharray: 30 20;
+    animation: slither 40s linear infinite;
+    filter: drop-shadow(0 0 3px var(--path-outline));
+}
+
+.snake-path-fill {
+    fill: none;
+    stroke: url(#snakeGradient);
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-dasharray: 30 20;
+    animation: slither 40s linear infinite;
+}
+
+@keyframes slither {
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -1000;
+    }
+}
+
+.map-stops {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.map-stop {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    text-decoration: none;
+    color: var(--light);
+    animation: pop-in 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes pop-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.map-stop:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.map-stop.locked {
+    cursor: not-allowed;
+    filter: grayscale(80%);
+}
+
+.map-stop.locked:hover {
+    transform: translate(-50%, -50%);
+}
+
+.next-to-unlock .stop-icon {
+    animation: glow 1.5s infinite ease-in-out;
+}
+
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 212, 59, 0.5), 0 4px 10px rgba(0,0,0,0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 212, 59, 1), 0 4px 10px rgba(0,0,0,0.3);
+        transform: scale(1.05);
+    }
+}
+
+.stop-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--python-dark);
+    border: 3px solid var(--python-yellow);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: background-color 0.3s;
+    position: relative;
+    z-index: 1;
+}
+
+.map-stop.locked .stop-icon {
+    background-color: var(--locked);
+    border-color: #95a5a6;
+}
+
+.map-stop:not(.locked) .stop-icon:has(+ .completed) {
+    border-color: var(--completed);
+    background-color: var(--completed);
+}
+
+.map-stop:hover .stop-icon {
+    background-color: var(--python-blue);
+}
+
+.stop-label {
+    background-color: rgba(13, 43, 78, 0.9);
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    border-left: 3px solid var(--python-yellow);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.stop-step {
+    font-size: 0.8rem;
+    color: var(--python-yellow);
+    font-weight: bold;
+}
+
+.stop-title {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* --- Estilos do Modal --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background-color: var(--python-dark);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 100%;
+    max-width: 1200px;
+    height: 95vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--python-yellow);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1.5rem;
+    color: var(--light);
+    background: var(--python-blue);
+    border: 2px solid var(--python-yellow);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.modal-close-btn:hover {
+    background-color: var(--python-yellow);
+    color: var(--python-blue);
+}
+
+.iframe-container {
+    flex-grow: 1;
+    overflow: hidden;
+    border-radius: 0 0 10px 10px;
+}
+
+#lesson-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+    .map-header h1 {
+        font-size: 1.8rem;
+    }
+    .stop-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    .stop-label {
+        display: none;
+    }
+    .map-header::before {
+        display: none;
+    }
+}
+
+/* Ajuste para o SVG não cobrir as paradas */
+.map-stops {
+    pointer-events: auto;
+}
+
+/* --- Estilos da Notificação (Toast) --- */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translate(-50%, 100px);
+    background: linear-gradient(135deg, var(--completed), var(--python-green));
+    color: var(--python-dark);
+    padding: 15px 25px;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 2000;
+    font-size: 1.1rem;
+    font-weight: bold;
+    opacity: 0;
+    visibility: hidden;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s;
+    border: 2px solid var(--python-yellow);
+}
+
+.toast.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Animação de Pontos Ganhos --- */
+.points-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, var(--python-yellow), #ffb700);
+    color: var(--python-dark);
+    padding: 20px 40px;
+    border-radius: 100px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    z-index: 3000;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transition: all 2s cubic-bezier(0.19, 1, 0.22, 1);
+    transform-origin: center;
+    border: 3px solid var(--python-blue);
+}
+
+.points-animation.show {
+    opacity: 1;
+    transform: translate(150%, -400%) scale(0.1);
+}
+
+/* --- Estilos do Hall da Fama --- */
+.hall-of-fame {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: rgba(13, 43, 78, 0.85);
+    border-top: 3px solid var(--python-yellow);
+    border-radius: 10px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.hall-of-fame h2 {
+    color: var(--python-yellow);
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.hall-of-fame p {
+    color: #bdc3c7;
+    margin-bottom: 20px;
+}
+
+.hall-of-fame-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hall-of-fame-list li {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 5px solid var(--python-blue);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hall-of-fame-list li:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.player-rank-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.rank {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--python-yellow);
+    min-width: 40px;
+}
+
+.player-score-hof {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--python-yellow);
+}
+
+/* Estilos de Pódio */
+.hall-of-fame-list li.rank-1 { border-left-color: #FFD700; } /* Ouro */
+.hall-of-fame-list li.rank-2 { border-left-color: #C0C0C0; } /* Prata */
+.hall-of-fame-list li.rank-3 { border-left-color: #CD7F32; } /* Bronze */
+
+.rank-1 .rank { color: #FFD700; }
+.rank-2 .rank { color: #C0C0C0; }
+.rank-3 .rank { color: #CD7F32; }

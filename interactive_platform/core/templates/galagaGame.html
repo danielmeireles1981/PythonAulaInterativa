@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Galaga - Quiz</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #1abc9c;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --info: #3498db;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), #1a202c);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            background: rgba(44, 62, 80, 0.3);
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        h1 {
+            color: var(--secondary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(26, 188, 156, 0.5);
+        }
+        
+        .subtitle {
+            color: var(--info);
+            font-size: 1rem;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 100%;
+            max-width: 960px;
+            height: 600px;
+            margin: 5px auto;
+            border: 2px solid var(--info);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #1a202c;
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        #gameCanvas {
+            background: #1a202c;
+        }
+        
+        .game-ui {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 960px;
+            margin-bottom: 20px;
+            background: rgba(44, 62, 80, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--info);
+        }
+        
+        .ui-item {
+            text-align: center;
+        }
+        
+        .ui-label {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .ui-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--secondary), var(--success));
+            color: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .question-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .question-content {
+            background: linear-gradient(135deg, var(--primary), #1a202c);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(26, 188, 156, 0.3);
+        }
+        
+        .question-content h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            color: #fff;
+        }
+        
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .answer-btn {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .answer-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+        
+        .game-over {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-over-content {
+            background: linear-gradient(135deg, var(--primary), #1a202c);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 0 20px rgba(26, 188, 156, 0.3);
+        }
+        
+        .game-over-content h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .game-over-content p {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .python-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--primary), var(--info));
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .python-logo::before {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 850px) {
+            .game-container, .game-ui {
+                width: 95%;
+            }
+            
+            .game-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🐍 Python Galaga 🐍</h1>
+        <p class="subtitle">Destrua inimigos e responda perguntas sobre Python! 🚀</p>
+    </div>
+    
+    <div class="game-ui">
+        <div class="ui-item">
+            <div class="ui-label">Pontuação 🏆</div>
+            <div class="ui-value" id="score">0</div>
+        </div>
+        <div class="ui-item">
+            <div class="ui-label">Vidas ❤️</div>
+            <div class="ui-value" id="lives">3</div>
+        </div>
+        <div class="ui-item">
+            <div class="ui-label">Nível ⭐</div>
+            <div class="ui-value" id="level">1</div>
+        </div>
+        <div class="ui-item">
+            <div class="ui-label">Perguntas 📝</div>
+            <div class="ui-value" id="questions">0</div>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <canvas id="gameCanvas" width="960" height="600"></canvas>
+    </div>
+    
+    <div class="controls">
+        <button id="start-btn">🎮 Iniciar Jogo</button>
+        <button id="pause-btn">⏸️ Pausar</button>
+        <button id="reset-btn">🔄 Reiniciar</button>
+    </div>
+    
+    <div class="question-modal" id="question-modal">
+        <div class="question-content">
+            <h2>🐍 Pergunta Python 🐍</h2>
+            <p class="question-text" id="question-text">Qual função é usada para exibir texto no console?</p>
+            <div class="answers" id="answers-container">
+                <!-- As respostas serão inseridas aqui pelo JavaScript -->
+            </div>
+            <p>⏰ Tempo restante: <span id="time-left">15</span> segundos</p>
+        </div>
+    </div>
+    
+    <div class="game-over" id="game-over">
+        <div class="game-over-content">
+            <div class="python-logo"></div>
+            <h2>🎯 Fim de Jogo! 🎯</h2>
+            <p>🏆 Sua pontuação final: <span id="final-score">0</span></p>
+            <p>📝 Perguntas respondidas: <span id="total-questions">0</span></p>
+            <p>⭐ Nível alcançado: <span id="final-level">1</span></p>
+            <button id="restart-btn">🔄 Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do jogo
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Elementos da UI
+        const scoreDisplay = document.getElementById('score');
+        const livesDisplay = document.getElementById('lives');
+        const levelDisplay = document.getElementById('level');
+        const questionsDisplay = document.getElementById('questions');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const questionModal = document.getElementById('question-modal');
+        const questionText = document.getElementById('question-text');
+        const answersContainer = document.getElementById('answers-container');
+        const timeLeftDisplay = document.getElementById('time-left');
+        const gameOverModal = document.getElementById('game-over');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const totalQuestionsDisplay = document.getElementById('total-questions');
+        const finalLevelDisplay = document.getElementById('final-level');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Variáveis do jogo
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let questionsAnswered = 0;
+        let gameRunning = false;
+        let gamePaused = false;
+        let questionActive = false;
+        let questionTimeLeft = 15;
+        let questionTimer;
+        
+        // Perguntas sobre Python
+        const pythonQuestions = [
+            {
+                question: "Qual função é usada para exibir texto no console? 🖥️",
+                answers: ["print()", "echo()", "display()", "show()"],
+                correct: 0
+            },
+            {
+                question: "Como se declara uma lista em Python? 📋",
+                answers: ["{1, 2, 3}", "[1, 2, 3]", "(1, 2, 3)", "<1, 2, 3>"],
+                correct: 1
+            },
+            {
+                question: "Qual palavra-chave é usada para definir uma função? 🔧",
+                answers: ["function", "def", "define", "func"],
+                correct: 1
+            },
+            {
+                question: "Como se chama o loop que itera sobre uma sequência? 🔄",
+                answers: ["while", "for", "loop", "repeat"],
+                correct: 1
+            },
+            {
+                question: "Qual operador é usado para verificar igualdade? ⚖️",
+                answers: ["=", "==", "===", "!="],
+                correct: 1
+            },
+            {
+                question: "Como se comenta uma linha em Python? 💬",
+                answers: ["//", "#", "--", "/* */"],
+                correct: 1
+            },
+            {
+                question: "Qual método adiciona um elemento ao final de uma lista? ➕",
+                answers: [".push()", ".add()", ".append()", ".insert()"],
+                correct: 2
+            },
+            {
+                question: "O que 'str' representa em Python? 🔤",
+                answers: ["Número inteiro", "Texto (string)", "Lista", "Dicionário"],
+                correct: 1
+            },
+            {
+                question: "Como se importa um módulo em Python? 📦",
+                answers: ["include", "import", "require", "using"],
+                correct: 1
+            },
+            {
+                question: "Qual estrutura é usada para tratamento de exceções? 🛡️",
+                answers: ["try-except", "try-catch", "error-handle", "exception"],
+                correct: 0
+            }
+        ];
+        
+        // Classes do jogo
+        class Player {
+            constructor() {
+                this.width = 60;
+                this.height = 40;
+                this.x = canvas.width / 2 - this.width / 2;
+                this.y = canvas.height - this.height - 10;
+                this.speed = 5;
+                this.color = 'var(--info)';
+            }
+            
+            draw() {
+                // Desenhar apenas o emoji da nave (sem caixa)
+                ctx.font = '40px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🚀', this.x + this.width/2, this.y + this.height/2);
+            }
+            
+            move(direction) {
+                if (direction === 'left' && this.x > 0) {
+                    this.x -= this.speed;
+                }
+                if (direction === 'right' && this.x < canvas.width - this.width) {
+                    this.x += this.speed;
+                }
+            }
+        }
+        
+        class Bullet {
+            constructor(x, y) {
+                this.width = 20;
+                this.height = 30;
+                this.x = x;
+                this.y = y;
+                this.speed = 6;
+            }
+            
+            update() {
+                this.y -= this.speed;
+            }
+            
+            draw() {
+                // Desenhar apenas o emoji do projétil (sem caixa)
+                ctx.font = '20px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('💥', this.x, this.y);
+            }
+            
+            isOffScreen() {
+                return this.y < 0;
+            }
+        }
+        
+        class Enemy {
+            constructor(x, y) {
+                this.width = 50;
+                this.height = 50;
+                this.x = x;
+                this.y = y;
+                this.speed = 1.5;
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            draw() {
+                // Desenhar apenas o emoji do inimigo (sem caixa)
+                ctx.font = '40px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('👾', this.x + this.width/2, this.y + this.height/2);
+            }
+            
+            isOffScreen() {
+                return this.y > canvas.height;
+            }
+        }
+        
+        class QuestionItem {
+            constructor(x, y) {
+                this.width = 40;
+                this.height = 40;
+                this.x = x;
+                this.y = y;
+                this.speed = 2;
+                this.color = '#06D6A0';
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            draw() {
+                // Desenhar a caixa colorida com o emoji dentro
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
+                // Emoji dentro da caixa
+                ctx.font = '25px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('❓', this.x + this.width/2, this.y + this.height/2);
+            }
+            
+            isOffScreen() {
+                return this.y > canvas.height;
+            }
+        }
+        
+        // Instâncias do jogo
+        const player = new Player();
+        let bullets = [];
+        let enemies = [];
+        let questionItems = [];
+        
+        // Controles
+        const keys = {
+            ArrowLeft: false,
+            ArrowRight: false,
+            Space: false
+        };
+        
+        // Event listeners
+        window.addEventListener('keydown', (e) => {
+            if (e.code in keys) {
+                keys[e.code] = true;
+                e.preventDefault();
+            }
+        });
+        
+        window.addEventListener('keyup', (e) => {
+            if (e.code in keys) {
+                keys[e.code] = false;
+                
+                if (e.code === 'Space' && gameRunning && !gamePaused && !questionActive) {
+                    shoot();
+                }
+            }
+        });
+        
+        startBtn.addEventListener('click', startGame);
+        pauseBtn.addEventListener('click', togglePause);
+        resetBtn.addEventListener('click', resetGame);
+        restartBtn.addEventListener('click', resetGame);
+        
+        // Funções do jogo
+        function startGame() {
+            if (!gameRunning) {
+                gameRunning = true;
+                gamePaused = false;
+                resetGame();
+                gameLoop();
+                startEnemySpawning();
+                startQuestionSpawning();
+            }
+        }
+        
+        function togglePause() {
+            if (gameRunning) {
+                gamePaused = !gamePaused;
+                pauseBtn.textContent = gamePaused ? '▶️ Continuar' : '⏸️ Pausar';
+            }
+        }
+        
+        function resetGame() {
+            score = 0;
+            lives = 3;
+            level = 1;
+            questionsAnswered = 0;
+            bullets = [];
+            enemies = [];
+            questionItems = [];
+            updateUI();
+            gameOverModal.style.display = 'none';
+        }
+        
+        function shoot() {
+            bullets.push(new Bullet(player.x + player.width/2, player.y));
+        }
+        
+        function startEnemySpawning() {
+            if (gameRunning && !gamePaused) {
+                const spawnInterval = setInterval(() => {
+                    if (!gameRunning || gamePaused) {
+                        clearInterval(spawnInterval);
+                        return;
+                    }
+                    
+                    const x = Math.random() * (canvas.width - 50);
+                    enemies.push(new Enemy(x, -50));
+                }, 1500 - (level * 100));
+            }
+        }
+        
+        function startQuestionSpawning() {
+            if (gameRunning && !gamePaused) {
+                const spawnInterval = setInterval(() => {
+                    if (!gameRunning || gamePaused) {
+                        clearInterval(spawnInterval);
+                        return;
+                    }
+                    
+                    // 30% de chance de spawnar um item de pergunta (aumentei a chance)
+                    if (Math.random() < 0.3) {
+                        const x = Math.random() * (canvas.width - 40);
+                        questionItems.push(new QuestionItem(x, -40));
+                    }
+                }, 3000); // Reduzi o intervalo para aparecerem mais frequentemente
+            }
+        }
+        
+        function showQuestion() {
+            if (questionActive) return;
+            
+            questionActive = true;
+            const randomQuestion = pythonQuestions[Math.floor(Math.random() * pythonQuestions.length)];
+            questionText.textContent = randomQuestion.question;
+            
+            // Limpar respostas anteriores
+            answersContainer.innerHTML = '';
+            
+            // Adicionar novas respostas
+            randomQuestion.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.textContent = answer;
+                button.addEventListener('click', () => checkAnswer(index, randomQuestion.correct));
+                answersContainer.appendChild(button);
+            });
+            
+            // Iniciar temporizador
+            questionTimeLeft = 15;
+            timeLeftDisplay.textContent = questionTimeLeft;
+            questionTimer = setInterval(() => {
+                questionTimeLeft--;
+                timeLeftDisplay.textContent = questionTimeLeft;
+                
+                if (questionTimeLeft <= 0) {
+                    clearInterval(questionTimer);
+                    wrongAnswer();
+                }
+            }, 1000);
+            
+            questionModal.style.display = 'flex';
+        }
+        
+        function checkAnswer(selected, correct) {
+            clearInterval(questionTimer);
+            
+            if (selected === correct) {
+                // Resposta correta
+                score += 100;
+                questionsAnswered++;
+                updateUI();
+                
+                // Efeito visual de acerto (usando var(--success))
+                const buttons = document.querySelectorAll('.answer-btn');
+                buttons[selected].style.background = 'var(--success)';
+                
+                setTimeout(() => {
+                    questionModal.style.display = 'none';
+                    questionActive = false;
+                }, 1000);
+            } else {
+                // Resposta incorreta
+                wrongAnswer();
+            }
+        }
+        
+        function wrongAnswer() {
+            lives--;
+            updateUI();
+            
+            // Efeito visual de erro
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach((button, index) => {
+                if (index === pythonQuestions.find(q => q.question === questionText.textContent).correct) {
+                    button.style.background = 'var(--success)';
+                } else {
+                    button.style.background = 'var(--danger)';
+                }
+            });
+            
+            setTimeout(() => {
+                questionModal.style.display = 'none';
+                questionActive = false;
+                
+                if (lives <= 0) {
+                    gameOver();
+                }
+            }, 1500);
+        }
+        
+        function updateUI() {
+            scoreDisplay.textContent = score;
+            livesDisplay.textContent = lives;
+            levelDisplay.textContent = level;
+            questionsDisplay.textContent = questionsAnswered;
+        }
+        
+        function gameOver() {
+            gameRunning = false;
+            finalScoreDisplay.textContent = score;
+            totalQuestionsDisplay.textContent = questionsAnswered;
+            finalLevelDisplay.textContent = level;
+            gameOverModal.style.display = 'flex';
+        }
+        
+        function checkCollisions() {
+            // Colisão entre balas e inimigos
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                    if (bullets[i].x < enemies[j].x + enemies[j].width &&
+                        bullets[i].x + bullets[i].width > enemies[j].x &&
+                        bullets[i].y < enemies[j].y + enemies[j].height &&
+                        bullets[i].y + bullets[i].height > enemies[j].y) {
+                        
+                        // Colisão detectada
+                        bullets.splice(i, 1);
+                        enemies.splice(j, 1);
+                        score += 10;
+                        updateUI();
+                        break;
+                    }
+                }
+            }
+            
+            // Colisão entre jogador e inimigos
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                if (player.x < enemies[i].x + enemies[i].width &&
+                    player.x + player.width > enemies[i].x &&
+                    player.y < enemies[i].y + enemies[i].height &&
+                    player.y + player.height > enemies[i].y) {
+                    
+                    // Colisão detectada
+                    enemies.splice(i, 1);
+                    lives--;
+                    updateUI();
+                    
+                    if (lives <= 0) {
+                        gameOver();
+                    }
+                }
+            }
+            
+            // Colisão entre jogador e itens de pergunta
+            for (let i = questionItems.length - 1; i >= 0; i--) {
+                if (player.x < questionItems[i].x + questionItems[i].width &&
+                    player.x + player.width > questionItems[i].x &&
+                    player.y < questionItems[i].y + questionItems[i].height &&
+                    player.y + player.height > questionItems[i].y) {
+                    
+                    // Colisão detectada
+                    questionItems.splice(i, 1);
+                    showQuestion();
+                }
+            }
+        }
+        
+        function updateGame() {
+            // Atualizar jogador
+            if (keys.ArrowLeft) player.move('left');
+            if (keys.ArrowRight) player.move('right');
+            
+            // Atualizar balas
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                bullets[i].update();
+                if (bullets[i].isOffScreen()) {
+                    bullets.splice(i, 1);
+                }
+            }
+            
+            // Atualizar inimigos
+            for (let i = enemies.length - 1; i >= 0; i--) {
+                enemies[i].update();
+                if (enemies[i].isOffScreen()) {
+                    enemies.splice(i, 1);
+                }
+            }
+            
+            // Atualizar itens de pergunta
+            for (let i = questionItems.length - 1; i >= 0; i--) {
+                questionItems[i].update();
+                if (questionItems[i].isOffScreen()) {
+                    questionItems.splice(i, 1);
+                }
+            }
+            
+            // Verificar colisões
+            checkCollisions();
+            
+            // Aumentar nível a cada 100 pontos
+            if (score >= level * 100) {
+                level++;
+                updateUI();
+            }
+        }
+        
+        function drawGame() {
+            // Limpar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Desenhar fundo estrelado
+            ctx.fillStyle = '#FFFFFF';
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                ctx.fillRect(x, y, 1, 1);
+            }
+            
+            // Desenhar elementos do jogo
+            player.draw();
+            bullets.forEach(bullet => bullet.draw());
+            enemies.forEach(enemy => enemy.draw());
+            questionItems.forEach(item => item.draw());
+            
+            // Desenhar informações do jogo no canvas
+            ctx.fillStyle = 'var(--secondary)';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(`🏆 Pontuação: ${score}`, 10, 20);
+            ctx.fillText(`❤️ Vidas: ${lives}`, 10, 40);
+            ctx.fillText(`⭐ Nível: ${level}`, 10, 60);
+        }
+        
+        function gameLoop() {
+            if (gameRunning && !gamePaused) {
+                updateGame();
+                drawGame();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // Inicialização
+        updateUI();
+        drawGame();
+    </script>
+</body>
+</html>

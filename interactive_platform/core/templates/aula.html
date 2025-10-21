@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python para Iniciantes - Aula Interativa</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Fim Google Fonts -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- Botão de Alternância de Tema Fixo -->
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema">
+        <span class="icon-moon">🌙</span>
+        <span class="icon-sun">☀️</span>
+    </button>
+
+    <!-- Botão do Glossário Fixo -->
+    <button id="glossary-toggle" class="glossary-toggle-btn" aria-label="Abrir glossário">
+        <span>📚</span>
+    </button>
+
+    <!-- Overlay para o fundo quando o menu estiver aberto -->
+    <div class="overlay" id="page-overlay"></div>
+
+    <div class="container">
+        <!-- Removido o banner antigo -->
+
+        <div class="main-content">
+            <!-- Etapa 1: Quem é você? (NOVA) -->
+            <div class="step active" id="step-1" data-total-activities="1">
+                <h2>Quem é você?</h2>
+                <p>Antes de começarmos, gostaria de conhecer um pouco mais sobre vocês. Por favor, respondam às
+                    perguntas no quadro abaixo para que eu possa adaptar a aula da melhor forma possível!</p>
+
+                <div class="interactive-exercise trackable-activity">
+                    <form id="student-info-form">
+                        <div class="form-group">
+                            <label for="student-name">Nome Completo:</label>
+                            <input type="text" id="form-student-name" name="student-name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="student-age">Idade:</label>
+                            <input type="number" id="student-age" name="student-age" min="10" max="99" required>
+                        </div>
+
+                        <!-- Seção de Seleção de Avatar -->
+                        <div class="form-group avatar-selection-group">
+                            <p>Escolha seu avatar:</p>
+                            <div class="avatar-options">
+                                <label>
+                                    <input type="radio" name="avatar" value="👩‍💻" required> <!-- Mulher programadora -->
+                                    <div class="avatar-card">👩‍💻</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👨🏾‍💻" required> <!-- Homem programador negro -->
+                                    <div class="avatar-card">👨🏾‍💻</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧑‍🚀" required> <!-- Pessoa astronauta (gênero neutro) -->
+                                    <div class="avatar-card">🧑‍🚀</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧕" required> <!-- Mulher com hijab -->
+                                    <div class="avatar-card">🧕</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧑‍🦽" required> <!-- Pessoa em cadeira de rodas -->
+                                    <div class="avatar-card">🧑‍🦽</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👩‍🔬" required> <!-- Mulher cientista -->
+                                    <div class="avatar-card">👩‍🔬</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧓" required> <!-- Pessoa idosa -->
+                                    <div class="avatar-card">🧓</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🤖" required> <!-- Robô -->
+                                    <div class="avatar-card">🤖</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧑🏻‍🏫" required> <!-- Pessoa professora -->
+                                    <div class="avatar-card">🧑🏻‍🏫</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👩‍🌾" required> <!-- Mulher agricultora -->
+                                    <div class="avatar-card">👩‍🌾</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧝" required> <!-- Elfo/Fantasia -->
+                                    <div class="avatar-card">🧝</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧑‍🎤" required> <!-- Pessoa cantora -->
+                                    <div class="avatar-card">🧑‍🎤</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👨‍🎨" required> <!-- Homem artista -->
+                                    <div class="avatar-card">👨‍🎨</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👩🏿‍⚕️" required> <!-- Mulher médica negra -->
+                                    <div class="avatar-card">👩🏿‍⚕️</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧑‍⚖️" required> <!-- Pessoa juíza -->
+                                    <div class="avatar-card">🧑‍⚖️</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👨‍🚒" required> <!-- Homem bombeiro -->
+                                    <div class="avatar-card">👨‍🚒</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="🧏" required> <!-- Pessoa surda -->
+                                    <div class="avatar-card">🧏</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👨‍🦳" required> <!-- Homem de cabelo branco -->
+                                    <div class="avatar-card">👨‍🦳</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👩‍🦰" required> <!-- Mulher ruiva -->
+                                    <div class="avatar-card">👩‍🦰</div>
+                                </label>
+                                <label>
+                                    <input type="radio" name="avatar" value="👽" required> <!-- Alienígena -->
+                                    <div class="avatar-card">👽</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <p>1. Qual seu nível de experiência com programação?</p>
+                            <label><input type="radio" name="experience-level" value="beginner" required> Nenhum, estou
+                                começando agora.</label>
+                            <label><input type="radio" name="experience-level" value="basic"> Básico, já vi um pouco em
+                                cursos ou na escola.</label>
+                            <label><input type="radio" name="experience-level" value="intermediate"> Intermediário, já
+                                criei pequenos projetos.</label>
+                            <label><input type="radio" name="experience-level" value="advanced"> Avançado, trabalho ou
+                                estudo programação ativamente.</label>
+                        </div>
+
+                        <div class="form-group">
+                            <p>2. Com qual área da tecnologia você mais se identifica?</p>
+                            <label><input type="radio" name="interest-area" value="frontend" required> Frontend (o que o
+                                usuário vê e interage)</label>
+                            <label><input type="radio" name="interest-area" value="backend"> Backend (lógica do
+                                servidor, bancos de dados)</label>
+                            <label><input type="radio" name="interest-area" value="data_science"> Análise de Dados /
+                                Inteligência Artificial</label>
+                            <label><input type="radio" name="interest-area" value="undecided"> Ainda não sei /
+                                Outra</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submit-form-btn">Enviar Respostas</button>
+                        <div class="feedback" id="form-feedback"></div>
+                    </form>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="1" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+
+            </div>
+
+            <!-- Estilos específicos para o formulário -->
+            <style>
+                .form-group {
+                    margin-bottom: 15px;
+                }
+
+                .form-group label {
+                    display: block;
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                }
+
+                .form-group input[type="text"],
+                .form-group input[type="number"] {
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                    /* Garante que padding não aumenta o tamanho */
+                    margin-bottom: 10px;
+                }
+
+                .form-group input[type="radio"] {
+                    margin-right: 5px;
+                }
+
+                /* Estilos para feedback (mensagens de erro/sucesso) */
+                .feedback {
+                    margin-top: 10px;
+                    padding: 10px;
+                    border-radius: 5px;
+                    display: none;
+                    /* Oculto por padrão */
+                }
+
+                /* Estilos para a seleção de avatar */
+                .avatar-selection-group p {
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+
+                .avatar-options {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 15px;
+                    justify-content: center;
+                }
+
+                .avatar-options label {
+                    cursor: pointer;
+                }
+
+                .avatar-options input[type="radio"] {
+                    display: none; /* Esconde o botão de rádio padrão */
+                }
+
+                .avatar-card {
+                    font-size: 2.5rem;
+                    padding: 15px;
+                    border: 2px solid var(--border-color);
+                    border-radius: 8px;
+                    transition: all 0.2s ease-in-out;
+                }
+
+                .avatar-options input[type="radio"]:checked + .avatar-card {
+                    border-color: var(--primary);
+                    background-color: var(--highlight-bg);
+                    transform: scale(1.1);
+                    box-shadow: 0 0 10px var(--primary);
+                }
+            </style>
+
+            <!-- Etapa 2: Backend -->
+            <div class="step" id="step-2" data-total-activities="0">
+                <!-- <span class="bloom-level">Nível 1: Contextualização</span> -->
+                <h2>Situação-Problema: A Escolha da Tecnologia Certa</h2>
+
+                <div class="interactive-exercise highlight-box">
+                    <h3>🚀 O Desafio da Startup "InovaTech"</h3>
+                    <p>Uma nova startup, a <strong>InovaTech</strong>, quer criar uma plataforma online. A equipe é
+                        pequena, o
+                        prazo é curto e o orçamento é limitado. Eles precisam escolher uma linguagem de programação
+                        para o <strong>backend</strong>.</p>
+
+                    <p>A escolha precisa ser estratégica: a linguagem deve ser <strong>rápida para
+                            desenvolver</strong>, <strong>fácil de aprender</strong> para novos membros da equipe e
+                        <strong>poderosa o suficiente</strong> para crescer e adicionar novos recursos no futuro,
+                        como análise de dados.
+                    </p>
+
+                    <br>
+
+                    <p>Ao longo desta aula, vamos atuar como consultores para a InovaTech, explorando o Python para
+                        descobrir se ele é a ferramenta certa para o trabalho e para orientar nossa análise e tomada de
+                        decisão, formulamos as seguintes perguntas de pesquisa:</p>
+
+
+                    <br>
+
+
+                    <ol>
+                        <li>
+                            <strong>Como o uso da linguagem Python pode contribuir para o desenvolvimento ágil e
+                                escalável do backend da plataforma da InovaTech?</strong><br>
+                            Essa questão busca compreender se as características da linguagem — como sintaxe simples,
+                            ampla comunidade e integração com frameworks — realmente favorecem a produtividade e a
+                            escalabilidade em um contexto de startup.
+                        </li>
+                        <br>
+                        <li>
+                            <strong>De que maneira a escolha do Python como linguagem principal pode influenciar a curva
+                                de aprendizado, a produtividade e a capacidade de inovação da equipe da
+                                InovaTech?</strong><br>
+                            Essa pergunta analisa os impactos estratégicos da escolha tecnológica, considerando fatores
+                            humanos, de aprendizado e de crescimento da equipe.
+                        </li>
+                    </ol>
+
+                </div>
+
+
+
+                <div class="interactive-exercise highlight-box">
+                    <h3>🎯 Objetivos desta Aula</h3>
+                    <p>Ao final desta jornada, você será capaz de:</p>
+                    <ul>
+                        <li><strong>Compreender os fundamentos da programação backend</strong>, o motor que
+                            impulsiona aplicações complexas.</li>
+                        <li><strong>Desenvolver o raciocínio lógico</strong> para resolver problemas de forma
+                            estruturada.</li>
+                        <li><strong>Escrever seus primeiros scripts em Python</strong>, uma das linguagens mais
+                            poderosas e versáteis do mundo.</li>
+                        <li><strong>Avaliar por que Python é uma escolha forte</strong> para projetos de
+                            desenvolvimento web, como o da InovaTech.</li>
+                    </ul>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="2">Desbloquear Próxima Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 3: Linguagens -->
+            <div class="step" id="step-3" data-total-activities="0">
+                <!-- <span class="bloom-level">Nível 1: Compreensão</span> -->
+                <h2>O que é Backend?</h2>
+                <p>O <strong>backend</strong> é a parte "invisível" de um sistema, o motor que trabalha nos
+                    bastidores. Ele é responsável por fazer a ponte entre a interface que você vê (front-end) e o
+                    banco de dados, garantindo que tudo funcione corretamente.</p>
+                
+                <div class="interactive-exercise">
+                    <h3>🤔 Perguntas para Reflexão (Debata com seus colegas!)</h3>
+                    <ul>
+                        <li>Quando você usa um app como Instagram ou Spotify, o que você acha que acontece "por trás das câmeras" quando você curte uma foto ou ouve uma música?</li>
+                        <li>Por que você acha que a senha do seu e-mail não fica salva diretamente no seu celular ou computador, mas sim em um lugar "distante"?</li>
+                        <li>Pense em um site de e-commerce. O que o backend precisa fazer quando você clica em "Comprar Agora"?</li>
+                    </ul>
+                </div>
+
+                <!-- Imagem transformada em Flip Card -->
+                <div class="flip-card-grid" style="grid-template-columns: 1fr; max-width: 750px; margin: 25px auto;">
+                    <div class="flip-card" style="height: 550px;">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">Clique para revelar o que acontece nos bastidores!</div>
+                            <div class="flip-card-back" style="padding: 5px; background-color: var(--content-bg);">
+                                <img src="{% static 'img/backend.png' %}" alt="Infográfico explicando a diferença entre Frontend e Backend" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cards de Curiosidades sobre Backend -->
+                <h3 style="margin-top: 25px; text-align: center;">💡 Curiosidades sobre o Backend</h3>
+                <div class="flip-card-grid">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">🏠 Onde o Backend "mora"? 🌍</div>
+                            <div class="flip-card-back">Ele roda em computadores potentes chamados servidores, que
+                                podem estar em qualquer lugar do mundo, processando solicitações 24/7.</div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">🤝 O que é uma API? 👨‍🍳</div>
+                            <div class="flip-card-back">É como um "garçom" do backend. O frontend (cliente) faz um
+                                pedido (requisição) e a API entrega os dados corretos, sem que o cliente precise
+                                entrar na "cozinha" (banco de dados).</div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">🛡️ Backend e Segurança 🔒</div>
+                            <div class="flip-card-back">A segurança é crucial no backend. É ele quem valida senhas,
+                                protege dados sensíveis e previne ataques, atuando como o "segurança" da aplicação.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center" style="color: #6c757d; font-style: italic;">Clique nos cards para virar!</p>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="3">Desbloquear Próxima Etapa</button>
+                </div>
+            </div>
+            <div class="step" id="step-4" data-total-activities="1">
+                <!-- <span class="bloom-level">Nível 2: Conhecimento</span> -->
+                <h2>Linguagens de Programação</h2>
+
+                <p>Existem diversas linguagens para o backend, cada uma com um estilo. Vamos ver os principais
+                    conceitos:</p>
+                <br>
+                <ul>
+                    <li><strong>Linguagens Compiladas (Ex: C++, Java, C#, Go, Rust):</strong> O código é traduzido
+                        <strong>inteiramente</strong> para a linguagem da máquina antes da execução. Isso gera um
+                        arquivo executável otimizado, que tende a ser muito rápido. Pense em uma planta de
+                        engenharia detalhada que é usada para construir um prédio de uma vez.
+                    </li>
+                    <br>
+                    <li><strong>Linguagens Interpretadas (Ex: Python, JavaScript, Ruby, PHP):</strong> O código é lido e
+                        executado <strong>linha por linha</strong> por um programa chamado "interpretador". É mais
+                        flexível e fácil de testar. É como um mestre de obras que lê a planta e constrói o prédio
+                        passo a passo.</li>
+                    <br>
+                    <li><strong>Programação Orientada a Objetos (POO):</strong> É um estilo (paradigma) de
+                        programação onde organizamos o código em "objetos" que possuem dados (atributos) e
+                        comportamentos (métodos). Python é fortemente orientado a objetos, o que ajuda a criar
+                        sistemas complexos e reutilizáveis, como blocos de montar.</li>
+                </ul>
+                <br>
+                <!-- Botão para abrir o modal sobre Python -->
+                <div class="text-center" style="margin: 20px 0;">
+                    <button class="btn btn-secondary" id="show-python-modal-btn" style="padding: 15px 30px; font-size: 1.2rem;">E o Python? 🐍</button>
+                </div>
+
+                <div class="interactive-exercise trackable-activity" id="matching-exercise-1">
+                    <h3>🧠 Associe os Conceitos</h3>
+                    <p>Arraste o conceito da coluna da esquerda e solte sobre a definição correta na coluna da
+                        direita.</p>
+                    <div class="matching-container">
+                        <div class="matching-column" id="concepts-column">
+                            <div class="matching-item" draggable="true" data-match-id="1">Linguagem Interpretada
+                            </div>
+                            <div class="matching-item" draggable="true" data-match-id="2">Linguagem Compilada</div>
+                            <div class="matching-item" draggable="true" data-match-id="3">Orientação a Objetos</div>
+                            <div class="matching-item" draggable="true" data-match-id="4">Exemplo de Compilada</div>
+                            <div class="matching-item" draggable="true" data-match-id="5">Exemplo de Interpretada
+                            </div>
+                        </div>
+                        <div class="matching-column" id="definitions-column">
+                            <div class="matching-dropzone" data-match-id="2">O código é traduzido inteiramente para
+                                a linguagem da máquina antes da execução.</div>
+                            <div class="matching-dropzone" data-match-id="5">Python, JavaScript, Ruby</div>
+                            <div class="matching-dropzone" data-match-id="3">Estilo que organiza o código em
+                                "objetos" com dados (atributos) e comportamentos (métodos).</div>
+                            <div class="matching-dropzone" data-match-id="1">O código é lido e executado linha por
+                                linha por um "interpretador" durante a execução.</div>
+                            <div class="matching-dropzone" data-match-id="4">C++, Java, Go</div>
+                        </div>
+                    </div>
+                    <div class="feedback" id="matching-feedback"></div>
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 15px;">
+                        <button class="btn btn-primary" id="check-matching-btn">Verificar Associações</button>
+                        <button class="btn btn-secondary" id="reset-matching-btn" style="margin-left: 10px;">Resetar</button>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="4" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 4: Python -->
+            <div class="step" id="step-5" data-total-activities="1">
+                <!-- <span class="bloom-level">Nível 3: Aplicação</span> -->
+                <h2>Por que escolher Python?</h2>
+
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/CoJSaVUuMHU?si=yXk6OqHMJkh5Erfu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+
+                <p>Python é uma das linguagens de programação mais populares atualmente e é também uma ótima opção
+                    para programar no Backend.</p>
+
+                <!-- Cards de Estudo -->
+                <div class="flip-card-grid">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">Por que Python é considerado fácil de aprender?</div>
+                            <div class="flip-card-back">Sua sintaxe é limpa e legível, quase como ler em inglês, o
+                                que acelera o desenvolvimento e facilita a manutenção.</div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">O que significa ter uma "grande comunidade"?</div>
+                            <div class="flip-card-back">Significa que há milhões de desenvolvedores, inúmeras
+                                bibliotecas prontas (como para IA, web, ciência de dados) e respostas para quase
+                                qualquer dúvida online.</div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">Python é versátil? Onde ele pode ser usado?</div>
+                            <div class="flip-card-back">Sim! É usado em desenvolvimento web (backend), automação,
+                                ciência de dados, inteligência artificial, jogos e muito mais.</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center" style="color: #6c757d; font-style: italic;">Clique nos cards para virar!</p>
+                <br>
+
+                <div class="company-logos">
+                    <div class="company-logo" data-company-name="Spotify" data-company-icon="🎵"
+                        data-company-usage="Usa Python massivamente para análise de dados e serviços de backend. A sua playlist 'Descobertas da Semana' é gerada por algoritmos de Machine Learning escritos em Python.">
+                        🎵 Spotify</div>
+                    <div class="company-logo" data-company-name="Netflix" data-company-icon="🎬"
+                        data-company-usage="Utiliza Python para uma infinidade de tarefas no backend, desde a automação de processos de segurança até a análise de dados que ajuda a decidir quais séries produzir e recomendar para você.">
+                        🎬 Netflix</div>
+                    <div class="company-logo" data-company-name="Instagram" data-company-icon="📸"
+                        data-company-usage="É um dos maiores exemplos do mundo! Toda a lógica de negócio do Instagram roda sobre Django, que é um framework web escrito em Python. É a espinha dorsal do aplicativo.">
+                        📸 Instagram</div>
+                    <div class="company-logo" data-company-name="Dropbox" data-company-icon="📦"
+                        data-company-usage="O primeiro cliente do Dropbox para desktop foi escrito quase que inteiramente em Python. A linguagem continua sendo crucial em sua infraestrutura de backend e serviços.">
+                        📦 Dropbox</div>
+                    <div class="company-logo" data-company-name="NASA" data-company-icon="🚀"
+                        data-company-usage="Usa Python para computação científica e análise de dados. Cientistas e engenheiros da NASA usam a linguagem para automatizar tarefas, processar dados de satélites e realizar cálculos complexos.">
+                        🚀 NASA</div>
+                </div>
+
+                <p style="text-align: center;">Estas empresas utilizam Python em seus backends! Clique em cada uma
+                    para saber onde é usado! 👍</p>
+                <br>
+
+                <!-- Nova Atividade de Pesquisa -->
+                <div class="interactive-exercise trackable-activity">
+                    <h3>✍️ Sua Vez de Pesquisar!</h3>
+                    <div class="exercise-instructions">
+                        <p>Agora que você viu algumas vantagens, pesquise por que grandes empresas escolhem Python
+                            em vez de outras linguagens para seus projetos de backend.</p>
+                        <br>
+                        <h3>Vamos compartilhar com os outros estudantes suas descobertas!! 😁</h3>
+                        <br>
+                        <strong>Dicas de pesquisa:</strong>
+                        <ul>
+                            <li>"Por que empresas usam Python para backend"</li>
+                            <li>"Python vs Java para desenvolvimento web"</li>
+                            <li>"Backend do Netflix com Python"</li>
+                        </ul>
+
+                        <strong>Links úteis para começar:</strong>
+                        <ul>
+                            <li><a href="https://www.tiobe.com/tiobe-index/" target="_blank">Índice TIOBE
+                                    (Popularidade de Linguagens)</a></li>
+                            <li><a href="https://stackoverflow.blog/2023/08/30/how-python-became-the-most-popular-language/"
+                                    target="_blank">Stack Overflow: Como o Python se tornou tão popular (em
+                                    inglês)</a></li>
+                        </ul>
+
+                        <p>Anote suas descobertas abaixo:</p>
+                    </div>
+                    <textarea id="research-notes" class="code-area"
+                        placeholder="Ex: Python é popular em ciência de dados por causa de bibliotecas como Pandas e NumPy..."></textarea>
+                    <button class="btn btn-primary" id="save-research-btn" style="margin-top: 10px;">Salvar
+                        Anotações</button>
+                    <div class="feedback" id="research-feedback"></div>
+
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="5" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+
+            </div>
+
+            <!-- Etapa 6: Variáveis e Operadores -->
+            <div class="step" id="step-6" data-total-activities="5">
+                <!-- <span class="bloom-level">Nível 3: Aplicação</span> -->
+                <h2>Variáveis e Operadores em Python</h2>
+                <p>Antes de programar, vamos entender os blocos de construção fundamentais: variáveis e operadores.
+                </p>
+
+                <div class="interactive-exercise">
+                    <h3>O que são Variáveis?</h3>
+                    <p>Pense em variáveis como "caixas" etiquetadas onde você guarda informações. Em Python, você
+                        cria uma variável simplesmente dando um nome a ela e usando o sinal de igual (`=`) para
+                        atribuir um valor.</p>
+                    <div class="code-editor" style="font-size: 0.9em;">
+                        <span class="code-comment"># A variável 'idade' guarda o número 25</span><br>
+                        idade = 25<br>
+                        <span class="code-comment"># A variável 'saudacao' guarda o texto "Olá, Mundo!"</span><br>
+                        saudacao = "Olá, Mundo!"
+                    </div>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>Operadores Lógicos e de Comparação</h3>
+                    <p>Usamos operadores para comparar valores e tomar decisões. Eles sempre retornam `True`
+                        (verdadeiro) ou `False` (falso).</p>
+                    <ul>
+                        <li>`==` (igual a)</li>
+                        <li>`!=` (diferente de)</li>
+                        <li>`>` (maior que)</li>
+                        <li>`<` (menor que)</li>
+                        <li>`and` (E lógico: ambos os lados devem ser verdadeiros)</li>
+                        <li>`or` (OU lógico: pelo menos um lado deve ser verdadeiro)</li>
+                    </ul>
+                    <button class="btn btn-secondary btn-reveal" data-target="quiz-5">🧠 Teste seu
+                        conhecimento</button>
+                    <div id="quiz-5" style="display: none;">
+                        <div class="quiz-container trackable-activity">
+                            <div class="quiz-question">Qual será o resultado da expressão: `(10 > 5) and (3 == 4)`?
+                            </div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" data-correct="false">True</div>
+                                <div class="quiz-option" data-correct="true">False</div>
+                                <div class="quiz-option" data-correct="false">Erro de sintaxe</div>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+
+                        <div class="quiz-container trackable-activity">
+                            <div class="quiz-question">Qual destes é um nome de variável VÁLIDO em Python?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" data-correct="false">2alunos</div>
+                                <div class="quiz-option" data-correct="false">alunos-nota</div>
+                                <div class="quiz-option" data-correct="true">nota_aluno</div>
+                                <div class="quiz-option" data-correct="false">nota$</div>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+
+                        <div class="quiz-container trackable-activity">
+                            <div class="quiz-question">Qual o valor final da variável `x` no código: `x = 10`,
+                                seguido de `x = x + 5`?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" data-correct="false">10</div>
+                                <div class="quiz-option" data-correct="true">15</div>
+                                <div class="quiz-option" data-correct="false">5</div>
+                                <div class="quiz-option" data-correct="false">Erro</div>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+
+                        <div class="quiz-container trackable-activity">
+                            <div class="quiz-question">Qual operador é usado para verificar se dois valores são
+                                DIFERENTES?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" data-correct="false">==</div>
+                                <div class="quiz-option" data-correct="true">!=</div>
+                                <div class="quiz-option" data-correct="false">
+                                    <>
+                                </div>
+                                <div class="quiz-option" data-correct="false">is not</div>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+
+                        <div class="quiz-container trackable-activity">
+                            <div class="quiz-question">Qual o resultado da expressão lógica: `(True or False) and
+                                True`?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" data-correct="true">True</div>
+                                <div class="quiz-option" data-correct="false">False</div>
+                            </div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="6" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 7: Primeiros Passos (MOVIDO) -->
+            <div class="step" id="step-7" data-total-activities="5">
+                <!-- <span class="bloom-level">Nível 3: Aplicação Guiada</span> -->
+                <h2>Primeiros Passos em Python</h2>
+
+                <div class="interactive-exercise trackable-activity">
+                    <h3>1. Mostrando uma mensagem com `print()`</h3>
+                    <p>A primeira coisa que aprendemos em qualquer linguagem é como "falar". Em Python, usamos a
+                        função <code>print()</code> para exibir mensagens na tela. Clique em
+                        <strong>Executar</strong> para concluir esta atividade.
+                    </p>
+                    <div class="code-playground">
+                        <div class="code-header">
+                            <span>passo1.py</span>
+                            <button class="btn btn-primary" id="run-code-step1">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step1"># Meu primeiro programa em Python
+print("Olá, Mundo!")
+print("Bem-vindo ao Python!")
+
+# Experimente outras mensagens usando print()
+</textarea>
+                        <div class="exercise-output" id="output-step1"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise trackable-activity">
+                    <h3>2. Guardando informações com Variáveis</h3>
+                    <p>Podemos guardar informações em "caixas" chamadas variáveis. Aqui, guardamos o texto "Maria"
+                        na variável <code>nome</code> e depois o exibimos.</p>
+                    <div class="code-playground">
+                        <div class="code-header">
+                            <span>passo2.py</span>
+                            <button class="btn btn-primary" id="run-code-step2">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step2">nome = "Maria"
+print("Olá, " + nome)
+
+# Experimente trocar o valor da variável "nome"
+</textarea>
+                        <div class="exercise-output" id="output-step2"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise trackable-activity">
+                    <h3>3. Interagindo com o usuário com `input()`</h3>
+                    <p>Agora, vamos tornar o programa interativo! A função <code>input()</code> pausa o programa e
+                        espera que o usuário digite algo. <strong>Sua vez:</strong> mude o texto dentro do
+                        <code>input()</code> para perguntar a cidade do usuário e clique em Executar.
+                    </p>
+                    <div class="code-playground">
+                        <div class="code-header">
+                            <span>passo3.py</span>
+                            <button class="btn btn-primary"
+                                onclick="runInteractiveCode('code-step3', 'output-step3')">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step3">nome = input("Qual é o seu nome? ")
+print("Bem-vindo(a), " + nome + "!")</textarea>
+                        <div class="exercise-output" id="output-step3"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise trackable-activity">
+                    <h3>4. Trabalhando com Números</h3>
+                    <p>Python lida com diferentes tipos de números, como inteiros (<code>int</code>) e números com
+                        casas decimais (<code>float</code>). Clique em <strong>Executar</strong> para ver como
+                        funcionam.</p>
+                    <div class="code-playground">
+                        <div class="code-header">
+                            <span>passo4.py</span>
+                            <button class="btn btn-primary" id="run-code-step4">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step4"># Variáveis numéricas
+idade = 25         # Um número inteiro (int)
+altura = 1.75      # Um número de ponto flutuante (float)
+
+print("Idade:", idade)
+print("Altura:", altura)
+
+# Experimente mudar os valores de idade e altura</textarea>
+                        <div class="exercise-output" id="output-step4"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise trackable-activity">
+                    <h3>5. Operações Matemáticas</h3>
+                    <p>Você pode usar Python como uma calculadora poderosa. Experimente mudar os valores de
+                        <code>a</code> e <code>b</code> e executar o código novamente.
+                    </p>
+                    <div class="code-playground">
+                        <div class="code-header">
+                            <span>passo5.py</span>
+                            <button class="btn btn-primary" id="run-code-step5">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step5">a = 10
+b = 3
+
+print("Soma:", a + b)
+print("Subtração:", a - b)
+print("Multiplicação:", a * b)
+print("Divisão:", a / b)
+print("Divisão Inteira:", a // b)
+print("Resto da Divisão:", a % b)
+print("Potência:", a ** b)
+
+# Experimente mudar os valores de a e b</textarea>
+                        <div class="exercise-output" id="output-step5"></div>
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="7" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+
+            </div>
+
+            <!-- Etapa 8: Condicionais e Repetição (NOVA) -->
+            <div class="step" id="step-8" data-total-activities="2">
+                <!-- <span class="bloom-level">Nível 4: Análise</span> -->
+                <h2>Controlando o Fluxo: Condicionais e Repetição</h2>
+                <p>Agora que você conhece o básico, vamos dar superpoderes ao seu código! Vamos ensiná-lo a
+                    <strong>tomar decisões</strong> e a <strong>repetir tarefas</strong>. Bem-vindo à caixa de
+                    ferramentas do programador!
+                </p>
+
+                <div class="interactive-exercise">
+                    <h3>Ferramenta 1: O Poder de Decidir com `if`, `elif` e `else` 🚦</h3>
+                    <p>Com o <code>if</code>, seu programa pode escolher qual caminho seguir, como em um jogo. Ele
+                        verifica se uma condição é verdadeira.</p>
+                    <div class="code-playground trackable-activity">
+                        <div class="code-header">
+                            <span>verificador_idade.py</span>
+                            <button class="btn btn-primary"
+                                onclick="runPythonCode(document.getElementById('code-step7-if').value, 'output-step7-if')">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step7-if">idade = 20
+
+if idade < 18:
+    print("Você é menor de idade.")
+elif idade >= 65:
+    print("Você está na melhor idade!")
+else:
+    print("Você é maior de idade.")
+
+# Desafio: Mude o valor da 'idade' para 17 e depois para 70 e veja o que acontece!</textarea>
+                        <div class="exercise-output" id="output-step7-if"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>Ferramenta 2: O Poder de Repetir com o loop `for` 🤖</h3>
+                    <p>Com o loop <code>for</code>, seu programa pode executar uma tarefa várias vezes, como um robô
+                        trabalhador. É perfeito para percorrer itens em uma lista.</p>
+                    <div class="code-playground trackable-activity">
+                        <div class="code-header">
+                            <span>lista_de_compras.py</span>
+                            <button class="btn btn-primary"
+                                onclick="runPythonCode(document.getElementById('code-step7-for').value, 'output-step7-for')">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step7-for">tarefas = ["Lavar a louça", "Estudar Python", "Passear com o cachorro"]
+
+print("Minhas tarefas de hoje:")
+for tarefa in tarefas:
+    print("- " + tarefa)
+
+# Desafio: Adicione uma nova tarefa à lista e execute novamente!</textarea>
+                        <div class="exercise-output" id="output-step7-for"></div>
+                    </div>
+                </div>
+
+                <!-- Seção de Curiosidades com Flip Cards -->
+                <h3 style="margin-top: 25px; text-align: center;">💡 Curiosidades</h3>
+                <div class="flip-card-grid">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">O "Else" de um Loop</div>
+                            <div class="flip-card-back">Em Python, um loop `for` ou `while` pode ter um `else`! O
+                                bloco `else` é executado quando o loop termina normalmente (sem ser interrompido por
+                                um `break`).</div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">O Operador Morsa `:=`</div>
+                            <div class="flip-card-back">Introduzido no Python 3.8, o "operador morsa" `:=` permite
+                                atribuir um valor a uma variável como parte de uma expressão. Útil para simplificar
+                                alguns loops `while`.</div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">Compreensão de Listas</div>
+                            <div class="flip-card-back">Python permite criar listas de forma concisa com "List
+                                Comprehensions". Ex: `quadrados = [x*x for x in range(10)]` cria uma lista com os
+                                quadrados de 0 a 9 em uma única linha!</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center" style="color: #6c757d; font-style: italic;">Clique nos cards para virar!</p>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="8" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 9: Estruturas de Dados (NOVA) -->
+            <div class="step" id="step-9" data-total-activities="6">
+                <!-- <span class="bloom-level">Nível 4: Análise</span> -->
+                <h2>Estruturas de Dados: As Caixas de Ferramentas</h2>
+                <p>Imagine que você tem vários itens para guardar. Em vez de criar uma variável para cada um, você
+                    pode usar "caixas" especiais chamadas <strong>Estruturas de Dados</strong>. Vamos conhecer as
+                    três principais do Python!</p>
+
+                <div class="interactive-exercise">
+                    <h3>1. Listas 🚂: O Trem de Carga Flexível</h3>
+                    <p>Uma <strong>lista</strong> é como um trem onde cada vagão pode carregar um item. Você pode
+                        adicionar, remover e mudar os vagões de lugar. Elas são criadas com colchetes
+                        <code>[]</code> e são super flexíveis.
+                    </p>
+                    <div class="code-playground trackable-activity">
+                        <div class="code-header">
+                            <span>trem_de_compras.py</span>
+                            <button class="btn btn-primary"
+                                onclick="runPythonCode(document.getElementById('code-step8-list').value, 'output-step8-list')">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step8-list"># Nossa lista de compras
+compras = ["Maçã", "Banana", "Leite"]
+
+# Adicionando um novo item no final do trem
+compras.append("Pão")
+
+print("Lista de compras atualizada:")
+print(compras)
+
+# Acessando o segundo item (índice 1)
+print("O segundo item é:", compras[1])</textarea>
+                        <div class="exercise-output" id="output-step8-list"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>2. Tuplas 💎: O Baú do Tesouro Lacrado</h3>
+                    <p>Uma <strong>tupla</strong> é como um baú do tesouro: uma vez que você guarda os itens, não
+                        pode mais alterá-los. Elas são perfeitas para dados que não devem mudar, como coordenadas.
+                        São criadas com parênteses <code>()</code>.</p>
+                    <div class="code-playground trackable-activity">
+                        <div class="code-header">
+                            <span>coordenadas.py</span>
+                            <button class="btn btn-primary"
+                                onclick="runPythonCode(document.getElementById('code-step8-tuple').value, 'output-step8-tuple')">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step8-tuple"># Coordenadas de um ponto no mapa (não devem mudar)
+ponto_fixo = (10, 25)
+
+print("Coordenada X:", ponto_fixo[0])
+print("Coordenada Y:", ponto_fixo[1])
+
+# Tentar mudar a tupla vai gerar um erro! (descomente para ver)
+# ponto_fixo[0] = 15</textarea>
+                        <div class="exercise-output" id="output-step8-tuple"></div>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>3. Dicionários 📖: A Agenda de Contatos Etiquetada</h3>
+                    <p>Um <strong>dicionário</strong> é como uma agenda onde cada informação é guardada com uma
+                        etiqueta (a "chave"). Em vez de procurar por um número de vagão (índice), você procura pela
+                        etiqueta. São criados com chaves <code>{}</code>.</p>
+                    <div class="code-playground trackable-activity">
+                        <div class="code-header">
+                            <span>perfil_usuario.py</span>
+                            <button class="btn btn-primary"
+                                onclick="runPythonCode(document.getElementById('code-step8-dict').value, 'output-step8-dict')">Executar</button>
+                        </div>
+                        <textarea class="code-area" id="code-step8-dict"># Um dicionário com informações de um usuário
+usuario = {
+    "nome": "Ana",
+    "idade": 28,
+    "cidade": "São Paulo"
+}
+
+# Acessando a idade pela chave "idade"
+print("Idade do usuário:", usuario["idade"])
+
+# Adicionando uma nova informação
+usuario["profissao"] = "Desenvolvedora"
+print("Profissão:", usuario["profissao"])</textarea>
+                        <div class="exercise-output" id="output-step8-dict"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary btn-reveal" data-target="quiz-8">🧠 Teste seu conhecimento</button>
+                <div class="interactive-exercise" id="quiz-8" style="display: none;">
+                    <h3 style="margin-top: 0;">Quiz: Estruturas de Dados</h3>
+
+                    <div class="quiz-container trackable-activity">
+                        <div class="quiz-question">Qual estrutura de dados você usaria para uma lista de tarefas que
+                            pode mudar a qualquer momento?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true">Lista 🚂</div>
+                            <div class="quiz-option" data-correct="false">Tupla 💎</div>
+                            <div class="quiz-option" data-correct="false">Dicionário 📖</div>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <div class="quiz-container trackable-activity">
+                        <div class="quiz-question">Se você precisa armazenar as coordenadas (X, Y, Z) de um ponto
+                            que NUNCA deve ser alterado, qual a melhor escolha?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Lista 🚂</div>
+                            <div class="quiz-option" data-correct="true">Tupla 💎</div>
+                            <div class="quiz-option" data-correct="false">Dicionário 📖</div>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+
+                    <div class="quiz-container trackable-activity">
+                        <div class="quiz-question">Para guardar informações de um produto com etiquetas como "nome",
+                            "preço" e "estoque", qual estrutura é a mais indicada?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Lista 🚂</div>
+                            <div class="quiz-option" data-correct="false">Tupla 💎</div>
+                            <div class="quiz-option" data-correct="true">Dicionário 📖</div>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="9" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 10: Boas Práticas -->
+            <div class="step" id="step-10" data-total-activities="0">
+                <!-- <span class="bloom-level">Nível 5: Síntese</span> -->
+                <h2>Boas Práticas: Código que Conta uma História</h2>
+                <p>Um bom código não apenas funciona, ele se comunica! Veja a diferença entre um código misterioso e
+                    um código que é um livro aberto.</p>
+
+                <div class="code-comparison">
+                    <!-- Coluna do Código Ruim -->
+                    <div class="comparison-column bad-code">
+                        <div class="comparison-header">
+                            <span class="comparison-emoji">🤯</span>
+                            <h3>Código Confuso</h3>
+                        </div>
+                        <p class="comparison-description">"O que isso faz mesmo?"</p>
+                        <div class="code-editor">
+                            n = [10, 20, 30, 40]<br>
+                            s = 0<br>
+                            for x in n:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;s = s + x<br>
+                            m = s / len(n)<br>
+                            print(m)
+                        </div>
+                    </div>
+
+                    <!-- Coluna do Código Bom -->
+                    <div class="comparison-column good-code">
+                        <div class="comparison-header">
+                            <span class="comparison-emoji">😎</span>
+                            <h3>Código Limpo</h3>
+                        </div>
+                        <p class="comparison-description">"Ah, entendi na hora!"</p>
+                        <div class="code-editor">
+                            <span class="code-comment"># Lista de notas dos alunos</span><br>
+                            notas_alunos = [10, 20, 30, 40]<br><br>
+                            <span class="code-comment"># Inicializa a soma</span><br>
+                            soma_total = 0<br><br>
+                            <span class="code-comment"># Loop para somar as notas</span><br>
+                            for nota in notas_alunos:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;soma_total += nota<br><br>
+                            <span class="code-comment"># Calcula e exibe a média</span><br>
+                            media = soma_total / len(notas_alunos)<br>
+                            print(f"A média é: {media}")
+                        </div>
+                    </div>
+                </div>
+
+                <div class="benefits-section">
+                    <h3>✨ As Vantagens do Código Limpo ✨</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit-item">🤝<br>Facilita a Colaboração</div>
+                        <div class="benefit-item">🔧<br>Simplifica a Manutenção</div>
+                        <div class="benefit-item">♻️<br>Promove a Reutilização</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="10">Desbloquear Próxima
+                        Etapa</button>
+                </div>
+
+            </div>
+
+            <!-- Etapa 11: Caça-Palavras (NOVA) -->
+            <div class="step" id="step-11" data-total-activities="1">
+                <!-- <span class="bloom-level">Nível 4: Memorização</span> -->
+                <h2>Caça-Palavras Python</h2>
+                <p>Vamos fazer uma pausa divertida para reforçar os termos que aprendemos. Leia o conceito na lista e
+                    encontre a palavra correspondente na grade. Clique e arraste para selecionar.</p>
+
+                <div class="interactive-exercise trackable-activity">
+                    <div class="word-search-container">
+                        <div class="word-search-grid" id="word-search-grid">
+                            <!-- Células serão geradas pelo JS -->
+                        </div>
+                        <div class="word-search-list-container">
+                            <h3>Conceitos para Encontrar:</h3>
+                            <ul class="word-search-list" id="word-search-list">
+                                <!-- Palavras serão geradas pelo JS -->
+                            </ul>
+                            <button class="btn btn-secondary" id="reveal-word-btn" style="margin-top: 15px;">💡
+                                Revelar Palavra</button>
+                            <div class="feedback" id="word-search-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="11" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 12: Construtor de Código (Unificado) -->
+            <div class="step" id="step-12" data-total-activities="5">
+                <!-- <span class="bloom-level">Nível 5: Aplicação</span> -->
+                <h2>Construtor de Código: Desafios</h2>
+                <p>Hora de colocar a mão na massa! Organize os blocos de código para resolver os desafios.</p>
+
+                <!-- Desafio 1: Área -->
+                <div class="interactive-exercise trackable-activity" id="dd-exercise-1">
+                    <h3>Desafio 1: Área do Retângulo</h3>
+                    <p>Monte um programa que calcula a área de um retângulo.</p>
+                    <div class="drag-drop-container">
+                        <div class="code-drop-zone"></div>
+                        <div class="code-block-source">
+                            <div class="code-block" draggable="true" data-order="3">print(f"A área é: {area}")</div>
+                            <div class="code-block" draggable="true" data-order="1">largura = 10</div>
+                            <div class="code-block" draggable="true" data-order="2">area = largura * altura</div>
+                            <div class="code-block" draggable="true" data-order="0">altura = 5</div>
+                        </div>
+                    </div>
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
+                        <button class="btn btn-primary check-btn">Verificar</button>
+                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <!-- Desafio 2: Condicional -->
+                <div class="interactive-exercise trackable-activity" id="dd-exercise-2">
+                    <h3>Desafio 2: Verificador de Nota</h3>
+                    <p>Crie um programa que verifica se um aluno foi aprovado (nota >= 70).</p>
+                    <div class="drag-drop-container">
+                        <div class="code-drop-zone"></div>
+                        <div class="code-block-source">
+                            <div class="code-block" draggable="true" data-order="0">nota = 75</div>
+                            <div class="code-block" draggable="true" data-order="1">if nota >= 70:</div>
+                            <div class="code-block" draggable="true" data-order="2"> print("Aprovado!")</div>
+                            <div class="code-block" draggable="true" data-order="3">else:</div>
+                            <div class="code-block" draggable="true" data-order="4"> print("Reprovado.")</div>
+                        </div>
+                    </div>
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
+                        <button class="btn btn-primary check-btn">Verificar</button>
+                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <!-- Desafio 3: Loop -->
+                <div class="interactive-exercise trackable-activity" id="dd-exercise-3">
+                    <h3>Desafio 3: Contagem com Loop</h3>
+                    <p>Faça um programa que use um loop `for` para contar e imprimir os números de 1 a 3.</p>
+                    <div class="drag-drop-container">
+                        <div class="code-drop-zone"></div>
+                        <div class="code-block-source">
+                            <div class="code-block" draggable="true" data-order="0">for numero in range(1, 4):</div>
+                            <div class="code-block" draggable="true" data-order="1"> print(numero)</div>
+                        </div>
+                    </div>
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
+                        <button class="btn btn-primary check-btn">Verificar</button>
+                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <!-- Desafio 4: Lista -->
+                <div class="interactive-exercise trackable-activity" id="dd-exercise-4">
+                    <h3>Desafio 4: Acessando uma Lista</h3>
+                    <p>Crie uma lista de frutas e imprima o segundo item da lista (lembre-se que a contagem começa
+                        em 0).</p>
+                    <div class="drag-drop-container">
+                        <div class="code-drop-zone"></div>
+                        <div class="code-block-source">
+                            <div class="code-block" draggable="true" data-order="1">print(frutas[1])</div>
+                            <div class="code-block" draggable="true" data-order="0">frutas = ["Maçã", "Banana",
+                                "Uva"]</div>
+                        </div>
+                    </div>
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
+                        <button class="btn btn-primary check-btn">Verificar</button>
+                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <!-- Desafio 5: Função -->
+                <div class="interactive-exercise trackable-activity" id="dd-exercise-5">
+                    <h3>Desafio 5: Verificador de Par ou Ímpar</h3>
+                    <p>Monte um programa que verifica se um número é par ou ímpar usando o operador de resto da
+                        divisão (%).</p>
+                    <div class="drag-drop-container">
+                        <div class="code-drop-zone"></div>
+                        <div class="code-block-source">
+                            <div class="code-block" draggable="true" data-order="0">numero = 7</div>
+                            <div class="code-block" draggable="true" data-order="1">if numero % 2 == 0:</div>
+                            <div class="code-block" draggable="true" data-order="2"> print("O número é par.")</div>
+                            <div class="code-block" draggable="true" data-order="3">else:</div>
+                            <div class="code-block" draggable="true" data-order="4"> print("O número é ímpar.")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
+                        <button class="btn btn-primary check-btn">Verificar</button>
+                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
+                    </div>
+                    <div class="feedback"></div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="12" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 13: Exercícios -->
+            <div class="step" id="step-13" data-total-activities="1">
+                <!-- <span class="bloom-level">Nível 6: Avaliação</span> -->
+                <h2>Avaliação: Exercícios Práticos</h2>
+                <p>Vamos testar tudo o que você aprendeu! Responda às 10 perguntas abaixo. Cada acerto vale 1 ponto.
+                </p>
+
+                <div id="final-quiz-container" class="trackable-activity">
+                    <!-- Q1 -->
+                    <div class="quiz-container">
+                        <div class="quiz-question">1. Qual é uma responsabilidade principal do backend?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Mudar a cor de um botão.</div>
+                            <div class="quiz-option" data-correct="true">Processar dados de um formulário e salvar
+                                em um banco de dados.</div>
+                            <div class="quiz-option" data-correct="false">Exibir imagens em uma galeria.</div>
+                        </div>
+                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
+                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    <!-- Q2 -->
+                    <div class="quiz-container">
+                        <div class="quiz-question">2. Por que a sintaxe "limpa e legível" do Python é uma vantagem
+                            para startups como a InovaTech?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true">Acelera o desenvolvimento e facilita a
+                                entrada de novos programadores na equipe.</div>
+                            <div class="quiz-option" data-correct="false">Garante que o programa rode mais rápido
+                                que qualquer outra linguagem.</div>
+                            <div class="quiz-option" data-correct="false">Permite criar interfaces gráficas mais
+                                bonitas.</div>
+                        </div>
+                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
+                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    <!-- Q3 -->
+                    <div class="quiz-container">
+                        <div class="quiz-question">3. Qual o resultado da operação `10 % 3` em Python?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">3</div>
+                            <div class="quiz-option" data-correct="false">3.33</div>
+                            <div class="quiz-option" data-correct="true">1 (o resto da divisão)</div>
+                        </div>
+                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
+                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    <!-- Q4 -->
+                    <div class="quiz-container">
+                        <div class="quiz-question">4. Qual será a saída do código: `idade = 17; if idade >= 18:
+                            print("Maior") else: print("Menor")`?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Maior</div>
+                            <div class="quiz-option" data-correct="true">Menor</div>
+                            <div class="quiz-option" data-correct="false">Nenhuma saída.</div>
+                        </div>
+                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
+                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    <!-- Q5 -->
+                    <div class="quiz-container">
+                        <div class="quiz-question">5. Qual estrutura de dados é imutável, ou seja, não pode ser
+                            alterada após sua criação?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false">Lista 🚂</div>
+                            <div class="quiz-option" data-correct="true">Tupla 💎</div>
+                            <div class="quiz-option" data-correct="false">Dicionário 📖</div>
+                        </div>
+                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
+                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
+                        </div>
+                        <div class="feedback"></div>
+                    </div>
+                    <!-- Q6 -->
+                    <div class="interactive-exercise" id="code-challenge-1">
+                        <p><strong>6. Desafio de Código:</strong> Declare duas variáveis, `a` e `b`, com valores 15
+                            e 30, e imprima a soma delas.</p>
+                        <div class="code-playground">
+                            <div class="code-header"><span>soma.py</span>
+                                <div>
+                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="1" style="margin-right: 10px;">💡 Revelar Solução</button>
+                                    <button class="btn btn-primary check-code-btn">Verificar</button>
+                                </div>
+                            </div>
+                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
+                            <div class="exercise-output"></div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                    <!-- Q7 -->
+                    <div class="interactive-exercise" id="code-challenge-2">
+                        <p><strong>7. Desafio de Código:</strong> Crie uma variável `idade` com o valor 25. Use
+                            `if/else` para imprimir "Maior de idade" se a idade for 18 ou mais, e "Menor de idade"
+                            caso contrário.</p>
+                        <div class="code-playground">
+                            <div class="code-header"><span>idade.py</span>
+                                <div>
+                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="2" style="margin-right: 10px;">💡 Revelar Solução</button>
+                                    <button class="btn btn-primary check-code-btn">Verificar</button>
+                                </div>
+                            </div>
+                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
+                            <div class="exercise-output"></div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                    <!-- Q8 -->
+                    <div class="interactive-exercise" id="code-challenge-3">
+                        <p><strong>8. Desafio de Código:</strong> Use um loop `for` e a função `range()` para
+                            imprimir os números de 1 a 5 (inclusive).</p>
+                        <div class="code-playground">
+                            <div class="code-header"><span>loop.py</span>
+                                <div>
+                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="3" style="margin-right: 10px;">💡 Revelar Solução</button>
+                                    <button class="btn btn-primary check-code-btn">Verificar</button>
+                                </div>
+                            </div>
+                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
+                            <div class="exercise-output"></div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                    <!-- Q9 -->
+                    <div class="interactive-exercise" id="code-challenge-4">
+                        <p><strong>9. Desafio de Código:</strong> Crie uma lista chamada `frutas` com "Maçã",
+                            "Banana" e "Uva". Em seguida, imprima o último item da lista.</p>
+                        <div class="code-playground">
+                            <div class="code-header"><span>lista.py</span>
+                                <div>
+                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="4" style="margin-right: 10px;">💡 Revelar Solução</button>
+                                    <button class="btn btn-primary check-code-btn">Verificar</button>
+                                </div>
+                            </div>
+                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
+                            <div class="exercise-output"></div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+                    <!-- Q10 -->
+                    <div class="interactive-exercise" id="code-challenge-5">
+                        <p><strong>10. Desafio de Código:</strong> Crie um dicionário chamado `carro` com as chaves
+                            "marca" e "ano", e valores "Tesla" e 2023. Imprima o valor associado à chave "marca".
+                        </p>
+                        <div class="code-playground">
+                            <div class="code-header"><span>dicionario.py</span>
+                                <div>
+                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="5" style="margin-right: 10px;">💡 Revelar Solução</button>
+                                    <button class="btn btn-primary check-code-btn">Verificar</button>
+                                </div>
+                            </div>
+                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
+                            <div class="exercise-output"></div>
+                            <div class="feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="nav-buttons" style="justify-content: center; margin-top: 20px;">
+                        <button class="btn btn-primary" id="check-final-quiz">Calcular Pontuação Final</button>
+                    </div>
+                    <div class="feedback" id="final-quiz-feedback" style="text-align: center; font-size: 1.2rem;">
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="13" disabled>Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 14: Jogos Interativos (NOVA) -->
+            <div class="step" id="step-14" data-total-activities="0">
+                <!-- <span class="bloom-level">Prática Lúdica</span> -->
+                <h2>Jogos Interativos</h2>
+                <p>Hora de relaxar e praticar o que você aprendeu de uma forma divertida! Clique em um dos jogos
+                    abaixo para começar. Eles abrirão em uma nova aba.</p>
+
+                <div class="interactive-exercise">
+                    <h3>🐍 Jogo da Memória Python</h3>
+                    <p>Teste sua memória e reforce os conceitos básicos de Python. Combine os termos com suas
+                        definições corretas antes que o tempo acabe!</p>
+                    <br>
+                    <a href="{% url 'memory_game' %}" target="_blank" class="btn btn-primary">Jogar Jogo da Memória</a>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🕹️ Snake Quiz</h3>
+                    <p>Jogue o clássico jogo da cobrinha enquanto responde a perguntas de múltipla escolha sobre
+                        Python. Coma a resposta certa para crescer!</p>
+                    <br>
+                    <a href="{% url 'snake_game' %}" target="_blank" class="btn btn-primary">Jogar Snake Quiz</a>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🚀 Python Galaga</h3>
+                    <p>Defenda a galáxia dos inimigos e mostre seu conhecimento em Python neste jogo de nave. Colete
+                        itens para responder perguntas e ganhar power-ups!</p>
+                    <br>
+                    <a href="{% url 'galaga_game' %}" target="_blank" class="btn btn-primary">Jogar Python Galaga</a>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🥠 Pac-Python</h3>
+                    <p>Uma versão do clássico Pac-Man com tema de Python. Colete todos os "pac-dots", fuja dos
+                        "bugs" e use a "energia de otimização" para virar o jogo!</p>
+                    <br>
+                    <a href="{% url 'pacman_game' %}" target="_blank" class="btn btn-primary">Jogar Pac-Python</a>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="14">Desbloquear Próxima
+                        Etapa</button>
+                </div>
+            </div>
+
+            <!-- Etapa 15: Projeto Final -->
+            <div class="step" id="step-15" data-total-activities="1">
+                <!-- <span class="bloom-level">Nível 7: Criação</span> -->
+                <h2>🏆 Desafio Final - Protótipo InovaTech</h2>
+
+                <div class="interactive-exercise">
+                    <div class="exercise-instructions">
+                        <h3>🚀 Construindo o Módulo de Cadastro da InovaTech</h3>
+                        <p>Para ajudar a InovaTech a começar, vamos construir o primeiro protótipo funcional da
+                            plataforma deles: um sistema de cadastro de usuários. Este é o primeiro passo para
+                            qualquer aplicação web! Conclua o desafio para desbloquear a emissão do seu certificado.
+                        </p>
+                        <hr style="margin: 10px 0;">
+
+                        <h4>Sua Missão:</h4>
+                        <p>Crie um programa que:</p>
+                        <ul>
+                            <li>Pergunte o nome, idade e e-mail do novo usuário.</li>
+                            <li>Calcule o ano de nascimento (aproximado).</li>
+                            <li>Exiba uma mensagem de boas-vindas personalizada com todos os dados.</li>
+                            <li>Verifique se o funcionário é maior de idade e informe o status.</li>
+                        </ul>
+                    </div>
+
+                    <div class="code-playground trackable-activity">
+                        <div class="code-header">
+                            <span>cadastro_usuarios.py</span>
+                            <button class="btn btn-primary" id="run-rh360">Executar Sistema</button>
+                        </div>
+                        <textarea class="code-area" id="rh360-code" placeholder="# Escreva o código do protótipo aqui...
+# Dica: Use input() para perguntar, int() para converter a idade, e f-strings para imprimir!"></textarea>
+                        <div class="exercise-output" id="rh360-output"></div>
+                    </div>
+
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" id="reveal-rh360-solution">💡 Ver Dicas / Solução</button>
+                        <button class="btn btn-primary btn-unlock-next" data-step="15" disabled>Desbloquear
+                            Conclusão</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Etapa 16: Conclusão -->
+            <div class="step" id="step-16" data-total-activities="0">
+                <div class="conclusion-banner">
+                    <div class="conclusion-icon">🏆</div>
+                    <h2>Missão Cumprida!</h2>
+                    <p>Você desvendou os segredos do Python e ajudou a InovaTech a encontrar seu caminho!</p>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>Revisitando o Desafio da InovaTech</h3>
+                    <p>Ao longo desta jornada, atuamos como consultores para a startup <strong>InovaTech</strong>.
+                        Agora, com o conhecimento adquirido, podemos dar um veredito final.</p>
+
+                    <div class="conclusion-insights">
+                        <div class="insight-card">
+                            <div class="insight-icon">⚡</div>
+                            <h3>Agilidade e Escalabilidade</h3>
+                            <p><strong>Descoberta:</strong> A sintaxe limpa do Python permite que a equipe da InovaTech
+                                desenvolva e teste ideias rapidamente. Com frameworks poderosos como Django e Flask, a
+                                aplicação pode crescer sem limites.</p>
+                        </div>
+                        <div class="insight-card">
+                            <div class="insight-icon">💡</div>
+                            <h3>Inovação e Produtividade</h3>
+                            <p><strong>Descoberta:</strong> A curva de aprendizado suave e o imenso ecossistema de
+                                bibliotecas (IA, dados, web) capacitam a equipe a inovar e a se manter produtiva,
+                                transformando ideias em realidade com mais eficiência.</p>
+                        </div>
+                    </div>
+
+                    <div class="conclusion-verdict">
+                        <h4>Veredito Final para a InovaTech</h4>
+                        <p>Python é a escolha certa! Ele oferece o equilíbrio perfeito entre <strong>velocidade de
+                                desenvolvimento</strong>, <strong>poder de processamento</strong> e um
+                            <strong>ecossistema que fomenta o crescimento e a inovação</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🏁 Sua Jornada Apenas Começou!</h3>
+                    <p>Parabéns por chegar até aqui! Você não apenas aprendeu os fundamentos do Python, mas também
+                        entendeu como ele se encaixa no mundo real. O que você construiu é a base para uma carreira de
+                        sucesso.</p>
+
+                    <div class="next-steps">
+                        <h3>Próximos Passos na sua Jornada 🚀</h3>
+                        <p>A programação é um caminho de aprendizado contínuo. Aqui estão alguns recursos para você ir
+                            além:</p>
+                        <ul>
+                            <li><strong><a href="https://docs.python.org/3/" target="_blank">Documentação Oficial do
+                                        Python</a>:</strong> A fonte definitiva para todas as suas dúvidas sobre a
+                                linguagem.</li>
+                            <li><strong><a href="https://www.djangoproject.com/" target="_blank">Django
+                                        Framework</a>:</strong> Um framework "baterias inclusas" para construir
+                                aplicações web complexas e robustas rapidamente.</li>
+                            <li><strong><a href="https://flask.palletsprojects.com/" target="_blank">Flask
+                                        Framework</a>:</strong> Um micro-framework leve e flexível, ótimo para começar
+                                projetos menores e APIs.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pesquisa de Satisfação -->
+                <div class="interactive-exercise trackable-activity" id="satisfaction-survey">
+                    <h3>⭐ Pesquisa de Satisfação ⭐</h3>
+                    <p>Seu feedback é muito importante para nós! Por favor, avalie sua experiência com esta aula interativa.</p>
+                    <div class="satisfaction-rating">
+                        <div class="stars" data-rating="0">
+                            <span class="star" data-value="1">☆</span>
+                            <span class="star" data-value="2">☆</span>
+                            <span class="star" data-value="3">☆</span>
+                            <span class="star" data-value="4">☆</span>
+                            <span class="star" data-value="5">☆</span>
+                        </div>
+                        <p class="rating-feedback-text" id="rating-feedback-text">Clique para avaliar</p>
+                    </div>
+                    <div class="feedback" id="satisfaction-feedback"></div>
+                </div>
+
+                <style>
+                    .satisfaction-rating {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-top: 20px;
+                    }
+                    .stars {
+                        font-size: 2.5rem;
+                        cursor: pointer;
+                        color: #ccc;
+                        display: inline-block;
+                    }
+                    .star {
+                        transition: color 0.2s;
+                    }
+                    .stars .star:hover,
+                    .stars .star.hover {
+                        color: #FFD700; /* Amarelo ouro */
+                    }
+                    .stars .star.selected {
+                        color: #FFD700;
+                    }
+                    .rating-feedback-text {
+                        margin-top: 10px;
+                        font-style: italic;
+                        color: var(--text-muted);
+                        min-height: 20px;
+                    }
+                </style>
+                <!-- Fim da Pesquisa de Satisfação -->
+
+                <div class="nav-buttons">
+                    <button class="btn btn-primary btn-unlock-next" data-step="16">Desbloquear Certificado</button>
+                </div>
+            </div>
+
+            <!-- Etapa 17: Certificado -->
+            <div class="step" id="step-17">
+                <!-- <span class="bloom-level">Nível Final: Conquista</span> -->
+                <h2>🎉 Parabéns, Mestre Python! 🎉</h2>
+                <p>Você completou com sucesso a jornada de introdução ao Python! Você demonstrou para a InovaTech o
+                    poder da linguagem e agora tem a base para criar suas próprias aplicações.</p>
+
+                <div class="interactive-exercise">
+                    <h3>📜 Emita seu Certificado de Conclusão</h3>
+                    <p>Clique no botão abaixo para gerar seu certificado com o nome que você preencheu na Etapa 1.
+                    </p>
+                    <br>
+                    <div class="certificate-generator">
+
+                        <button id="generate-pdf-btn" class="btn btn-primary">Gerar Certificado</button>
+                    </div>
+                </div>
+
+                
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="restart-course-btn">Reiniciar Curso</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal do Glossário -->
+    <div class="glossary-modal-overlay" id="glossary-modal-overlay">
+        <div class="glossary-modal-content">
+            <button class="glossary-modal-close-btn">&times;</button>
+            <div class="glossary-modal-header">
+                <h3>📚 Glossário</h3>
+            </div>
+            <div class="glossary-modal-body">
+                <details>
+                    <summary>Backend</summary>
+                    <p>A parte "invisível" de um sistema, o motor que trabalha nos bastidores. É responsável pela lógica, banco de dados e comunicação com o servidor.</p>
+                </details>
+                <details>
+                    <summary>Frontend</summary>
+                    <p>A parte visual e interativa de um site ou aplicativo com a qual o usuário interage diretamente.</p>
+                </details>
+                <details>
+                    <summary>API (Application Programming Interface)</summary>
+                    <p>Uma "ponte" ou "garçom" que permite que diferentes sistemas (como o frontend e o backend) conversem entre si de forma padronizada.</p>
+                </details>
+                <details>
+                    <summary>Linguagem Interpretada</summary>
+                    <p>Uma linguagem cujo código é lido e executado linha por linha por um programa chamado "interpretador". Ex: Python, JavaScript.</p>
+                </details>
+                <details>
+                    <summary>Linguagem Compilada</summary>
+                    <p>Uma linguagem cujo código é traduzido inteiramente para a linguagem da máquina antes da execução, gerando um arquivo executável. Ex: C++, Java, Go.</p>
+                </details>
+                <details>
+                    <summary>Variável</summary>
+                    <p>Um "contêiner" ou "caixa" com um nome que armazena um valor (número, texto, etc.) na memória do computador.</p>
+                </details>
+                <details>
+                    <summary>Lista</summary>
+                    <p>Uma estrutura de dados ordenada e mutável (pode ser alterada) que armazena uma coleção de itens. Criada com colchetes `[]`.</p>
+                </details>
+                <details>
+                    <summary>Tupla</summary>
+                    <p>Uma estrutura de dados ordenada e imutável (não pode ser alterada após a criação). Ideal para dados que não devem mudar. Criada com parênteses `()`.</p>
+                </details>
+                <details>
+                    <summary>Dicionário</summary>
+                    <p>Uma estrutura de dados que armazena itens em pares de "chave-valor", permitindo acesso rápido aos valores através de suas chaves. Criado com chaves `{}`.</p>
+                </details>
+                <details>
+                    <summary>Condicional (if/elif/else)</summary>
+                    <p>Uma estrutura que permite ao programa tomar decisões e executar diferentes blocos de código com base em uma condição ser verdadeira ou falsa.</p>
+                </details>
+                <details>
+                    <summary>Loop (for/while)</summary>
+                    <p>Uma estrutura que permite que um bloco de código seja executado repetidamente. O loop `for` itera sobre uma sequência (como uma lista), enquanto o `while` continua enquanto uma condição for verdadeira.</p>
+                </details>
+                <details>
+                    <summary>Função (def)</summary>
+                    <p>Um bloco de código nomeado e reutilizável que realiza uma tarefa específica. Funções ajudam a organizar e a não repetir código.</p>
+                </details>
+                <details>
+                    <summary>Framework</summary>
+                    <p>Um conjunto de ferramentas e bibliotecas que serve como base para o desenvolvimento de software. No mundo Python, Django e Flask são frameworks web populares.</p>
+                </details>
+                <details>
+                    <summary>Sintaxe</summary>
+                    <p>O conjunto de regras que define como um programa deve ser escrito em uma linguagem específica para ser considerado correto. A sintaxe do Python é conhecida por ser limpa e legível.</p>
+                </details>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Empresas -->
+    <div class="company-modal-overlay" id="company-modal-overlay">
+        <div class="company-modal-content">
+            <button class="company-modal-close-btn">&times;</button>
+            <div class="company-modal-header">
+                <span id="modal-company-icon"></span>
+                <h3 id="modal-company-name"></h3>
+            </div>
+            <div class="company-modal-body">
+                <p id="modal-company-usage"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Genérico para Informações -->
+    <div class="generic-modal-overlay" id="generic-modal-overlay">
+        <div class="generic-modal-content">
+            <button class="generic-modal-close-btn">&times;</button>
+            <div class="generic-modal-header">
+                <h3 id="generic-modal-title"></h3>
+            </div>
+            <div class="generic-modal-body">
+                <p id="generic-modal-text"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Define o caminho para as imagens estáticas para ser usado pelo script.js -->
+    <script>
+        window.STATIC_IMG_PATH = "{% static 'img/' %}";
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="{% static 'js/script.js' %}" defer></script>
+</body>
+
+</html>

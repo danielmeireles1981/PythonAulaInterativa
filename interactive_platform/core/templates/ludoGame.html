@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Matrix Ludo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: #000;
+            color: #00ff00;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #3776ab;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #3776ab;
+        }
+
+        .subtitle {
+            color: #ffd73b;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .board-container {
+            flex: 2;
+            min-width: 500px;
+            position: relative;
+        }
+
+        .board {
+            width: 500px;
+            height: 500px;
+            background-color: #0a0a0a;
+            border: 3px solid #00ff00;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            grid-template-rows: repeat(15, 1fr);
+            gap: 1px;
+        }
+
+        .cell {
+            background-color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            min-height: 30px;
+        }
+
+        .cell.path {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+        }
+
+        .cell.start-1 {
+            background-color: rgba(55, 118, 171, 0.4);
+            border: 2px solid #3776ab;
+        }
+
+        .cell.start-2 {
+            background-color: rgba(255, 215, 59, 0.4);
+            border: 2px solid #ffd73b;
+        }
+
+        .cell.safe {
+            background-color: rgba(0, 255, 0, 0.3);
+            border: 2px solid #00ff00;
+        }
+
+        .player {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+            transition: all 0.5s ease;
+            z-index: 10;
+            box-shadow: 0 0 10px currentColor;
+            border: 2px solid white;
+        }
+
+        .player-1 {
+            background-color: #3776ab;
+            color: white;
+        }
+
+        .player-2 {
+            background-color: #ffd73b;
+            color: black;
+        }
+
+        .home {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 3px solid;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 10px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .home-1 {
+            top: 50px;
+            left: 50px;
+            border-color: #3776ab;
+            color: #3776ab;
+        }
+
+        .home-2 {
+            bottom: 50px;
+            right: 50px;
+            border-color: #ffd73b;
+            color: #ffd73b;
+        }
+
+        .home-3 {
+            top: 50px;
+            right: 50px;
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .home-4 {
+            bottom: 50px;
+            left: 50px;
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+
+        .center-home {
+            position: absolute;
+            top: 200px;
+            left: 200px;
+            width: 100px;
+            height: 100px;
+            border: 3px solid #00ff00;
+            border-radius: 10px;
+            background-color: rgba(0, 255, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #00ff00;
+            text-align: center;
+        }
+
+        .info-panel {
+            flex: 1;
+            min-width: 300px;
+            background-color: #0a0a0a;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .status {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #111;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .player-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #111;
+        }
+
+        .player-1-info {
+            border-left: 4px solid #3776ab;
+        }
+
+        .player-2-info {
+            border-left: 4px solid #ffd73b;
+        }
+
+        .dice-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .dice {
+            width: 80px;
+            height: 80px;
+            background-color: #111;
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 15px;
+            color: #00ff00;
+        }
+
+        button {
+            background-color: #3776ab;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #2a5f8f;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .question-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #111;
+            border-radius: 5px;
+            border: 1px solid #00ff00;
+        }
+
+        .question {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 10px;
+            background-color: #222;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            background-color: #333;
+        }
+
+        .correct {
+            background-color: #00aa00;
+        }
+
+        .incorrect {
+            background-color: #aa0000;
+        }
+
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .game-over h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ffd73b;
+        }
+
+        .game-over p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-container {
+            margin: 15px 0;
+            background-color: #111;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-fill.player-1 {
+            background-color: #3776ab;
+        }
+
+        .progress-fill.player-2 {
+            background-color: #ffd73b;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .board-container, .info-panel {
+                min-width: 100%;
+            }
+            
+            .board {
+                width: 100%;
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+    <div class="container">
+        <header>
+            <h1>Python Matrix Ludo</h1>
+            <p class="subtitle">Teste seus conhecimentos de Python contra o computador</p>
+        </header>
+        
+        <div class="game-area">
+            <div class="board-container">
+                <div class="board" id="gameBoard">
+                    <!-- Tabuleiro é gerado via JavaScript -->
+                </div>
+                <div class="home home-1">BASE<br>JOGADOR</div>
+                <div class="home home-2">BASE<br>COMPUTADOR</div>
+                <div class="home home-3">BASE<br>VERDE</div>
+                <div class="home home-4">BASE<br>VERMELHA</div>
+                <div class="center-home">META</div>
+                <div class="player player-1" id="player1">P1</div>
+                <div class="player player-2" id="player2">PC</div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="status" id="status">Seu turno - Role o dado</div>
+                
+                <div class="player-info player-1-info">
+                    <span>Jogador (Você)</span>
+                    <span>Posição: <span id="player1Pos">0</span>/40</span>
+                </div>
+                
+                <div class="player-info player-2-info">
+                    <span>Computador</span>
+                    <span>Posição: <span id="player2Pos">0</span>/40</span>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill player-1" id="progressPlayer1" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill player-2" id="progressPlayer2" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span>Início</span>
+                        <span>Meta</span>
+                    </div>
+                </div>
+                
+                <div class="dice-container">
+                    <div class="dice" id="dice">?</div>
+                    <button id="rollDice">Rolar Dado</button>
+                </div>
+                
+                <div class="question-container hidden" id="questionContainer">
+                    <div class="question" id="question"></div>
+                    <div class="options" id="options"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="game-over hidden" id="gameOver">
+        <h2 id="gameOverTitle">Fim de Jogo</h2>
+        <p id="gameOverMessage"></p>
+        <button id="playAgain">Jogar Novamente</button>
+    </div>
+
+    <script>
+        // =========================
+        // Efeito Matrix de fundo
+        // =========================
+        const matrixBg = document.getElementById('matrixBg');
+        const chars = "0101010101001010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010";
+        
+        function createMatrixEffect() {
+            matrixBg.innerHTML = '';
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.style.position = 'absolute';
+                column.style.top = '-100px';
+                column.style.left = (i * 20) + 'px';
+                column.style.width = '2px';
+                column.style.color = '#00ff00';
+                column.style.fontSize = '16px';
+                column.style.fontFamily = 'Courier New, monospace';
+                column.style.textShadow = '0 0 5px #00ff00';
+                column.style.animation = `fall ${Math.random() * 5 + 3}s linear infinite`;
+                column.style.animationDelay = Math.random() * 5 + 's';
+                column.innerText = chars;
+                matrixBg.appendChild(column);
+            }
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fall {
+                    to {
+                        transform: translateY(calc(100vh + 100px));
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // =========================
+        // Caminho do tabuleiro (anel 40 casas)
+        // =========================
+        function generateRingPath() {
+            const min = 2;   // borda interna do anel (grid 15x15)
+            const max = 12;  // 11 células por lado -> perímetro = 40
+
+            const path = [];
+
+            // Topo: (min, min) -> (max, min)
+            for (let x = min; x <= max; x++) path.push({ x, y: min });
+            // Direita: (max, min+1) -> (max, max)
+            for (let y = min + 1; y <= max; y++) path.push({ x: max, y });
+            // Base: (max-1, max) -> (min, max)
+            for (let x = max - 1; x >= min; x--) path.push({ x, y: max });
+            // Esquerda: (min, max-1) -> (min, min+1)
+            for (let y = max - 1; y > min; y--) path.push({ x: min, y });
+
+            return path; // 40 casas
+        }
+
+        const pathCoordinates = generateRingPath();
+        const RING_LEN = pathCoordinates.length; // 40
+        const START_P1 = 0;                      // início do Jogador
+        const START_P2 = (RING_LEN / 2) | 0;     // início oposto (20)
+
+        // =========================
+        // Estado do jogo
+        // =========================
+        const gameState = {
+            playerPosition: 0,
+            computerPosition: 0,
+            playerTurn: true,
+            gameOver: false,
+            currentQuestion: null,
+            diceValue: 0,
+            totalCells: RING_LEN,   // 40
+            waitingForAnswer: false
+        };
+        
+        // Perguntas sobre Python
+        const questions = [
+            { question: "Qual é a saída de: print(2 ** 3)?", options: ["6", "8", "9", "5"], correct: 1 },
+            { question: "Como se declara uma lista em Python?", options: ["{1, 2, 3}", "[1, 2, 3]", "(1, 2, 3)", "<1, 2, 3>"], correct: 1 },
+            { question: "Qual função retorna o número de itens em um objeto?", options: ["count()", "size()", "len()", "length()"], correct: 2 },
+            { question: "O que 'elif' significa em Python?", options: ["else if", "else", "else for", "else in"], correct: 0 },
+            { question: "Qual método é usado para adicionar um item ao final de uma lista?", options: ["append()", "add()", "insert()", "push()"], correct: 0 },
+            { question: "Como se comenta uma linha em Python?", options: ["// comentário", "# comentário", "/* comentário */", "-- comentário"], correct: 1 },
+            { question: "Qual é o resultado de: 'Hello'[1:4]?", options: ["Hell", "ello", "ell", "Hel"], correct: 2 },
+            { question: "Qual palavra-chave é usada para criar uma função?", options: ["function", "def", "define", "func"], correct: 1 },
+            { question: "O que o operador '%' faz em Python?", options: ["Divide", "Multiplica", "Resto da divisão", "Potência"], correct: 2 },
+            { question: "Qual método remove o último item de uma lista?", options: ["remove()", "pop()", "delete()", "cut()"], correct: 1 }
+        ];
+        
+        // Elementos DOM
+        const gameBoard = document.getElementById('gameBoard');
+        const player1 = document.getElementById('player1');
+        const player2 = document.getElementById('player2');
+        const player1Pos = document.getElementById('player1Pos');
+        const player2Pos = document.getElementById('player2Pos');
+        const progressPlayer1 = document.getElementById('progressPlayer1');
+        const progressPlayer2 = document.getElementById('progressPlayer2');
+        const status = document.getElementById('status');
+        const dice = document.getElementById('dice');
+        const rollDiceBtn = document.getElementById('rollDice');
+        const questionContainer = document.getElementById('questionContainer');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const gameOverScreen = document.getElementById('gameOver');
+        const gameOverTitle = document.getElementById('gameOverTitle');
+        const gameOverMessage = document.getElementById('gameOverMessage');
+        const playAgainBtn = document.getElementById('playAgain');
+
+        // =========================
+        // Utilidades de tabuleiro
+        // =========================
+        function getCellSize() {
+            const rect = gameBoard.getBoundingClientRect();
+            return rect.width / 15; // grade 15x15
+        }
+
+        // Inicializar o jogo
+        function initGame() {
+            gameState.playerPosition = 0;
+            gameState.computerPosition = 0;
+            gameState.playerTurn = true;
+            gameState.gameOver = false;
+            gameState.currentQuestion = null;
+            gameState.diceValue = 0;
+            gameState.waitingForAnswer = false;
+            
+            createBoard();
+            updatePositions();
+            updateStatus();
+            updatePlayerPositions();
+            updateProgressBars();
+            rollDiceBtn.disabled = false;
+            questionContainer.classList.add('hidden');
+            gameOverScreen.classList.add('hidden');
+        }
+        
+        // Criar tabuleiro
+        function createBoard() {
+            gameBoard.innerHTML = '';
+            
+            for (let y = 0; y < 15; y++) {
+                for (let x = 0; x < 15; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    const pathIndex = pathCoordinates.findIndex(coord => coord.x === x && coord.y === y);
+                    const isPath = pathIndex !== -1;
+                    
+                    if (isPath) {
+                        cell.classList.add('path');
+
+                        if (pathIndex === START_P1) cell.classList.add('start-1');
+                        if (pathIndex === START_P2) cell.classList.add('start-2');
+
+                        // seguros em 0,10,20,30
+                        if (pathIndex % 10 === 0) cell.classList.add('safe');
+                    }
+                    
+                    gameBoard.appendChild(cell);
+                }
+            }
+        }
+        
+        // Atualizar posições dos jogadores (visuais)
+        function updatePlayerPositions() {
+            const cellSize = getCellSize();
+
+            const p1Index = Math.min(gameState.playerPosition, gameState.totalCells) % RING_LEN;
+            const p2Index = Math.min(gameState.computerPosition, gameState.totalCells) % RING_LEN;
+
+            const p1Coord = pathCoordinates[(START_P1 + p1Index) % RING_LEN];
+            const p2Coord = pathCoordinates[(START_P2 + p2Index) % RING_LEN];
+
+            player1.style.left = `${p1Coord.x * cellSize + cellSize / 2 - 10}px`;
+            player1.style.top  = `${p1Coord.y * cellSize + cellSize / 2 - 10}px`;
+
+            player2.style.left = `${p2Coord.x * cellSize + cellSize / 2 - 10}px`;
+            player2.style.top  = `${p2Coord.y * cellSize + cellSize / 2 - 10}px`;
+        }
+        
+        // Atualizar barras de progresso
+        function updateProgressBars() {
+            const player1Progress = (gameState.playerPosition / gameState.totalCells) * 100;
+            const player2Progress = (gameState.computerPosition / gameState.totalCells) * 100;
+            
+            progressPlayer1.style.width = `${player1Progress}%`;
+            progressPlayer2.style.width = `${player2Progress}%`;
+        }
+        
+        // Atualizar status do jogo
+        function updateStatus() {
+            if (gameState.waitingForAnswer) {
+                status.textContent = "Responda a pergunta!";
+                status.style.color = "#00ff00";
+            } else if (gameState.playerTurn) {
+                status.textContent = "Seu turno - Role o dado";
+                status.style.color = "#3776ab";
+            } else {
+                status.textContent = "Turno do computador";
+                status.style.color = "#ffd73b";
+            }
+            
+            if (gameState.gameOver) {
+                if (gameState.playerPosition >= gameState.totalCells) {
+                    status.textContent = "Você venceu!";
+                } else {
+                    status.textContent = "Computador venceu!";
+                }
+            }
+        }
+        
+        // Atualizar posições numéricas
+        function updatePositions() {
+            player1Pos.textContent = gameState.playerPosition;
+            player2Pos.textContent = gameState.computerPosition;
+            updateProgressBars();
+        }
+        
+        // Rolar o dado
+        function rollDice() {
+            if (gameState.gameOver || gameState.waitingForAnswer) return;
+            
+            rollDiceBtn.disabled = true;
+            gameState.diceValue = Math.floor(Math.random() * 6) + 1;
+            
+            // Animação do dado
+            let rolls = 0;
+            const rollInterval = setInterval(() => {
+                dice.textContent = Math.floor(Math.random() * 6) + 1;
+                rolls++;
+                
+                if (rolls > 10) {
+                    clearInterval(rollInterval);
+                    dice.textContent = gameState.diceValue;
+                    
+                    // Mostrar pergunta ANTES de mover
+                    gameState.waitingForAnswer = true;
+                    updateStatus();
+                    showQuestion();
+                }
+            }, 100);
+        }
+        
+        // Turno do computador
+        function computerTurn() {
+            if (gameState.gameOver) return;
+            
+            gameState.diceValue = Math.floor(Math.random() * 6) + 1;
+            dice.textContent = gameState.diceValue;
+            
+            // Computador "acerta" e ganha +2
+            setTimeout(() => {
+                gameState.computerPosition += gameState.diceValue + 2;
+                if (gameState.computerPosition > gameState.totalCells) {
+                    gameState.computerPosition = gameState.totalCells;
+                }
+                
+                updatePositions();
+                updatePlayerPositions();
+                
+                if (gameState.computerPosition >= gameState.totalCells) {
+                    endGame(false);
+                    return;
+                }
+                
+                gameState.playerTurn = true;
+                updateStatus();
+                rollDiceBtn.disabled = false;
+            }, 1000);
+        }
+        
+        // Mostrar pergunta
+        function showQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            gameState.currentQuestion = questions[randomIndex];
+            
+            questionElement.textContent = gameState.currentQuestion.question;
+            optionsElement.innerHTML = '';
+            
+            gameState.currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = `${index + 1}. ${option}`;
+                optionElement.addEventListener('click', () => checkAnswer(index));
+                optionsElement.appendChild(optionElement);
+            });
+            
+            questionContainer.classList.remove('hidden');
+        }
+        
+        // Verificar resposta
+        function checkAnswer(selectedIndex) {
+            const options = document.querySelectorAll('.option');
+            const correctIndex = gameState.currentQuestion.correct;
+            
+            options.forEach((option, index) => {
+                if (index === correctIndex) option.classList.add('correct');
+                else if (index === selectedIndex && index !== correctIndex) option.classList.add('incorrect');
+                option.style.pointerEvents = 'none';
+            });
+            
+            setTimeout(() => {
+                let movement = gameState.diceValue;
+                
+                if (selectedIndex === correctIndex) {
+                    movement += 2; // bônus por acerto
+                } else {
+                    movement = Math.max(1, movement - 1); // penalidade por erro
+                }
+                
+                if (gameState.playerTurn) {
+                    gameState.playerPosition += movement;
+                    if (gameState.playerPosition > gameState.totalCells) {
+                        gameState.playerPosition = gameState.totalCells;
+                    }
+                }
+                
+                updatePositions();
+                updatePlayerPositions();
+                
+                if (gameState.playerPosition >= gameState.totalCells) {
+                    endGame(true);
+                    return;
+                }
+                
+                gameState.waitingForAnswer = false;
+                questionContainer.classList.add('hidden');
+                
+                if (gameState.playerTurn) {
+                    gameState.playerTurn = false;
+                    updateStatus();
+                    setTimeout(computerTurn, 1000);
+                } else {
+                    gameState.playerTurn = true;
+                    updateStatus();
+                    rollDiceBtn.disabled = false;
+                }
+            }, 800);
+        }
+        
+        // Finalizar jogo
+        function endGame(playerWon) {
+            gameState.gameOver = true;
+            updateStatus();
+            
+            gameOverTitle.textContent = playerWon ? "Você Venceu!" : "Computador Venceu!";
+            gameOverMessage.textContent = playerWon 
+                ? "Parabéns! Seu conhecimento em Python é impressionante!" 
+                : "O computador venceu desta vez. Estude mais Python e tente novamente!";
+            
+            gameOverScreen.classList.remove('hidden');
+        }
+        
+        // Event Listeners
+        rollDiceBtn.addEventListener('click', rollDice);
+        playAgainBtn.addEventListener('click', initGame);
+        
+        // Inicialização e responsividade
+        window.onload = function() {
+            createMatrixEffect();
+            initGame();
+
+            window.addEventListener('resize', () => {
+                createMatrixEffect();
+                createBoard();
+                updatePlayerPositions();
+            });
+        };
+    </script>
+</body>
+</html>

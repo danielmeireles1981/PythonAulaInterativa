@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória - Python Básico</title>
+    <style>
+        :root {
+            --python-blue: #2c3e50;
+            --python-yellow: #1abc9c;
+            --python-light-blue: #34495e;
+            --python-dark-blue: #233140;
+            --python-white: #f0f0f0;
+            --card-color-1: #FF6B6B;
+            --card-color-2: #4ECDC4;
+            --card-color-3: #FFD166;
+            --card-color-4: #06D6A0;
+            --card-color-5: #118AB2;
+            --card-color-6: #073B4C;
+            --card-color-7: #7209B7;
+            --card-color-8: #F15BB5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--python-dark-blue);
+            color: var(--python-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            color: var(--python-yellow);
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .python-symbol {
+            font-size: 3rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--python-blue), var(--python-light-blue));
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .python-symbol::before {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: var(--python-yellow);
+            border-radius: 50%;
+        }
+        
+        .python-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--python-blue), var(--python-light-blue));
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .python-logo::before {
+            content: "";
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: var(--python-yellow);
+            border-radius: 50%;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            background-color: var(--python-blue);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--python-yellow);
+        }
+        
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, var(--python-blue), var(--python-light-blue));
+            color: var(--python-white);
+            font-size: 2.5rem;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, var(--python-yellow), #58d68d);
+            color: var(--python-dark-blue);
+            transform: rotateY(180deg);
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .card-term {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        
+        .card-definition {
+            font-size: 0.95rem;
+        }
+        
+        .card.matched .card-back {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--python-yellow), #27ae60);
+            color: var(--python-dark-blue);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #27ae60, var(--python-yellow));
+            transform: translateY(-2px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--python-blue), var(--python-dark-blue));
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal h2 {
+            color: var(--python-yellow);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .modal p {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+        
+        .snake-decoration {
+            width: 100px;
+            height: 20px;
+            background-color: var(--python-yellow);
+            margin: 20px auto;
+            border-radius: 10px;
+            position: relative;
+        }
+        
+        .snake-decoration::before, .snake-decoration::after {
+            content: "";
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: var(--python-yellow);
+            border-radius: 50%;
+        }
+        
+        .snake-decoration::before {
+            top: -5px;
+            left: 10px;
+        }
+        
+        .snake-decoration::after {
+            bottom: -5px;
+            right: 10px;
+        }
+        
+        /* Cores para os pares de cartas */
+        .card[data-pair="1"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-1), #ff9e9e);
+        }
+        
+        .card[data-pair="2"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-2), #9be3de);
+        }
+        
+        .card[data-pair="3"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-3), #ffdf9e);
+        }
+        
+        .card[data-pair="4"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-4), #6ce6c7);
+        }
+        
+        .card[data-pair="5"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-5), #6bb5ff);
+        }
+        
+        .card[data-pair="6"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-6), #3a7a94);
+            color: white;
+        }
+        
+        .card[data-pair="7"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-7), #a45ee5);
+            color: white;
+        }
+        
+        .card[data-pair="8"] .card-back {
+            background: linear-gradient(135deg, var(--card-color-8), #f7a6d0);
+        }
+        
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .card {
+                height: 130px;
+            }
+            
+            .card-front {
+                font-size: 2rem;
+            }
+            
+            .card-term {
+                font-size: 1.1rem;
+            }
+            
+            .card-definition {
+                font-size: 0.85rem;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .python-symbol {
+                font-size: 2.5rem;
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .card {
+                height: 120px;
+            }
+            
+            h1 {
+                font-size: 1.2rem;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .python-symbol {
+                font-size: 2rem;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .card-term {
+                font-size: 1rem;
+            }
+            
+            .card-definition {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <span class="python-symbol"></span>
+            Jogo da Memória: Python Básico
+            <span class="python-symbol"></span>
+        </h1>
+        <p>Combine os termos com suas definições corretas!</p>
+    </header>
+    
+    <div class="game-info">
+        <div class="info-item">
+            <div class="info-label">Tempo</div>
+            <div class="info-value" id="timer">60</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Pontuação</div>
+            <div class="info-value" id="score">0</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Pares Encontrados</div>
+            <div class="info-value" id="pairs">0/8</div>
+        </div>
+        <div class="controls">
+            <button id="start-btn">Iniciar Jogo</button>
+            <button id="reset-btn">Reiniciar</button>
+        </div>
+    </div>
+    
+    <div class="game-container" id="game-board">
+        <!-- Cartas serão geradas dinamicamente pelo JavaScript -->
+    </div>
+    
+    <div class="modal" id="victory-modal">
+        <div class="modal-content">
+            <h2>Parabéns!</h2>
+            <div class="snake-decoration"></div>
+            <p>Você completou o jogo da memória Python!</p>
+            <p>Sua pontuação final: <span id="final-score">0</span></p>
+            <p>Tempo restante: <span id="time-left">0</span> segundos</p>
+            <button id="play-again-btn">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        // Dados do jogo: termos e definições de Python
+        const pythonTerms = [
+            { 
+                term: "print()", 
+                definition: "Função que exibe informações na tela",
+                simpleDefinition: "Mostra texto no console"
+            },
+            { 
+                term: "if", 
+                definition: "Estrutura condicional para tomada de decisões",
+                simpleDefinition: "Executa código se uma condição for verdadeira"
+            },
+            { 
+                term: "for", 
+                definition: "Loop que itera sobre uma sequência",
+                simpleDefinition: "Repete ações para cada item em uma lista"
+            },
+            { 
+                term: "def", 
+                definition: "Palavra-chave para definir uma função",
+                simpleDefinition: "Cria uma função personalizada"
+            },
+            { 
+                term: "list", 
+                definition: "Estrutura de dados ordenada e mutável",
+                simpleDefinition: "Coleção ordenada de itens entre colchetes"
+            },
+            { 
+                term: "dict", 
+                definition: "Estrutura de dados com pares chave-valor",
+                simpleDefinition: "Coleção de itens com chave e valor"
+            },
+            { 
+                term: "int", 
+                definition: "Tipo de dados para números inteiros",
+                simpleDefinition: "Números inteiros sem parte decimal"
+            },
+            { 
+                term: "str", 
+                definition: "Tipo de dados para texto (strings)",
+                simpleDefinition: "Sequência de caracteres entre aspas"
+            }
+        ];
+
+        // Variáveis do jogo
+        let cards = [];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let score = 0;
+        let timeLeft = 60;
+        let timer;
+        let gameStarted = false;
+
+        // Elementos DOM
+        const gameBoard = document.getElementById('game-board');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const pairsDisplay = document.getElementById('pairs');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const victoryModal = document.getElementById('victory-modal');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const timeLeftDisplay = document.getElementById('time-left');
+        const playAgainBtn = document.getElementById('play-again-btn');
+
+        // Inicializar o jogo
+        function initGame() {
+            // Duplicar e embaralhar os cartões
+            cards = [];
+            pythonTerms.forEach((term, index) => {
+                // Adicionar carta de termo
+                cards.push({
+                    ...term,
+                    type: 'term',
+                    pairId: index + 1
+                });
+                
+                // Adicionar carta de definição
+                cards.push({
+                    ...term,
+                    type: 'definition',
+                    pairId: index + 1
+                });
+            });
+            
+            shuffleArray(cards);
+            
+            // Limpar o tabuleiro
+            gameBoard.innerHTML = '';
+            
+            // Criar os cartões
+            cards.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'card';
+                cardElement.dataset.index = index;
+                cardElement.dataset.pair = card.pairId;
+                
+                if (card.type === 'term') {
+                    cardElement.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-front">🐍</div>
+                            <div class="card-back">
+                                <div class="card-term">${card.term}</div>
+                                <div class="card-definition">${card.simpleDefinition}</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    cardElement.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-front">🐍</div>
+                            <div class="card-back">
+                                <div class="card-definition">${card.definition}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                cardElement.addEventListener('click', () => flipCard(cardElement));
+                gameBoard.appendChild(cardElement);
+            });
+            
+            // Reiniciar variáveis do jogo
+            flippedCards = [];
+            matchedPairs = 0;
+            score = 0;
+            timeLeft = 60;
+            gameStarted = false;
+            
+            // Atualizar displays
+            updateDisplays();
+            
+            // Esconder modal de vitória
+            victoryModal.style.display = 'none';
+        }
+
+        // Embaralhar array (algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Virar carta
+        function flipCard(card) {
+            if (!gameStarted || card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+                return;
+            }
+            
+            card.classList.add('flipped');
+            flippedCards.push(card);
+            
+            // Verificar se duas cartas foram viradas
+            if (flippedCards.length === 2) {
+                checkForMatch();
+            }
+        }
+
+        // Verificar se as cartas viradas formam um par
+        function checkForMatch() {
+            const [card1, card2] = flippedCards;
+            const index1 = parseInt(card1.dataset.index);
+            const index2 = parseInt(card2.dataset.index);
+            
+            // Verificar se é um par correto (mesmo pairId)
+            if (cards[index1].pairId === cards[index2].pairId) {
+                // Par correto
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                score += 10;
+                
+                // Bônus por encontrar pares rapidamente
+                if (timeLeft > 45) score += 5;
+                else if (timeLeft > 30) score += 3;
+                
+                flippedCards = [];
+                
+                // Verificar se o jogo acabou
+                if (matchedPairs === pythonTerms.length) {
+                    endGame();
+                }
+            } else {
+                // Par incorreto
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+                
+                // Penalidade por erro
+                score = Math.max(0, score - 2);
+            }
+            
+            updateDisplays();
+        }
+
+        // Atualizar displays de tempo, pontuação e pares
+        function updateDisplays() {
+            timerDisplay.textContent = timeLeft;
+            scoreDisplay.textContent = score;
+            pairsDisplay.textContent = `${matchedPairs}/${pythonTerms.length}`;
+        }
+
+        // Iniciar temporizador
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                updateDisplays();
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Iniciar jogo
+        function startGame() {
+            if (gameStarted) return;
+            
+            gameStarted = true;
+            startTimer();
+            startBtn.disabled = true;
+        }
+
+        // Finalizar jogo
+        function endGame() {
+            clearInterval(timer);
+            gameStarted = false;
+            startBtn.disabled = false;
+            
+            // Mostrar modal de vitória
+            finalScoreDisplay.textContent = score;
+            timeLeftDisplay.textContent = timeLeft;
+            victoryModal.style.display = 'flex';
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startGame);
+        resetBtn.addEventListener('click', initGame);
+        playAgainBtn.addEventListener('click', initGame);
+
+        // Inicializar o jogo quando a página carregar
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

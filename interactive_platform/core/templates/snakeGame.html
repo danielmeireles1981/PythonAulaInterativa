@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Snake Quiz — Python Theme</title>
+  <style>
+    :root {
+      --python-blue: #2c3e50;
+      --python-yellow: #1abc9c;
+      --python-light-blue: #34495e;
+      --python-dark-blue: #233140;
+      --python-white: #f0f0f0;
+      --bg: #0b0f14;
+      --panel: #121821;
+      --grid: #213046;
+      --snake: #3498db;
+      --head: #1abc9c;
+      --ok: #32cd32;
+      --bad: #dc143c;
+      --text: #e6eef8;
+      --muted: #9bb0c9;
+      --accent: #66e0ff;
+      --bar: #1b2533;
+      --barFill: #1abc9c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, var(--python-dark-blue), var(--bg));
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Noto Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+    }
+
+    header {
+      width: min(100%, 980px);
+      padding: 14px 16px;
+      margin-top: 0;
+      background: linear-gradient(180deg, #121821, var(--python-dark-blue));
+      border: 1px solid var(--python-blue);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+      display: grid;
+      gap: 10px;
+    }
+
+    header h1 {
+      font-size: 24px;
+      margin: 0;
+      letter-spacing: .3px;
+      color: var(--python-yellow);
+      text-align: center;
+    }
+
+    #hudRow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    #stats {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--python-dark-blue);
+      border: 1px solid var(--python-blue);
+      border-radius: 10px;
+      color: var(--python-white);
+      font-size: 14px;
+    }
+
+    #score.badge {
+      color: var(--python-yellow);
+      font-weight: 700;
+    }
+
+    /* Vidas como corações */
+    #lives.badge {
+      color: var(--text);
+    }
+
+    .hearts {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      color: #ff6b6b;
+    }
+
+    .hearts span {
+      font-size: 16px;
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, .25));
+    }
+
+    /* Velocidade: número + barra de progresso */
+    #speedBox {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #speedMeter {
+      width: 160px;
+      height: 10px;
+      background: var(--bar);
+      border: 1px solid var(--python-blue);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    #speedFill {
+      height: 100%;
+      width: 0%;
+      background: var(--barFill);
+      transition: width 0.3s ease;
+    }
+
+    /* Pergunta em cartão destacado */
+    #questionCard {
+      background: var(--python-dark-blue);
+      border: 1px solid var(--python-blue);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: grid;
+      gap: 6px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #questionCard .qTitle {
+      font-size: 14px;
+      color: var(--python-yellow);
+      letter-spacing: .3px;
+    }
+
+    #question {
+      color: var(--text);
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    main {
+      width: min(100%, 980px);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    #stageWrap {
+      height: 100%;
+      position: relative;
+      background: var(--panel);
+      border: 2px solid var(--python-blue);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #0c121b;
+    }
+
+    #overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      place-items: center;
+      background: rgba(10, 20, 35, 0.85);
+    }
+
+    #overlay.visible {
+      display: grid;
+    }
+
+    .panel {
+      width: min(92%, 520px);
+      background: var(--python-dark-blue);
+      border: 2px solid var(--python-yellow);
+      border-radius: 16px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      color: var(--python-yellow);
+    }
+
+    .panel p {
+      margin: 8px 0;
+      color: var(--python-white);
+      font-size: 16px;
+    }
+
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid var(--python-blue);
+      background: var(--python-blue);
+      color: var(--python-white);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: var(--python-light-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #mobileControls {
+      display: none;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    #mobileControls button {
+      width: 72px;
+      height: 56px;
+      font-size: 20px;
+      background: var(--python-dark-blue);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      gap: 8px;
+    }
+
+    .spacer {
+      visibility: hidden;
+    }
+
+    footer {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 4px 0 10px;
+      margin-top: auto;
+      padding-top: 10px;
+      text-align: center;
+    }
+
+    .python-logo {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 15px;
+      background: linear-gradient(135deg, var(--python-blue), var(--python-light-blue));
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .python-logo::before {
+      content: "";
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: var(--python-yellow);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 700px) {
+      #mobileControls {
+        display: flex;
+      }
+      
+      .badge {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+      
+      #question {
+        font-size: 16px;
+      }
+      
+      header h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>🐍 Snake Quiz — Python Edition 🐍</h1>
+    <div id="hudRow">
+      <div id="stats">
+        <span id="score" class="badge">🏆 Pontos: 0</span>
+        <span id="timer" class="badge">⏰ Tempo: 03:00</span>
+        <span id="lives" class="badge">❤️ Vidas: <span class="hearts" id="livesHearts"></span></span>
+        <span id="speedBox" class="badge">🚀 Vel: <strong id="speedLabel">7</strong>
+          <div id="speedMeter">
+            <div id="speedFill"></div>
+          </div>
+        </span>
+      </div>
+    </div>
+    <div id="questionCard">
+      <div class="qTitle">❓ Pergunta sobre Python</div>
+      <div id="question"></div>
+    </div>
+  </header>
+
+  <main>
+    <div id="stageWrap">
+      <canvas id="stage" aria-label="tabuleiro do jogo"></canvas>
+      <div id="overlay" role="dialog" aria-modal="true">
+        <div class="panel" id="overlayPanel">
+          <div class="python-logo"></div>
+          <h2 id="ovTitle">Pausado</h2>
+          <p id="ovSubtitle">Pressione P para continuar</p>
+          <div class="actions">
+            <button id="btnResume">▶️ Retomar (P)</button>
+            <button id="btnRestart">🔄 Reiniciar (R)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobileControls">
+      <div class="grid">
+        <span class="spacer"></span>
+        <button data-dir="up">▲</button>
+        <span class="spacer"></span>
+        <button data-dir="left">◀</button>
+        <button data-dir="down">▼</button>
+        <button data-dir="right">▶</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>🐍 Feito em JavaScript + Canvas • Use as setas ou WASD para mover • P para pausar • R para reiniciar</footer>
+
+  <script>
+    // ===================== Configurações =====================
+
+    const COLORS = {
+      bg: '#0c121b',
+      grid: '#213046',
+      snake: '#3498db',
+      head: '#1abc9c',
+      ok: '#32cd32',
+      bad: '#dc143c',
+      text: '#e6eef8',
+      border: '#ffffff',
+      food: '#1abc9c'
+    };
+
+    const TILE = 24;
+    const GRID_W = 40;
+    const GRID_H = 24;
+
+    // Para telas HiDPI/Retina
+    const dpr = window.devicePixelRatio || 1;
+    const WIDTH = GRID_W * TILE;
+    const HEIGHT = GRID_H * TILE;
+    const GROW_ON_CORRECT = 3;
+    const SHRINK_ON_WRONG = 2;
+    const MAX_LIVES = 3;
+    const GAME_DURATION_SECONDS = 180; // 3 minutos
+    const BASE_SPEED = 8;
+    const SPEED_CAP = 18;
+
+    // ===================== Perguntas =====================
+    const QUESTIONS = [
+      { pergunta: '🐍 Qual tipo nativo representa números com casas decimais em Python?', alternativas: ['int', 'float'], correta: 'float' },
+      { pergunta: '📚 Qual estrutura é imutável?', alternativas: ['list', 'tuple'], correta: 'tuple' },
+      { pergunta: '⚖️ Qual operador compara igualdade?', alternativas: ['==', '='], correta: '==' },
+      { pergunta: '🔧 Como iniciar um ambiente virtual venv?', alternativas: ['python -m venv venv', 'pip install venv'], correta: 'python -m venv venv' },
+      { pergunta: '🔑 Qual palavra-chave cria uma função?', alternativas: ['def', 'func'], correta: 'def' },
+      { pergunta: '📝 Qual método adiciona item ao final de uma lista?', alternativas: ['.append()', '.add()'], correta: '.append()' },
+      { pergunta: '📖 Qual destas estruturas é um dicionário válido?', alternativas: ['{"a":1, "b":2}', '["a",1,"b",2]'], correta: '{"a":1, "b":2}' },
+      { pergunta: '🔄 Qual conversão torna "42" um número inteiro?', alternativas: ["int('42')", 'str(42)'], correta: "int('42')" },
+      { pergunta: '⏰ Qual módulo padrão lida com tempo?', alternativas: ['time', 'sleepy'], correta: 'time' },
+      { pergunta: '🛡️ Qual keyword trata exceções?', alternativas: ['try/except', 'catch/except'], correta: 'try/except' },
+      { pergunta: '💬 Como se escreve um comentário de uma linha?', alternativas: ['# comentário', '// comentário'], correta: '# comentário' },
+      { pergunta: '📏 Qual função retorna o tamanho de uma lista?', alternativas: ['len()', 'size()'], correta: 'len()' },
+      { pergunta: '➕ Qual o resultado de `[1, 2] + [3, 4]`?', alternativas: ['[1, 2, 3, 4]', '[4, 6]'], correta: '[1, 2, 3, 4]' },
+      { pergunta: '🔢 Qual o operador para exponenciação?', alternativas: ['**', '^'], correta: '**' },
+      { pergunta: '📦 Qual tipo de coleção não permite itens duplicados?', alternativas: ['set', 'list'], correta: 'set' },
+      { pergunta: '🔄 Qual o resultado de `print(3 * "a")`?', alternativas: ['aaa', 'a3'], correta: 'aaa' },
+      { pergunta: '📄 Qual a extensão de arquivo padrão para scripts Python?', alternativas: ['.py', '.pyt'], correta: '.py' },
+      { pergunta: '⌨️ Como obter um input do usuário no console?', alternativas: ['input()', 'scan()'], correta: 'input()' },
+      { pergunta: '🔢 O que `range(3)` gera?', alternativas: ['0, 1, 2', '1, 2, 3'], correta: '0, 1, 2' },
+      { pergunta: '❌ Qual o operador para verificar se um item NÃO está em uma lista?', alternativas: ['not in', 'notin'], correta: 'not in' },
+      { pergunta: '🔧 Como se chama um método de uma classe?', alternativas: ['objeto.metodo()', 'metodo(objeto)'], correta: 'objeto.metodo()' },
+      { pergunta: '🔍 Qual o resultado de `True and False`?', alternativas: ['False', 'True'], correta: 'False' },
+      { pergunta: '🗑️ Qual função remove o último item de uma lista e o retorna?', alternativas: ['.pop()', '.remove()'], correta: '.pop()' },
+      { pergunta: '📦 Qual o nome do gerenciador de pacotes do Python?', alternativas: ['pip', 'get'], correta: 'pip' },
+      { pergunta: '🔀 Como se inicia um bloco `else if` em Python?', alternativas: ['elif', 'else if'], correta: 'elif' },
+      { pergunta: '✅ Qual o tipo de dado de `True`?', alternativas: ['bool', 'boolean'], correta: 'bool' },
+      { pergunta: '🔑 Qual método retorna as chaves de um dicionário?', alternativas: ['.keys()', '.get_keys()'], correta: '.keys()' },
+      { pergunta: '📚 Como importar a biblioteca `math`?', alternativas: ['import math', 'include math'], correta: 'import math' },
+    ];
+
+    // ===================== Utilidades =====================
+    function choice(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function randomFreeCell(snakeBody, forbidden = new Set()) {
+      const free = [];
+      for (let x = 0; x < GRID_W; x++) {
+        for (let y = 0; y < GRID_H; y++) {
+          const key = x + ',' + y;
+          if (!snakeBody.has(key) && !forbidden.has(key)) free.push([x, y]);
+        }
+      }
+      return free.length ? choice(free) : null;
+    }
+
+    // ===================== Estado do jogo =====================
+    const canvas = document.getElementById('stage');
+    const ctx = canvas.getContext('2d');
+
+    // Ajuste para HiDPI
+    canvas.width = WIDTH * dpr;
+    canvas.height = HEIGHT * dpr;
+    canvas.style.width = `${WIDTH}px`;
+    canvas.style.height = `${HEIGHT}px`;
+    ctx.scale(dpr, dpr);
+
+    const questionEl = document.getElementById('question');
+    const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
+    const livesHeartsEl = document.getElementById('livesHearts');
+    const speedLabelEl = document.getElementById('speedLabel');
+    const speedFillEl = document.getElementById('speedFill');
+    const overlay = document.getElementById('overlay');
+    const ovTitle = document.getElementById('ovTitle');
+    const ovSubtitle = document.getElementById('ovSubtitle');
+    const btnResume = document.getElementById('btnResume');
+    const btnRestart = document.getElementById('btnRestart');
+
+    let rngQuestions = shuffle([...QUESTIONS]);
+    let qIndex = 0;
+    let score = 0;
+    let lives = MAX_LIVES;
+    let timeLeft = GAME_DURATION_SECONDS;
+    let speed = BASE_SPEED;
+    let paused = false;
+    let gameOver = false;
+
+    let snake = [];
+    let snakeDir = [1, 0];
+    let grow = 0;
+    let foods = [];
+    let correctOnA = true;
+
+    function reset() {
+      rngQuestions = shuffle([...QUESTIONS]);
+      qIndex = 0;
+      score = 0;
+      lives = MAX_LIVES;
+      timeLeft = GAME_DURATION_SECONDS;
+      speed = BASE_SPEED;
+      paused = false;
+      gameOver = false;
+      correctOnA = true;
+      const midx = Math.floor(GRID_W / 2), midy = Math.floor(GRID_H / 2);
+      snake = [[midx, midy], [midx - 1, midy], [midx - 2, midy]];
+      snakeDir = [1, 0];
+      grow = 0;
+      foods = spawnFoods(currentQuestion());
+      updateHUD();
+      questionEl.textContent = currentQuestion().pergunta;
+    }
+
+    function currentQuestion() { return rngQuestions[qIndex]; }
+    function nextQuestion() { qIndex = (qIndex + 1) % rngQuestions.length; correctOnA = !correctOnA; questionEl.textContent = currentQuestion().pergunta; }
+
+    function renderLives() {
+      let html = '';
+      for (let i = 0; i < MAX_LIVES; i++) {
+        html += (i < lives) ? '<span>❤️</span>' : '<span>♡</span>';
+      }
+      livesHeartsEl.innerHTML = html;
+    }
+
+    function updateSpeedBar() {
+      speedLabelEl.textContent = String(speed);
+      const pct = Math.min(1, Math.max(0, (speed - BASE_SPEED) / (SPEED_CAP - BASE_SPEED)));
+      speedFillEl.style.width = String(pct * 100) + '%';
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = Math.floor(timeLeft % 60);
+        timerEl.textContent = `⏰ Tempo: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function updateHUD() {
+      scoreEl.textContent = '🏆 Pontos: ' + String(score);
+      renderLives();
+      updateTimerDisplay();
+      updateSpeedBar();
+    }
+
+    function spawnFoods(q) {
+      const correct = q.correta;
+      const other = q.alternativas.find(a => a !== correct) || q.alternativas[0];
+      const bodySet = new Set(snake.map(([x, y]) => x + ',' + y));
+      const forb = new Set(bodySet);
+      const cellA = randomFreeCell(bodySet, forb);
+      forb.add(String(cellA[0]) + ',' + String(cellA[1]));
+      const cellB = randomFreeCell(bodySet, forb);
+      const aText = correctOnA ? correct : other;
+      const bText = correctOnA ? other : correct;
+      return [
+        { label: 'A', text: aText, cell: cellA, isCorrect: aText === correct },
+        { label: 'B', text: bText, cell: cellB, isCorrect: bText === correct },
+      ];
+    }
+
+    // ===================== Loop =====================
+    let last = 0; let acc = 0;
+    function frame(ts) {
+      const dt = (ts - last) / 1000; last = ts;
+      if (!paused && !gameOver) {
+        timeLeft -= dt;
+        if (timeLeft <= 0) {
+            timeLeft = 0;
+            gameOver = true;
+            showOverlay('⏰ Tempo Esgotado!', 'Pressione R para reiniciar');
+        }
+        updateTimerDisplay();
+
+        acc += dt; const step = 1 / speed;
+        while (acc >= step) { acc -= step; tick(); }
+        draw();
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    function tick() {
+      const hx = snake[0][0];
+      const hy = snake[0][1];
+      let nx = hx + snakeDir[0];
+      let ny = hy + snakeDir[1];
+
+      // Wrap around (sem colisão nas paredes)
+      if (nx < 0) nx = GRID_W - 1;
+      if (nx >= GRID_W) nx = 0;
+      if (ny < 0) ny = GRID_H - 1;
+      if (ny >= GRID_H) ny = 0;
+
+      // colisão consigo mesmo
+      for (let i = 0; i < snake.length; i++) { 
+        if (snake[i][0] === nx && snake[i][1] === ny) { 
+          gameOver = true; 
+          showOverlay('💀 Game Over', 'Pressione R para reiniciar'); 
+          return; 
+        } 
+      }
+      
+      snake.unshift([nx, ny]);
+      if (grow > 0) { grow--; } else { snake.pop(); }
+
+      // comidas
+      for (let k = 0; k < foods.length; k++) {
+        const f = foods[k];
+        if (f.cell[0] === nx && f.cell[1] === ny) {
+          if (f.isCorrect) {
+            score += 1; 
+            grow += GROW_ON_CORRECT;
+            if (score % 4 === 0 && speed < SPEED_CAP) { 
+              speed += 1; 
+              updateSpeedBar(); 
+            }
+          } else {
+            lives -= 1; 
+            for (let i = 0; i < SHRINK_ON_WRONG; i++) { 
+              if (snake.length > 1) snake.pop(); 
+            }
+            if (lives <= 0) { 
+              gameOver = true; 
+              showOverlay('💀 Game Over', 'Pressione R para reiniciar'); 
+              updateHUD(); 
+              return; 
+            }
+          }
+          nextQuestion(); 
+          foods = spawnFoods(currentQuestion()); 
+          updateHUD();
+          break;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = COLORS.bg; 
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.strokeStyle = COLORS.grid; 
+      ctx.lineWidth = 1;
+      for (let x = 0; x < GRID_W; x++) {
+        for (let y = 0; y < GRID_H; y++) {
+          ctx.strokeRect(x * TILE, y * TILE, TILE, TILE);
+        }
+      }
+      
+      for (let i = 0; i < snake.length; i++) {
+        const x = snake[i][0];
+        const y = snake[i][1];
+        ctx.fillStyle = (i === 0) ? COLORS.head : COLORS.snake;
+        roundRect(ctx, x * TILE, y * TILE, TILE, TILE, 5, true);
+        ctx.lineWidth = 1; 
+        ctx.strokeStyle = '#ffffff';
+        roundRect(ctx, x * TILE, y * TILE, TILE, TILE, 5, false);
+      }
+      
+      ctx.font = '14px system-ui,Segoe UI,Arial';
+      ctx.textBaseline = 'middle';
+      
+      for (let i = 0; i < foods.length; i++) {
+        const f = foods[i];
+        const x = f.cell[0];
+        const y = f.cell[1];
+        
+        // Caixa da resposta
+        ctx.fillStyle = COLORS.food;
+        roundRect(ctx, x * TILE, y * TILE, TILE, TILE, 5, true);
+        ctx.lineWidth = 1; 
+        ctx.strokeStyle = '#ffffff';
+        roundRect(ctx, x * TILE, y * TILE, TILE, TILE, 5, false);
+        
+        // Label A/B
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 12px system-ui,Segoe UI,Arial';
+        ctx.fillText(f.label, x * TILE + 6, y * TILE + TILE / 2);
+        
+        // Texto da alternativa ao lado
+        ctx.fillStyle = COLORS.text;
+        ctx.font = '14px system-ui,Segoe UI,Arial';
+        ctx.fillText(f.label + ') ' + f.text, x * TILE + TILE + 6, y * TILE + TILE / 2);
+      }
+    }
+
+    // ===================== UI & Controles =====================
+    function showOverlay(title, subtitle) { 
+      ovTitle.textContent = title; 
+      ovSubtitle.textContent = subtitle; 
+      overlay.classList.add('visible'); 
+    }
+    
+    function hideOverlay() { 
+      overlay.classList.remove('visible'); 
+    }
+
+    function setDir(dx, dy) { 
+      if (dx === -snakeDir[0] && dy === -snakeDir[1]) return; 
+      snakeDir = [dx, dy]; 
+    }
+
+    addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (e.key === 'ArrowUp' || k === 'w') setDir(0, -1);
+      else if (e.key === 'ArrowDown' || k === 's') setDir(0, 1);
+      else if (e.key === 'ArrowLeft' || k === 'a') setDir(-1, 0);
+      else if (e.key === 'ArrowRight' || k === 'd') setDir(1, 0);
+      else if (k === 'p') { 
+        paused = !paused; 
+        paused ? showOverlay('⏸️ Pausado', 'Pressione P para continuar') : hideOverlay(); 
+      }
+      else if (k === 'r') { 
+        reset(); 
+        hideOverlay(); 
+      }
+    });
+
+    btnResume.addEventListener('click', () => { 
+      if (gameOver) return; 
+      paused = false; 
+      hideOverlay(); 
+    });
+    
+    btnRestart.addEventListener('click', () => { 
+      reset(); 
+      hideOverlay(); 
+    });
+
+    for (let btn of document.querySelectorAll('#mobileControls [data-dir]')) {
+      btn.addEventListener('click', () => {
+        const d = btn.getAttribute('data-dir');
+        if (d === 'up') setDir(0, -1);
+        if (d === 'down') setDir(0, 1);
+        if (d === 'left') setDir(-1, 0);
+        if (d === 'right') setDir(1, 0);
+      });
+    }
+
+    function shuffle(a) { 
+      for (let i = a.length - 1; i > 0; i--) { 
+        const j = Math.floor(Math.random() * (i + 1)); 
+        const tmp = a[i]; 
+        a[i] = a[j]; 
+        a[j] = tmp; 
+      } 
+      return a; 
+    }
+    
+    function roundRect(ctx, x, y, w, h, r, fill) { 
+      ctx.beginPath(); 
+      ctx.moveTo(x + r, y); 
+      ctx.arcTo(x + w, y, x + w, y + h, r); 
+      ctx.arcTo(x + w, y + h, x, y + h, r); 
+      ctx.arcTo(x, y + h, x, y, r); 
+      ctx.arcTo(x, y, x + w, y, r); 
+      if (fill) ctx.fill(); 
+      else ctx.stroke(); 
+    }
+
+    // start
+    reset();
+    requestAnimationFrame(function (t) { last = t; requestAnimationFrame(frame); });
+  </script>
+</body>
+
+</html>
