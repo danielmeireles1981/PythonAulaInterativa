@@ -184,6 +184,12 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('studentData', JSON.stringify(studentData));
             console.log('Dados do Aluno salvos no localStorage:', JSON.stringify(studentData));
 
+            // NOVO: Inicia o cronômetro do curso se ainda não foi iniciado
+            if (!localStorage.getItem('courseStartTime')) {
+                localStorage.setItem('courseStartTime', new Date().getTime());
+                console.log('Cronômetro do curso iniciado.');
+            }
+
             // Feedback para o usuário
             const feedbackElement = document.getElementById('form-feedback');
             feedbackElement.textContent = '✅ Suas respostas foram salvas! Agora pode avançar.';
@@ -255,6 +261,12 @@ document.querySelectorAll('.quiz-option').forEach(option => {
     option.addEventListener('click', function () {
         const parent = this.parentElement;
         const quizContainer = this.closest('.quiz-container');
+
+        // NOVO: Bloqueio definitivo para a etapa 13 se já foi finalizada
+        if (localStorage.getItem('finalQuizCompleted') === 'true' && this.closest('#step-13')) {
+            return; // Impede qualquer interação se a avaliação final já foi respondida.
+        }
+
         const feedback = parent.nextElementSibling;
 
         // Remover seleções anteriores
@@ -287,6 +299,7 @@ document.querySelectorAll('.quiz-option').forEach(option => {
         }
 
         feedback.style.display = 'block';
+        quizContainer.classList.add('answered'); // Marca como respondido para evitar re-pontuação na mesma sessão
     });
 });
 
@@ -888,8 +901,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para verificar um desafio de código individual
     setupMatchingExercise('matching-exercise-1');
     function checkCodeChallenge(challengeNum) {
+        // NOVO: Bloqueio definitivo para a etapa 13 se já foi finalizada
+        if (localStorage.getItem('finalQuizCompleted') === 'true') return false;
+
         const challengeContainer = document.getElementById(`code-challenge-${challengeNum}`);
+
         if (!challengeContainer) return false;
+
+        // Impede que o usuário responda novamente
+        const checkBtn = challengeContainer.querySelector('.check-code-btn');
+        if (checkBtn && checkBtn.disabled) return false;
 
         const code = challengeContainer.querySelector('.code-area').value;
         const outputDiv = challengeContainer.querySelector('.exercise-output');
@@ -932,6 +953,11 @@ document.addEventListener('DOMContentLoaded', () => {
             challengeContainer.dataset.correct = "false";
         }
         feedbackDiv.style.display = 'block';
+
+        // Desabilita os botões após a verificação
+        if (checkBtn) checkBtn.disabled = true;
+        const revealBtn = challengeContainer.querySelector('.btn-reveal-solution');
+        if (revealBtn) revealBtn.disabled = true;
         return isCorrect;
     }
 
@@ -942,6 +968,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const challengeContainer = document.getElementById(`code-challenge-${challengeNum}`);
             if (!challengeContainer) return;
 
+            // Impede que o usuário revele após já ter respondido
+            const checkBtn = challengeContainer.querySelector('.check-code-btn');
+            if (checkBtn && checkBtn.disabled) return;
+
             const codeArea = challengeContainer.querySelector('.code-area');
             const solutions = [
                 "a = 15\nb = 30\nprint(a + b)",
@@ -951,9 +981,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 "carro = {'marca': 'Tesla', 'ano': 2023}\nprint(carro['marca'])"
             ];
             codeArea.value = solutions[challengeNum - 1];
-            checkCodeChallenge(challengeNum); // Valida e marca como completo
+            
+            // Marca como revelado para aplicar a penalidade
+            challengeContainer.dataset.revealed = "true";
+            
+            // Desabilita os botões
+            if (checkBtn) checkBtn.disabled = true;
+            this.disabled = true;
+            checkCodeChallenge(challengeNum); // Valida, marca como completo e exibe a saída
         });
     });
+
+    /**
+     * Desabilita todas as interações no quiz final após o cálculo da pontuação.
+     */
+    function disableFinalQuizInteractions() {
+        const finalQuizContainer = document.getElementById('step-13');
+        if (!finalQuizContainer) return;
+
+        // Desabilita todos os botões de revelação e verificação
+        finalQuizContainer.querySelectorAll('.btn-reveal-answer, .btn-reveal-solution, .check-code-btn').forEach(btn => {
+            btn.disabled = true;
+        });
+
+        // Adiciona uma classe para desabilitar o ponteiro do mouse nos quizzes e áreas de código
+        finalQuizContainer.querySelectorAll('.quiz-container, .code-playground').forEach(el => {
+            el.classList.add('disabled');
+        });
+    }
 
     // Adiciona listener para cada botão de verificação de código
     document.querySelectorAll('.check-code-btn').forEach((btn, index) => {
@@ -965,14 +1020,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalQuizBtn = document.getElementById('check-final-quiz');
     if (finalQuizBtn) {
         finalQuizBtn.addEventListener('click', async () => {
+            // Desabilita o botão para evitar múltiplos cliques
+            finalQuizBtn.disabled = true;
+            finalQuizBtn.textContent = 'Calculando...';
+
             const quizContainer = document.getElementById('final-quiz-container');
             const correctQuizAnswers = quizContainer.querySelectorAll('.quiz-option.correct.selected').length;
-            const correctCodeChallenges = quizContainer.querySelectorAll('.interactive-exercise[data-correct="true"]').length;
+            
+            let codeChallengesScore = 0;
+            const codeChallenges = quizContainer.querySelectorAll('.interactive-exercise[id^="code-challenge-"]');
+            codeChallenges.forEach(challenge => {
+                if (challenge.dataset.correct === "true") {
+                    if (challenge.dataset.revealed === "true") {
+                        codeChallengesScore += 9; // 90% de 10 pontos
+                    } else {
+                        codeChallengesScore += 10; // 100% dos pontos
+                    }
+                }
+            });
 
-            const totalScore = correctQuizAnswers + correctCodeChallenges;
+            const quizScore = (correctQuizAnswers * 10) + codeChallengesScore;
+            const totalPointsFromQuiz = quizScore / 10; // Converte para a escala de 10 questões
             const finalFeedback = document.getElementById('final-quiz-feedback');
-            finalFeedback.textContent = `Sua pontuação final é: ${totalScore}/10.`;
-            finalFeedback.className = 'feedback correct';
+            finalFeedback.textContent = `Sua pontuação nesta etapa é: ${totalPointsFromQuiz}/10.`;
+            finalFeedback.className = 'feedback correct'; // Usando a classe 'correct' para um visual positivo
             finalFeedback.style.display = 'block';
 
             // Se o quiz final for concluído, marca a atividade
@@ -981,7 +1052,84 @@ document.addEventListener('DOMContentLoaded', () => {
                 activityContainer.classList.add('completed');
                 checkStepCompletion(currentStep);
             }
+
+            // Adiciona a pontuação ao total da trilha
+            const currentTotalScore = parseInt(localStorage.getItem('playerScore') || '0');
+            const newTotalScore = currentTotalScore + quizScore;
+            localStorage.setItem('playerScore', newTotalScore);
+
+            // Notifica a página pai (mapa) para atualizar a pontuação total
+            if (window.parent) {
+                window.parent.postMessage({ type: 'ADD_POINTS', points: quizScore }, '*');
+            }
+
+            finalQuizBtn.textContent = 'Pontuação Calculada!';
+
+            // Desabilita todas as interações no quiz final
+            localStorage.setItem('finalQuizCompleted', 'true'); // Salva o estado no localStorage
+            disableFinalQuizInteractions();
         });
+    }
+
+    // NOVO: Verifica no carregamento da página se o quiz final já foi concluído
+    if (localStorage.getItem('finalQuizCompleted') === 'true') {
+        const finalQuizBtn = document.getElementById('check-final-quiz');
+        const finalFeedback = document.getElementById('final-quiz-feedback');
+
+        if (finalQuizBtn) {
+            finalQuizBtn.disabled = true;
+            finalQuizBtn.textContent = 'Avaliação Finalizada';
+        }
+        if (finalFeedback) {
+            finalFeedback.textContent = 'Você já completou esta avaliação.';
+            finalFeedback.className = 'feedback correct';
+            finalFeedback.style.display = 'block';
+        }
+        disableFinalQuizInteractions();
+    }
+
+    // NOVO: Exibe o bônus de tempo na Etapa 16, se aplicável
+    const timeBonusData = localStorage.getItem('timeBonus');
+    if (timeBonusData) {
+        const data = JSON.parse(timeBonusData);
+        const container = document.getElementById('time-bonus-container');
+        if (container) {
+            document.getElementById('time-bonus-icon').textContent = data.icon;
+            document.getElementById('time-bonus-title').textContent = data.title;
+            document.getElementById('completion-time').textContent = data.timeString;
+            document.getElementById('bonus-points').textContent = `+${data.points} pontos`;
+            container.style.display = 'block';
+        }
+    }
+
+    // NOVO: Função para calcular e salvar o bônus de tempo
+    function calculateAndTimeBonus() {
+        if (localStorage.getItem('timeBonus')) return; // Já calculado
+
+        const startTime = parseInt(localStorage.getItem('courseStartTime') || '0');
+        if (startTime === 0) return; // Cronômetro nunca iniciou
+
+        const endTime = new Date().getTime();
+        const durationSeconds = Math.floor((endTime - startTime) / 1000);
+        const minutes = Math.floor(durationSeconds / 60);
+        const seconds = durationSeconds % 60;
+
+        let bonus = { points: 0, title: '', icon: '', timeString: `${minutes}m ${seconds}s` };
+
+        if (durationSeconds < 1800) { // Menos de 30 minutos
+            bonus = { ...bonus, points: 50, title: 'Mestre Python (Ouro)', icon: '🏆' };
+        } else if (durationSeconds < 3600) { // Entre 30 e 60 minutos
+            bonus = { ...bonus, points: 25, title: 'Aventureiro Ágil (Prata)', icon: '🥈' };
+        } else { // Mais de 60 minutos
+            bonus = { ...bonus, points: 10, title: 'Explorador Dedicado (Bronze)', icon: '🥉' };
+        }
+
+        localStorage.setItem('timeBonus', JSON.stringify(bonus));
+
+        // Adiciona os pontos ao score total e notifica a página pai
+        if (window.parent) {
+            window.parent.postMessage({ type: 'ADD_POINTS', points: bonus.points }, '*');
+        }
     }
 
     setupWordSearch();
@@ -989,8 +1137,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adiciona listener para os botões de revelar resposta do quiz
     document.querySelectorAll('.btn-reveal-answer').forEach(btn => {
         btn.addEventListener('click', function () {
-            // Se o botão já foi clicado, não faz nada
-            if (this.disabled) return;
+            // NOVO: Bloqueio definitivo para a etapa 13 se já foi finalizada
+            if (localStorage.getItem('finalQuizCompleted') === 'true' || this.disabled) return;
             this.disabled = true; // Desabilita para evitar múltiplos cliques
             this.classList.add('revealed');
 
@@ -1005,6 +1153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedback.className = 'feedback correct';
             feedback.style.display = 'block';
             quizContainer.classList.add('completed');
+            quizContainer.classList.add('answered'); // Marca como respondido
             checkStepCompletion(currentStep);
         });
     });
@@ -1022,6 +1171,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // Interrompe a execução para não repetir a ação
             }
             const points = 10;
+
+            // NOVO: Se estiver concluindo a etapa 15, calcula o bônus de tempo
+            if (step === 15) {
+                calculateAndTimeBonus();
+            }
 
             // Lógica existente para salvar o progresso
             saveAndNotifyProgress(step);

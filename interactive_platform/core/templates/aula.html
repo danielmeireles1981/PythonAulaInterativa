@@ -1463,6 +1463,27 @@ print("Profissão:", usuario["profissao"])</textarea>
                     <p>Você desvendou os segredos do Python e ajudou a InovaTech a encontrar seu caminho!</p>
                 </div>
 
+                <!-- NOVO: Bloco de Desempenho por Tempo -->
+                <div class="interactive-exercise" id="time-bonus-container" style="display: none;">
+                    <div class="time-bonus-card">
+                        <div class="time-bonus-header">
+                            <span id="time-bonus-icon"></span>
+                            <h3 id="time-bonus-title"></h3>
+                        </div>
+                        <p>Seu tempo total de conclusão foi de <strong id="completion-time"></strong>.</p>
+                        <p>Por seu excelente desempenho, você ganhou um bônus de <strong id="bonus-points"></strong>!</p>
+                    </div>
+                </div>
+                <style>
+                    .time-bonus-card { background-color: var(--highlight-bg); border: 2px solid var(--primary); border-radius: 8px; padding: 20px; text-align: center; }
+                    .time-bonus-header { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px; }
+                    .time-bonus-header h3 { margin: 0; font-size: 1.5rem; color: var(--primary); }
+                    .time-bonus-header span { font-size: 2rem; }
+                    .time-bonus-card p { font-size: 1.1rem; line-height: 1.6; }
+                    .time-bonus-card strong { color: var(--primary); }
+                </style>
+                <!-- Fim do Bloco de Desempenho -->
+
                 <div class="interactive-exercise">
                     <h3>Revisitando o Desafio da InovaTech</h3>
                     <p>Ao longo desta jornada, atuamos como consultores para a startup <strong>InovaTech</strong>.

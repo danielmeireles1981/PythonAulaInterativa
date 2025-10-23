@@ -44,6 +44,7 @@
                 <span id="player-name" class="player-name"></span>
             </div>
             <span id="player-score">🏆 Pontos: 0</span>
+            <span id="course-timer" class="player-score" style="display: none;">⏰ Tempo: 00:00</span>
             <button id="reset-progress-btn" title="Resetar todo o progresso e pontos">🔄 Resetar</button>
         </div>
     </header>
@@ -211,6 +212,12 @@
         <ul class="hall-of-fame-list" id="hall-of-fame-list">
             <!-- O ranking será preenchido pelo JavaScript -->
             <li>Carregando ranking...</li>
+            <style>
+                .player-time {
+                    color: var(--muted);
+                    font-size: 0.9em;
+                }
+            </style>
         </ul>
     </section>
 
@@ -404,6 +411,16 @@
 
             });
 
+            // --- NOVO: Função para formatar o tempo para o Hall da Fama ---
+            function formatTime(seconds) {
+                if (!seconds || seconds <= 0) {
+                    return '';
+                }
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+
             // --- NOVO: Função para buscar e renderizar o Hall da Fama ---
             async function updateAndRenderHallOfFame() {
                 hallOfFameList.innerHTML = '<li>Carregando ranking...</li>';
@@ -423,9 +440,12 @@
                     hallOfFame.forEach((player, index) => {
                         const rank = index + 1;
                         const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
+                        const timeString = formatTime(player.completion_time_seconds);
+                        const timeHtml = timeString ? `<span class="player-time">(${timeString})</span>` : '';
+
                         const li = document.createElement('li');
                         li.className = `rank-${rank}`;
-                        li.innerHTML = `<div class="player-rank-info"><span class="rank">${medal}</span><span class="player-avatar">${player.avatar}</span> <span class="player-name">${player.name}</span></div><span class="player-score-hof">${player.score} Pontos</span>`;
+                        li.innerHTML = `<div class="player-rank-info"><span class="rank">${medal}</span><span class="player-avatar">${player.avatar}</span> <span class="player-name">${player.name}</span></div><span class="player-score-hof">${player.score} Pontos ${timeHtml}</span>`;
                         hallOfFameList.appendChild(li);
                     });
                 } catch (error) {
@@ -439,6 +459,7 @@
                 const studentDataRaw = localStorage.getItem('studentData');
                 const score = parseInt(localStorage.getItem('playerScore') || '0');
                 const unlockedStep = parseInt(localStorage.getItem('unlockedStep') || '1');
+                const completionTime = localStorage.getItem('completionTimeSeconds');
 
                 if (!studentDataRaw) return; // Não faz nada se não houver dados do aluno
 
@@ -447,7 +468,8 @@
                     name: studentData.name,
                     avatar: studentData.avatar,
                     score: score,
-                    unlocked_step: unlockedStep
+                    unlocked_step: unlockedStep,
+                    completion_time_seconds: completionTime ? parseInt(completionTime) : null
                 };
 
                 try {
@@ -533,6 +555,16 @@
                     // Limpa dados relacionados às aulas
                     localStorage.removeItem('studentData');
                     localStorage.removeItem('pythonResearchNotes');
+                    localStorage.removeItem('courseStartTime');
+                    localStorage.removeItem('completionTimeSeconds');
+                    localStorage.removeItem('timeBonus');
+                    localStorage.removeItem('finalQuizCompleted');
+                    localStorage.removeItem('satisfactionRating');
+
+                    // Limpa o registro de certificados para forçar a recriação
+                    // (Opcional, mas bom para testes)
+                    localStorage.removeItem('certificateRegistry');
+
                     localStorage.removeItem('theme'); // Limpa também o tema
 
                     // Recarrega a página para aplicar as mudanças
@@ -583,6 +615,54 @@
                 updateAndRenderHallOfFame(); // Renderiza o Hall da Fama ao carregar
                 renderMap(); // Renderiza o mapa
             });
+
+            // --- Lógica para salvar o tempo de conclusão ---
+            // Ouve a mensagem do iframe da aula
+            window.addEventListener('message', (event) => {
+                const data = event.data;
+
+                // Quando a etapa 15 (desafio final) é concluída, o iframe envia uma mensagem
+                if (data?.type === 'STEP_UNLOCKED' && data.step === 15) {
+                    const startTime = parseInt(localStorage.getItem('courseStartTime') || '0');
+                    if (startTime > 0) {
+                        const endTime = new Date().getTime();
+                        const durationSeconds = Math.floor((endTime - startTime) / 1000);
+                        localStorage.setItem('completionTimeSeconds', durationSeconds);
+                    }
+                }
+            });
+
+            // --- NOVO: Lógica do Cronômetro do Curso ---
+            let courseTimerInterval;
+            const timerDisplay = document.getElementById('course-timer');
+
+            function startCourseTimer() {
+                const startTime = localStorage.getItem('courseStartTime');
+                if (!startTime) {
+                    timerDisplay.style.display = 'none';
+                    return;
+                }
+
+                timerDisplay.style.display = 'inline'; // Mostra o cronômetro
+
+                // Limpa qualquer intervalo anterior para evitar duplicação
+                if (courseTimerInterval) {
+                    clearInterval(courseTimerInterval);
+                }
+
+                courseTimerInterval = setInterval(() => {
+                    const now = new Date().getTime();
+                    const elapsed = Math.floor((now - startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+
+                    timerDisplay.textContent = `⏰ Tempo: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            // Inicia o cronômetro ao carregar a página se o tempo já tiver começado
+            startCourseTimer();
+
         });
     </script>
 </body>

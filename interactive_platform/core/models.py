@@ -5,6 +5,7 @@ class Player(models.Model):
     avatar = models.CharField(max_length=10, default='🐍')
     score = models.IntegerField(default=0)
     unlocked_step = models.IntegerField(default=1)
+    completion_time_seconds = models.IntegerField(null=True, blank=True, help_text="Tempo total para concluir o curso em segundos")
 
     def __str__(self):
         return self.name
