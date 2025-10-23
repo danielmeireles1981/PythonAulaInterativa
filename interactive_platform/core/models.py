@@ -6,6 +6,7 @@ class Player(models.Model):
     score = models.IntegerField(default=0)
     unlocked_step = models.IntegerField(default=1)
     completion_time_seconds = models.IntegerField(null=True, blank=True, help_text="Tempo total para concluir o curso em segundos")
+    research_notes = models.TextField(blank=True, null=True, help_text="Anotações da pesquisa da Etapa 5")
 
     def __str__(self):
         return self.name

@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Anotações dos Alunos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --header-color: #2c3e50;
+            --accent-color: #3776AB;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--header-color);
+        }
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+        }
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .note-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .note-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow-color);
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .student-avatar {
+            font-size: 2.5rem;
+        }
+        .student-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .card-body {
+            flex-grow: 1;
+        }
+        .card-body pre {
+            white-space: pre-wrap; /* Quebra a linha nas anotações */
+            word-wrap: break-word;
+            font-family: inherit;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        #loading-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✍️ Painel de Anotações</h1>
+            <p>Visualizando as pesquisas da Etapa 5 feitas pelos alunos.</p>
+        </header>
+        <div id="notes-grid" class="notes-grid">
+            <p id="loading-message">Carregando anotações...</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('notes-grid');
+            const loadingMessage = document.getElementById('loading-message');
+
+            try {
+                const response = await fetch("{% url 'get_research_notes' %}");
+                const notesData = await response.json();
+
+                loadingMessage.style.display = 'none';
+
+                if (notesData.length === 0) {
+                    grid.innerHTML = '<p>Nenhuma anotação encontrada ainda.</p>';
+                    return;
+                }
+
+                notesData.forEach(student => {
+                    const card = document.createElement('div');
+                    card.className = 'note-card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <span class="student-avatar">${student.avatar}</span>
+                            <span class="student-name">${student.name}</span>
+                        </div>
+                        <div class="card-body">
+                            <pre>${student.research_notes}</pre>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (error) {
+                loadingMessage.textContent = 'Falha ao carregar as anotações.';
+                console.error('Erro:', error);
+            }
+        });
+    </script>
+</body>
+</html>

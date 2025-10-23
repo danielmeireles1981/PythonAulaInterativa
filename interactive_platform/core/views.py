@@ -13,6 +13,10 @@ def index(request):
 def aula(request):
     return render(request, 'aula.html')
 
+# NOVA VIEW para o painel
+def notes_dashboard(request):
+    return render(request, 'notes_dashboard.html')
+
 # --- Views para os Jogos ---
 
 def memory_game(request):
@@ -57,7 +61,8 @@ def update_player(request):
                 'avatar': data.get('avatar', '🐍'),
                 'score': data.get('score', 0),
                 'unlocked_step': data.get('unlocked_step', 1),
-                'completion_time_seconds': data.get('completion_time_seconds') # Aceita o tempo de conclusão
+                'completion_time_seconds': data.get('completion_time_seconds'),
+                'research_notes': data.get('research_notes') # Aceita as anotações
             }
         )
         return JsonResponse({'status': 'success', 'created': created})
@@ -91,3 +96,10 @@ def submit_survey(request):
             SatisfactionSurvey.objects.create(player=None, rating=rating)
             return JsonResponse({'status': 'success', 'message': 'Feedback anônimo recebido!'})
     return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)
+
+# NOVA API para buscar as anotações
+def get_research_notes(request):
+    """Retorna todos os jogadores que têm anotações de pesquisa."""
+    players_with_notes = Player.objects.exclude(research_notes__isnull=True).exclude(research_notes__exact='').order_by('-id')
+    data = list(players_with_notes.values('name', 'avatar', 'research_notes'))
+    return JsonResponse(data, safe=False)

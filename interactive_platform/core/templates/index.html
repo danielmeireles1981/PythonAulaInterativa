@@ -460,6 +460,7 @@
                 const score = parseInt(localStorage.getItem('playerScore') || '0');
                 const unlockedStep = parseInt(localStorage.getItem('unlockedStep') || '1');
                 const completionTime = localStorage.getItem('completionTimeSeconds');
+                const researchNotes = localStorage.getItem('pythonResearchNotes'); // Pega as anotações
 
                 if (!studentDataRaw) return; // Não faz nada se não houver dados do aluno
 
@@ -469,7 +470,8 @@
                     avatar: studentData.avatar,
                     score: score,
                     unlocked_step: unlockedStep,
-                    completion_time_seconds: completionTime ? parseInt(completionTime) : null
+                    completion_time_seconds: completionTime ? parseInt(completionTime) : null,
+                    research_notes: researchNotes // Adiciona ao payload
                 };
 
                 try {

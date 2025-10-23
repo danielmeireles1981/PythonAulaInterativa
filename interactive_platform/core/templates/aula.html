@@ -1537,6 +1537,59 @@ print("Profissão:", usuario["profissao"])</textarea>
                     </div>
                 </div>
 
+                <!-- NOVA Seção de Referência Bibliográfica -->
+                <div class="interactive-exercise" id="book-recommendation">
+                    <h3>📚 Leitura Recomendada</h3>
+                    <p>Para aprofundar seus conhecimentos em lógica de programação e Python, estes livros são referências essenciais para iniciantes.</p>
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <a href="https://a.co/d/edusAVl" target="_blank">
+                                <img src="{% static 'img/python_livro01.jpg' %}" alt="Capa do livro Introdução à Programação com Python de Nilo Ney Coutinho Menezes">
+                            </a>
+                        </div>
+                        <div class="book-details">
+                            <h4>Introdução à Programação com Python – 4ª Edição</h4>
+                            <p class="book-author">por Nilo Ney Coutinho Menezes</p>
+                            <p class="book-description">Uma obra fundamental que aborda algoritmos e lógica de programação de forma clara e didática, usando Python como ferramenta. Perfeito para solidificar a base que você construiu aqui.</p>
+                            <br>
+                            <a href="https://a.co/d/edusAVl" target="_blank" class="btn btn-secondary">Ver na Amazon</a>
+                        </div>
+                    </div>
+                    <div class="book-card">
+                        <div class="book-cover">
+                            <a href="https://a.co/d/5amPIGW" target="_blank">
+                                <img src="{% static 'img/python_livro02.jpg' %}" alt="Capa do livro Introdução à Programação com Python de Nilo Ney Coutinho Menezes">
+                            </a>
+                        </div>
+                        <div class="book-details">
+                            <h4>Python Para Data Science: e Machine Learning Descomplicado</h4>
+                            <p class="book-author">por Amilcar Netto e Frnancisco Maciel</p>
+                            <p class="book-description">A obra apresenta uma introdução prática à Ciência de Dados, mostrando como transformar grandes volumes de informação em conhecimento por meio de projetos em Python e ferramentas modernas de aprendizado de máquina.</p>
+                            <br>
+                            <a href="https://a.co/d/5amPIGW" target="_blank" class="btn btn-secondary">Ver na Amazon</a>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .book-card {
+                        display: flex;
+                        gap: 25px;
+                        align-items: center;
+                        margin-top: 20px;
+                    }
+                    .book-cover img {
+                        width: 150px;
+                        height: auto;
+                        border-radius: 5px;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                        transition: transform 0.2s;
+                    }
+                    .book-cover img:hover { transform: scale(1.05); }
+                    .book-details h4 { margin-top: 0; }
+                    .book-details .book-author { font-style: italic; color: var(--text-muted); margin-top: -10px; }
+                    .book-details .book-description { line-height: 1.6; }
+                </style>
+
                 <!-- Pesquisa de Satisfação -->
                 <div class="interactive-exercise trackable-activity" id="satisfaction-survey">
                     <h3>⭐ Pesquisa de Satisfação ⭐</h3>
