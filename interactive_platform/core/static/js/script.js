@@ -1177,6 +1177,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 calculateAndTimeBonus();
             }
 
+            // NOVO: Se for a etapa 1, inicia o cronômetro e avisa a página principal
+            if (step === 1) {
+                localStorage.setItem('courseStartTime', new Date().getTime());
+                window.parent.postMessage({ type: 'START_TIMER' }, '*');
+            }
+
             // Lógica existente para salvar o progresso
             saveAndNotifyProgress(step);
             this.textContent = '✅ Desbloqueado!';

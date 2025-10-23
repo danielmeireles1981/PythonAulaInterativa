@@ -624,11 +624,13 @@
                 // Quando a etapa 15 (desafio final) é concluída, o iframe envia uma mensagem
                 if (data?.type === 'STEP_UNLOCKED' && data.step === 15) {
                     const startTime = parseInt(localStorage.getItem('courseStartTime') || '0');
-                    if (startTime > 0) {
+                     if (startTime > 0) {
                         const endTime = new Date().getTime();
                         const durationSeconds = Math.floor((endTime - startTime) / 1000);
                         localStorage.setItem('completionTimeSeconds', durationSeconds);
                     }
+                } else if (data?.type === 'START_TIMER') { // NOVO: Ouve a mensagem para iniciar o cronômetro
+                    startCourseTimer();
                 }
             });
 
