@@ -169,10 +169,4 @@ Agradecimentos especiais aos nossos heróis contribuidores!
 Última atualização: 2025-10-23 23:41:45 UTC
 
 ---
-
-<div align="center">
-    <img src="path_to_your_logo.png" width="150">
-    <p>Feito com 💜 e muito ☕</p>
-</div>
-
 _"O código é apenas o começo da aventura!"_ 🚀
