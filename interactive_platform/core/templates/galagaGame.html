@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Galaga - Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #2c3e50;
@@ -20,9 +23,9 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--primary), #1a202c);
+            background: #0a0f18; /* Fundo mais escuro para o efeito de estrelas */
             color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif;
             display: flex;
             min-height: 100vh;
             flex-direction: column;
@@ -32,13 +35,13 @@
         
         .header {
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             width: 100%;
-            background: rgba(44, 62, 80, 0.3);
-            border-bottom: 2px solid var(--secondary);
+            background: transparent;
         }
         
         h1 {
+            font-family: 'Orbitron', sans-serif;
             color: var(--secondary);
             font-size: 1.8rem;
             margin-bottom: 5px;
@@ -54,12 +57,12 @@
             position: relative;
             width: 100%;
             max-width: 960px;
-            height: 600px;
+            aspect-ratio: 16 / 10; /* Proporção mais moderna */
             margin: 5px auto;
             border: 2px solid var(--info);
             border-radius: 10px;
             overflow: hidden;
-            background: #1a202c;
+            background: transparent; /* O canvas de fundo cuidará disso */
             box-shadow: 0 0 20px rgba(52, 152, 219, 0.3);
         }
         
@@ -72,11 +75,13 @@
             justify-content: space-between;
             width: 100%;
             max-width: 960px;
-            margin-bottom: 20px;
-            background: rgba(44, 62, 80, 0.3);
+            margin-bottom: 15px;
+            background: rgba(26, 40, 60, 0.5); /* Efeito de vidro */
+            backdrop-filter: blur(5px);
             padding: 15px;
             border-radius: 10px;
             border: 1px solid var(--info);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         .ui-item {
@@ -84,6 +89,7 @@
         }
         
         .ui-label {
+            font-family: 'Orbitron', sans-serif;
             color: var(--secondary);
             font-size: 0.9rem;
             margin-bottom: 5px;
@@ -93,6 +99,7 @@
             font-size: 1.5rem;
             font-weight: bold;
             color: #fff;
+            text-shadow: 0 0 5px var(--secondary);
         }
         
         .controls {
@@ -127,9 +134,11 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
             z-index: 100;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.3s ease;
         }
         
         .question-content {
@@ -144,6 +153,7 @@
         }
         
         .question-content h2 {
+            font-family: 'Orbitron', sans-serif;
             color: var(--secondary);
             margin-bottom: 20px;
             font-size: 1.8rem;
@@ -187,9 +197,11 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
             z-index: 100;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.3s ease;
         }
         
         .game-over-content {
@@ -204,6 +216,7 @@
         }
         
         .game-over-content h2 {
+            font-family: 'Orbitron', sans-serif;
             color: var(--secondary);
             margin-bottom: 20px;
             font-size: 2rem;
@@ -235,14 +248,15 @@
             background-color: var(--secondary);
             border-radius: 50%;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
         
         @media (max-width: 850px) {
             .game-container, .game-ui {
                 width: 95%;
-            }
-            
-            .game-container {
-                height: 500px;
             }
         }
     </style>
@@ -389,6 +403,26 @@
                 question: "Qual estrutura é usada para tratamento de exceções? 🛡️",
                 answers: ["try-except", "try-catch", "error-handle", "exception"],
                 correct: 0
+            },
+            {
+                question: "Qual estrutura de dados é mutável (pode ser alterada)? 🔄",
+                answers: ["Tupla", "String", "Lista", "Inteiro"],
+                correct: 2
+            },
+            {
+                question: "Qual o resultado de `(10 > 5) and (3 == 4)`? ⚖️",
+                answers: ["True", "False", "Erro", "None"],
+                correct: 1
+            },
+            {
+                question: "Qual o propósito de um framework como Django? 🏗️",
+                answers: ["Editar imagens", "Acelerar o dev web", "Criar jogos", "Analisar dados"],
+                correct: 1
+            },
+            {
+                question: "Qual o nome de variável VÁLIDO em Python? 🏷️",
+                answers: ["nota_aluno", "2alunos", "nota-aluno", "nota do aluno"],
+                correct: 0
             }
         ];
         
@@ -504,12 +538,100 @@
             }
         }
         
+        // NOVO: Classe para partículas de explosão
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 5 + 2;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
+                this.color = color;
+                this.life = 100; // Duração da partícula
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 2;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.life / 100;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        // NOVA CLASSE: Chefão (Boss)
+        class Boss {
+            constructor() {
+                this.width = 150;
+                this.height = 100;
+                this.x = canvas.width / 2 - this.width / 2;
+                this.y = -this.height; // Começa fora da tela
+                this.speedY = 1;
+                this.speedX = 2;
+                this.maxHealth = 100 + (level * 20);
+                this.health = this.maxHealth;
+                this.emoji = '👹';
+                this.attackCooldown = 120; // Cooldown para atirar
+                this.onPosition = false;
+            }
+
+            update() {
+                if (!this.onPosition) {
+                    this.y += this.speedY;
+                    if (this.y >= 50) {
+                        this.y = 50;
+                        this.onPosition = true;
+                    }
+                    return;
+                }
+
+                this.x += this.speedX;
+                if (this.x <= 0 || this.x + this.width >= canvas.width) {
+                    this.speedX *= -1;
+                }
+
+                this.attackCooldown--;
+                if (this.attackCooldown <= 0) {
+                    // Atira 3 projéteis
+                    bossBullets.push(new BossBullet(this.x + this.width / 2 - 20, this.y + this.height));
+                    bossBullets.push(new BossBullet(this.x + this.width / 2, this.y + this.height));
+                    bossBullets.push(new BossBullet(this.x + this.width / 2 + 20, this.y + this.height));
+                    this.attackCooldown = 100 - (level * 5); // Atira mais rápido em níveis mais altos
+                }
+            }
+
+            draw() {
+                ctx.font = '80px Arial';
+                ctx.fillText(this.emoji, this.x + this.width / 2, this.y + this.height / 2);
+                // Barra de vida
+                ctx.fillStyle = 'red';
+                ctx.fillRect(this.x, this.y - 15, this.width, 10);
+                ctx.fillStyle = 'green';
+                ctx.fillRect(this.x, this.y - 15, this.width * (this.health / this.maxHealth), 10);
+            }
+
+            takeDamage() {
+                this.health -= 5; // Dano por tiro
+            }
+        }
+
         // Instâncias do jogo
         const player = new Player();
         let bullets = [];
         let enemies = [];
         let questionItems = [];
         
+        let particles = []; // NOVO: para explosões
+        let boss = null; // NOVO: instância do chefão
+        let bossFightActive = false; // NOVO: flag para luta contra chefão
+        let bossBullets = []; // NOVO: projéteis do chefão
         // Controles
         const keys = {
             ArrowLeft: false,
@@ -567,6 +689,10 @@
             bullets = [];
             enemies = [];
             questionItems = [];
+            bossBullets = [];
+            boss = null;
+            bossFightActive = false;
+            particles = [];
             updateUI();
             gameOverModal.style.display = 'none';
         }
@@ -577,38 +703,54 @@
         
         function startEnemySpawning() {
             if (gameRunning && !gamePaused) {
+                // Se for uma luta de chefão, não cria inimigos normais
+                if (bossFightActive) {
+                    return;
+                }
+
                 const spawnInterval = setInterval(() => {
-                    if (!gameRunning || gamePaused) {
+                    if (!gameRunning) { // Se o jogo acabou, para o intervalo
                         clearInterval(spawnInterval);
                         return;
                     }
                     
-                    const x = Math.random() * (canvas.width - 50);
-                    enemies.push(new Enemy(x, -50));
-                }, 1500 - (level * 100));
+                    // Só cria inimigos se o jogo não estiver pausado
+                    if (!gamePaused) {
+                        const x = Math.random() * (canvas.width - 50);
+                        enemies.push(new Enemy(x, -50));
+                    }
+                }, 1500 - (level * 100)); // Aumenta a frequência geral de inimigos
             }
         }
         
         function startQuestionSpawning() {
             if (gameRunning && !gamePaused) {
+                // Não cria itens de pergunta durante a luta contra o chefão
+                if (bossFightActive) {
+                    return;
+                }
+
                 const spawnInterval = setInterval(() => {
-                    if (!gameRunning || gamePaused) {
+                    if (!gameRunning) { // Se o jogo acabou, para o intervalo
                         clearInterval(spawnInterval);
                         return;
                     }
                     
-                    // 30% de chance de spawnar um item de pergunta (aumentei a chance)
-                    if (Math.random() < 0.3) {
-                        const x = Math.random() * (canvas.width - 40);
-                        questionItems.push(new QuestionItem(x, -40));
+                    // 50% de chance de spawnar um item de pergunta (aumentei a chance)
+                    if (Math.random() < 0.5) {
+                        if (!gamePaused) { // Só cria itens se o jogo não estiver pausado
+                            const x = Math.random() * (canvas.width - 40);
+                            questionItems.push(new QuestionItem(x, -40));
+                        }
                     }
-                }, 3000); // Reduzi o intervalo para aparecerem mais frequentemente
+                }, 2000); // Reduzi o intervalo para aparecerem mais frequentemente
             }
         }
         
         function showQuestion() {
             if (questionActive) return;
             
+            gamePaused = true; // PAUSA O JOGO
             questionActive = true;
             const randomQuestion = pythonQuestions[Math.floor(Math.random() * pythonQuestions.length)];
             questionText.textContent = randomQuestion.question;
@@ -657,6 +799,7 @@
                 setTimeout(() => {
                     questionModal.style.display = 'none';
                     questionActive = false;
+                    gamePaused = false; // RETOMA O JOGO
                 }, 1000);
             } else {
                 // Resposta incorreta
@@ -681,6 +824,7 @@
             setTimeout(() => {
                 questionModal.style.display = 'none';
                 questionActive = false;
+                gamePaused = false; // RETOMA O JOGO
                 
                 if (lives <= 0) {
                     gameOver();
@@ -702,7 +846,28 @@
             finalLevelDisplay.textContent = level;
             gameOverModal.style.display = 'flex';
         }
+
+        // NOVO: Função para criar explosão
+        function createExplosion(x, y) {
+            for (let i = 0; i < 20; i++) {
+                particles.push(new Particle(x, y, 'var(--secondary)'));
+            }
+        }
         
+        // NOVA CLASSE: Projétil do Chefão
+        class BossBullet {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 10;
+                this.height = 20;
+                this.speed = 4;
+            }
+            update() { this.y += this.speed; }
+            draw() { ctx.fillStyle = 'var(--danger)'; ctx.fillRect(this.x, this.y, this.width, this.height); }
+            isOffScreen() { return this.y > canvas.height; }
+        }
+
         function checkCollisions() {
             // Colisão entre balas e inimigos
             for (let i = bullets.length - 1; i >= 0; i--) {
@@ -713,6 +878,7 @@
                         bullets[i].y + bullets[i].height > enemies[j].y) {
                         
                         // Colisão detectada
+                        createExplosion(enemies[j].x + enemies[j].width / 2, enemies[j].y + enemies[j].height / 2); // NOVO
                         bullets.splice(i, 1);
                         enemies.splice(j, 1);
                         score += 10;
@@ -722,6 +888,21 @@
                 }
             }
             
+            // NOVO: Colisão entre balas do jogador e o chefão
+            if (bossFightActive && boss) {
+                for (let i = bullets.length - 1; i >= 0; i--) {
+                    if (bullets[i].x < boss.x + boss.width && bullets[i].x + bullets[i].width > boss.x &&
+                        bullets[i].y < boss.y + boss.height && bullets[i].y + bullets[i].height > boss.y) {
+                        
+                        bullets.splice(i, 1);
+                        boss.takeDamage();
+                        createExplosion(bullets[i].x, bullets[i].y);
+
+                        if (boss.health <= 0) defeatBoss();
+                    }
+                }
+            }
+
             // Colisão entre jogador e inimigos
             for (let i = enemies.length - 1; i >= 0; i--) {
                 if (player.x < enemies[i].x + enemies[i].width &&
@@ -730,6 +911,7 @@
                     player.y + player.height > enemies[i].y) {
                     
                     // Colisão detectada
+                    createExplosion(enemies[i].x + enemies[i].width / 2, enemies[i].y + enemies[i].height / 2); // NOVO
                     enemies.splice(i, 1);
                     lives--;
                     updateUI();
@@ -740,6 +922,21 @@
                 }
             }
             
+            // NOVO: Colisão entre jogador e projéteis do chefão
+            for (let i = bossBullets.length - 1; i >= 0; i--) {
+                if (player.x < bossBullets[i].x + bossBullets[i].width &&
+                    player.x + player.width > bossBullets[i].x &&
+                    player.y < bossBullets[i].y + bossBullets[i].height &&
+                    player.y + player.height > bossBullets[i].y) {
+                    
+                    bossBullets.splice(i, 1);
+                    lives--;
+                    updateUI();
+                    if (lives <= 0) gameOver();
+                    break;
+                }
+            }
+
             // Colisão entre jogador e itens de pergunta
             for (let i = questionItems.length - 1; i >= 0; i--) {
                 if (player.x < questionItems[i].x + questionItems[i].width &&
@@ -759,6 +956,11 @@
             if (keys.ArrowLeft) player.move('left');
             if (keys.ArrowRight) player.move('right');
             
+            // NOVO: Atualizar chefão
+            if (bossFightActive && boss) {
+                boss.update();
+            }
+
             // Atualizar balas
             for (let i = bullets.length - 1; i >= 0; i--) {
                 bullets[i].update();
@@ -775,6 +977,14 @@
                 }
             }
             
+            // NOVO: Atualizar projéteis do chefão
+            for (let i = bossBullets.length - 1; i >= 0; i--) {
+                bossBullets[i].update();
+                if (bossBullets[i].isOffScreen()) {
+                    bossBullets.splice(i, 1);
+                }
+            }
+
             // Atualizar itens de pergunta
             for (let i = questionItems.length - 1; i >= 0; i--) {
                 questionItems[i].update();
@@ -783,13 +993,27 @@
                 }
             }
             
+            // NOVO: Atualizar partículas
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
             // Verificar colisões
             checkCollisions();
             
-            // Aumentar nível a cada 100 pontos
-            if (score >= level * 100) {
+            // Aumentar nível
+            const requiredScoreForNextLevel = level * 500;
+            if (!bossFightActive && score >= requiredScoreForNextLevel) {
                 level++;
                 updateUI();
+
+                // NOVO: Verifica se é hora do chefão
+                if (level % 3 === 0) {
+                    startBossFight();
+                }
             }
         }
         
@@ -797,41 +1021,80 @@
             // Limpar canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Desenhar fundo estrelado
-            ctx.fillStyle = '#FFFFFF';
-            for (let i = 0; i < 50; i++) {
-                const x = Math.random() * canvas.width;
-                const y = Math.random() * canvas.height;
-                ctx.fillRect(x, y, 1, 1);
-            }
-            
-            // Desenhar elementos do jogo
+            // Desenha o fundo estrelado primeiro
+            drawStars();
+
+            // Desenha outros elementos
             player.draw();
             bullets.forEach(bullet => bullet.draw());
             enemies.forEach(enemy => enemy.draw());
             questionItems.forEach(item => item.draw());
+            bossBullets.forEach(b => b.draw());
             
-            // Desenhar informações do jogo no canvas
-            ctx.fillStyle = 'var(--secondary)';
-            ctx.font = '16px Arial';
-            ctx.textAlign = 'left';
-            ctx.fillText(`🏆 Pontuação: ${score}`, 10, 20);
-            ctx.fillText(`❤️ Vidas: ${lives}`, 10, 40);
-            ctx.fillText(`⭐ Nível: ${level}`, 10, 60);
+            // NOVO: Desenhar partículas
+            particles.forEach(p => p.draw());
+            // NOVO: Desenhar chefão
+            if (bossFightActive && boss) boss.draw();
         }
-        
+
+        // --- NOVO: Fundo estrelado animado ---
+        let stars = [];
+        function createStars() {
+            stars = [];
+            for (let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5,
+                    speed: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.fillStyle = '#FFFFFF';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fill();
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+            });
+        }
+
         function gameLoop() {
             if (gameRunning && !gamePaused) {
                 updateGame();
                 drawGame();
             }
-            
             requestAnimationFrame(gameLoop);
+        }
+
+        // --- NOVO: Lógica do Chefão ---
+        function startBossFight() {
+            bossFightActive = true;
+            enemies = []; // Limpa inimigos normais
+            questionItems = []; // Limpa itens de pergunta
+            boss = new Boss();
+        }
+
+        function defeatBoss() {
+            createExplosion(boss.x + boss.width / 2, boss.y + boss.height / 2);
+            score += 1000; // Recompensa por derrotar o chefão
+            boss = null;
+            bossFightActive = false;
+            updateUI();
+            // Reinicia o spawn de inimigos para o próximo nível
+            startEnemySpawning();
         }
         
         // Inicialização
         updateUI();
-        drawGame();
+        createStars(); // Cria as estrelas
+        gameLoop(); // Inicia o loop principal que desenhará tudo
     </script>
 </body>
 </html>

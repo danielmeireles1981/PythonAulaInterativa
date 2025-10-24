@@ -292,41 +292,6 @@
             right: 10px;
         }
         
-        /* Cores para os pares de cartas */
-        .card[data-pair="1"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-1), #ff9e9e);
-        }
-        
-        .card[data-pair="2"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-2), #9be3de);
-        }
-        
-        .card[data-pair="3"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-3), #ffdf9e);
-        }
-        
-        .card[data-pair="4"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-4), #6ce6c7);
-        }
-        
-        .card[data-pair="5"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-5), #6bb5ff);
-        }
-        
-        .card[data-pair="6"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-6), #3a7a94);
-            color: white;
-        }
-        
-        .card[data-pair="7"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-7), #a45ee5);
-            color: white;
-        }
-        
-        .card[data-pair="8"] .card-back {
-            background: linear-gradient(135deg, var(--card-color-8), #f7a6d0);
-        }
-        
         @media (max-width: 768px) {
             .game-container {
                 grid-template-columns: repeat(3, 1fr);
@@ -403,7 +368,7 @@
     <div class="game-info">
         <div class="info-item">
             <div class="info-label">Tempo</div>
-            <div class="info-value" id="timer">60</div>
+            <div class="info-value" id="timer">180</div>
         </div>
         <div class="info-item">
             <div class="info-label">Pontuação</div>
@@ -484,7 +449,7 @@
         let flippedCards = [];
         let matchedPairs = 0;
         let score = 0;
-        let timeLeft = 60;
+        let timeLeft = 180;
         let timer;
         let gameStarted = false;
 
@@ -561,7 +526,7 @@
             flippedCards = [];
             matchedPairs = 0;
             score = 0;
-            timeLeft = 60;
+            timeLeft = 180;
             gameStarted = false;
             
             // Atualizar displays

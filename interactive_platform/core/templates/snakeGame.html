@@ -25,6 +25,7 @@
       --bar: #1b2533;
       --barFill: #1abc9c;
     }
+    
 
     * {
       box-sizing: border-box;
@@ -32,7 +33,7 @@
 
     body {
       margin: 0;
-      background: linear-gradient(135deg, var(--python-dark-blue), var(--bg));
+      background: var(--bg); /* Alterado para fundo sólido para o canvas de fundo funcionar bem */
       color: var(--text);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Noto Sans", sans-serif;
       display: flex;
@@ -41,6 +42,17 @@
       align-items: center;
       gap: 12px;
       padding: 10px;
+    }
+    
+    /* NOVO: Canvas para o fundo animado */
+    #background-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
     }
 
     header {
@@ -177,6 +189,22 @@
       overflow: hidden;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
+    
+    /* NOVO: Efeito de feedback de resposta */
+    .feedback-text {
+        position: absolute;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 0 5px black;
+        animation: fadeOutUp 1.5s ease-out forwards;
+    }
+
+    @keyframes fadeOutUp {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-50px); }
+    }
+
+
 
     canvas {
       display: block;
@@ -322,6 +350,7 @@
 </head>
 
 <body>
+  <canvas id="background-canvas"></canvas>
   <header>
     <h1>🐍 Snake Quiz — Python Edition 🐍</h1>
     <div id="hudRow">
@@ -408,12 +437,22 @@
       { pergunta: '📚 Qual estrutura é imutável?', alternativas: ['list', 'tuple'], correta: 'tuple' },
       { pergunta: '⚖️ Qual operador compara igualdade?', alternativas: ['==', '='], correta: '==' },
       { pergunta: '🔧 Como iniciar um ambiente virtual venv?', alternativas: ['python -m venv venv', 'pip install venv'], correta: 'python -m venv venv' },
-      { pergunta: '🔑 Qual palavra-chave cria uma função?', alternativas: ['def', 'func'], correta: 'def' },
+      { pergunta: '🔑 Qual palavra-chave cria uma função em Python?', alternativas: ['def', 'func'], correta: 'def' },
       { pergunta: '📝 Qual método adiciona item ao final de uma lista?', alternativas: ['.append()', '.add()'], correta: '.append()' },
       { pergunta: '📖 Qual destas estruturas é um dicionário válido?', alternativas: ['{"a":1, "b":2}', '["a",1,"b",2]'], correta: '{"a":1, "b":2}' },
       { pergunta: '🔄 Qual conversão torna "42" um número inteiro?', alternativas: ["int('42')", 'str(42)'], correta: "int('42')" },
       { pergunta: '⏰ Qual módulo padrão lida com tempo?', alternativas: ['time', 'sleepy'], correta: 'time' },
       { pergunta: '🛡️ Qual keyword trata exceções?', alternativas: ['try/except', 'catch/except'], correta: 'try/except' },
+      { pergunta: 'Qual estrutura de dados é mutável (pode ser alterada)?', alternativas: ['list', 'tuple'], correta: 'list' },
+      { pergunta: 'Qual empresa usa Python para recomendações de filmes?', alternativas: ['Netflix', 'Facebook'], correta: 'Netflix' },
+      { pergunta: 'O que o backend geralmente faz?', alternativas: ['Processa dados', 'Muda cores de botões'], correta: 'Processa dados' },
+      { pergunta: 'Qual símbolo inicia um dicionário?', alternativas: ['{}', '[]'], correta: '{}' },
+      { pergunta: 'Python é uma linguagem...', alternativas: ['Interpretada', 'Compilada'], correta: 'Interpretada' },
+      { pergunta: 'Qual o nome de variável VÁLIDO?', alternativas: ['nota_aluno', '2alunos'], correta: 'nota_aluno' },
+      { pergunta: 'O que é uma API?', alternativas: ['Uma ponte entre sistemas', 'Um tipo de banco de dados'], correta: 'Uma ponte entre sistemas' },
+      { pergunta: 'Qual o resultado de `(10 > 5) and (3 == 4)`?', alternativas: ['False', 'True'], correta: 'False' },
+      { pergunta: 'Qual loop é ideal para percorrer itens de uma lista?', alternativas: ['for', 'while'], correta: 'for' },
+      { pergunta: 'Qual o propósito de um framework como Django?', alternativas: ['Acelerar o dev web', 'Editar imagens'], correta: 'Acelerar o dev web' },
       { pergunta: '💬 Como se escreve um comentário de uma linha?', alternativas: ['# comentário', '// comentário'], correta: '# comentário' },
       { pergunta: '📏 Qual função retorna o tamanho de uma lista?', alternativas: ['len()', 'size()'], correta: 'len()' },
       { pergunta: '➕ Qual o resultado de `[1, 2] + [3, 4]`?', alternativas: ['[1, 2, 3, 4]', '[4, 6]'], correta: '[1, 2, 3, 4]' },
@@ -445,6 +484,20 @@
         }
       }
       return free.length ? choice(free) : null;
+    }
+
+    // NOVO: Função para mostrar feedback visual de acerto/erro
+    function showFeedback(text, isCorrect, x, y) {
+        const feedbackEl = document.createElement('div');
+        feedbackEl.className = 'feedback-text';
+        feedbackEl.textContent = text;
+        feedbackEl.style.color = isCorrect ? COLORS.ok : COLORS.bad;
+        feedbackEl.style.left = `${x}px`;
+        feedbackEl.style.top = `${y}px`;
+        document.getElementById('stageWrap').appendChild(feedbackEl);
+
+        // Remove o elemento após a animação
+        setTimeout(() => feedbackEl.remove(), 1500);
     }
 
     // ===================== Estado do jogo =====================
@@ -599,6 +652,10 @@
       for (let k = 0; k < foods.length; k++) {
         const f = foods[k];
         if (f.cell[0] === nx && f.cell[1] === ny) {
+          // NOVO: Mostra o feedback visual
+          const feedbackX = f.cell[0] * TILE + TILE / 2;
+          const feedbackY = f.cell[1] * TILE;
+          showFeedback(f.text, f.isCorrect, feedbackX, feedbackY);
           if (f.isCorrect) {
             score += 1; 
             grow += GROW_ON_CORRECT;
@@ -749,9 +806,40 @@
       else ctx.stroke(); 
     }
 
+    // --- NOVO: Lógica para o fundo animado ---
+    const bgCanvas = document.getElementById('background-canvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+
+    const matrixChars = "def class import for if else True False None 🐍 () [] {} :".split(" ");
+    const fontSize = 16;
+    const columns = bgCanvas.width / fontSize;
+    const drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function drawMatrix() {
+        bgCtx.fillStyle = 'rgba(11, 15, 20, 0.05)';
+        bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+        bgCtx.fillStyle = COLORS.grid;
+        bgCtx.font = `${fontSize}px monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = choice(matrixChars);
+            bgCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > bgCanvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        }
+    }
+
     // start
     reset();
     requestAnimationFrame(function (t) { last = t; requestAnimationFrame(frame); });
+    setInterval(drawMatrix, 50); // Anima o fundo
   </script>
 </body>
 
