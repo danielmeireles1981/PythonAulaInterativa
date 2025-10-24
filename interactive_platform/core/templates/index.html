@@ -339,9 +339,13 @@
                 if (!seconds || seconds <= 0) {
                     return '';
                 }
-                const mins = Math.floor(seconds / 60);
+                const hrs = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
                 const secs = seconds % 60;
-                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                // Exibe HH:MM:SS quando houver horas; caso contrário, MM:SS
+                return hrs > 0
+                    ? `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+                    : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
             }
 
             // --- NOVO: Função para buscar e renderizar o Hall da Fama ---
@@ -364,7 +368,7 @@
                         const rank = index + 1;
                         const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
                         const timeString = formatTime(player.completion_time_seconds);
-                        const timeHtml = timeString ? `<span class="player-time">(${timeString})</span>` : '';
+                        const timeHtml = timeString ? `<span class="player-time">• Tempo: ${timeString}</span>` : '';
 
                         const li = document.createElement('li');
                         li.className = `rank-${rank}`;
@@ -593,6 +597,135 @@
             // Inicia o cronômetro ao carregar a página se o tempo já tiver começado
             startCourseTimer();
 
+        });
+        
+        // --- Matrix Python Rain (canvas) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('background-animation');
+            if (!container) return;
+
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const canvas = document.createElement('canvas');
+            canvas.id = 'matrix-canvas';
+            // Garante cobertura total do fundo em CSS pixels
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.display = 'block';
+            // Limpa qualquer conteúdo anterior (símbolos flutuantes) e instala o canvas
+            container.innerHTML = '';
+            container.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            const styles = getComputedStyle(document.documentElement);
+            const PY_BLUE = (styles.getPropertyValue('--python-blue') || '#3776AB').trim();
+            const PY_YELLOW = (styles.getPropertyValue('--python-yellow') || '#FFD43B').trim();
+            // Maior opacidade para reduzir cauda e poluição visual
+            const HAZE = 'rgba(13, 43, 78, 0.12)';
+
+            const glyphs = ['def','class','import','print','lambda','for','if','else','try','[]','{}','()','=>',':','#','🐍','True','False','__init__','0','1'];
+            const BASE_ALPHA = 0.28; // opacidade base mais discreta
+            const HEAD_ALPHA = 0.45; // cabeças levemente mais visíveis
+
+            let fontSize;
+            let columns;
+            let columnSpacing;
+            let drops;
+            let rafId = null;
+            let tick = 0;
+            const advanceEvery = 3; // avança a queda a cada 3 frames (≈ 1/3 da velocidade)
+
+            function resizeCanvas() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const cssW = container.clientWidth || container.offsetWidth || window.innerWidth;
+                const cssH = container.clientHeight || container.offsetHeight || window.innerHeight;
+                canvas.width = Math.floor(cssW * dpr);
+                canvas.height = Math.floor(cssH * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                const base = Math.max(16, Math.min(24, Math.floor(cssW / 70)));
+                fontSize = base;
+                ctx.font = `${fontSize}px Courier New, monospace`;
+
+                // Espaçamento das colunas levando em conta o alargamento horizontal
+                columnSpacing = Math.max(fontSize, Math.floor(fontSize * 1.25 * 1.05));
+                columns = Math.max(1, Math.ceil(cssW / columnSpacing) + 2);
+                const maxRows = Math.max(1, Math.ceil(cssH / fontSize) + 2);
+                drops = new Array(columns).fill(0).map(() => Math.floor(Math.random() * maxRows));
+            }
+
+            function drawFrame(advance) {
+                ctx.fillStyle = HAZE;
+                const cssW = container.clientWidth || container.offsetWidth || window.innerWidth;
+                const cssH = container.clientHeight || container.offsetHeight || window.innerHeight;
+                ctx.fillRect(0, 0, cssW, cssH);
+
+                for (let i = 0; i < columns; i++) {
+                    const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+                    const x = Math.floor(i * columnSpacing);
+                    const y = drops[i] * fontSize;
+
+                    const isHead = Math.random() < 0.02; // menos destaques para reduzir ruído
+                    ctx.globalAlpha = isHead ? HEAD_ALPHA : BASE_ALPHA;
+                    ctx.fillStyle = isHead ? PY_YELLOW : PY_BLUE;
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.scale(1.25, 1);
+                    ctx.fillText(glyph, 0, 0);
+                    ctx.restore();
+
+                    if (advance) {
+                        if (y > (container.clientHeight || window.innerHeight) && Math.random() > 0.985) {
+                            drops[i] = 0;
+                        }
+                        drops[i]++;
+                    }
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            function loop() {
+                tick = (tick + 1) % 60;
+                const advance = tick % advanceEvery === 0;
+                drawFrame(advance);
+                rafId = requestAnimationFrame(loop);
+            }
+
+            function start() {
+                if (rafId == null) rafId = requestAnimationFrame(loop);
+            }
+
+            function stop() {
+                if (rafId != null) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', () => {
+                stop();
+                resizeCanvas();
+                if (!prefersReduced) start();
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) stop(); else if (!prefersReduced) start();
+            });
+
+            if (!prefersReduced) {
+                start();
+            } else {
+                ctx.fillStyle = 'rgba(13, 43, 78, 0.25)';
+                ctx.fillRect(0, 0, container.clientWidth, container.clientHeight);
+                ctx.fillStyle = PY_BLUE;
+                for (let i = 0; i < 80; i++) {
+                    const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+                    const x = Math.random() * container.clientWidth;
+                    const y = Math.random() * container.clientHeight;
+                    ctx.fillText(glyph, x, y);
+                }
+            }
         });
     </script>
 </body>
