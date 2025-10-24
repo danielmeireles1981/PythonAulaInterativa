@@ -174,7 +174,8 @@
 
             const symbols = ['def', 'class', 'import', 'print()', 'for in', 'if else', '()', '{}', '[]', '=>', '🐍', '<>', '"""', '#', 'lambda', 'True', 'False', '__init__'];
             const colors = ['var(--python-blue)', 'var(--python-yellow)', 'var(--python-green)'];
-            const numberOfSymbols = 50; // Aumente para mais densidade
+            // Menos elementos no mobile para melhor performance
+            const numberOfSymbols = window.matchMedia('(max-width: 768px)').matches ? 24 : 50;
 
             for (let i = 0; i < numberOfSymbols; i++) {
                 const symbolEl = document.createElement('div');
