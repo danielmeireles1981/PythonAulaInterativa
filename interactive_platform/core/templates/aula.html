@@ -43,6 +43,7 @@
                     <span style="font-size: 2.5rem;">⏱️</span>
                     <div>
                         <strong style="font-size: 1.1rem; color: var(--primary);">Tempo Estimado: 25 minutos</strong>
+                      
                         <p style="margin: 5px 0 0 0; font-size: 0.9em; color: var(--text-muted);">
                             Uma jornada rápida e intensa para despertar seu potencial em Python!
                         </p>
@@ -518,37 +519,41 @@
                     para saber onde é usado! 👍</p>
                 <br>
 
-                <!-- Nova Atividade de Pesquisa -->
-                <div class="interactive-exercise trackable-activity">
-                    <h3>✍️ Sua Vez de Pesquisar!</h3>
+                <!-- Atividade de Pesquisa Guiada -->
+                <div class="interactive-exercise trackable-activity" id="guided-research-activity">
+                    <h3>✍️ Missão: Consultoria para a InovaTech</h3>
                     <div class="exercise-instructions">
-                        <p>Agora que você viu algumas vantagens, pesquise por que grandes empresas escolhem Python
-                            em vez de outras linguagens para seus projetos de backend.</p>
-                        <br>
-                        <h3>Vamos compartilhar com os outros estudantes suas descobertas!! 😁</h3>
-                        <br>
-                        <strong>Dicas de pesquisa:</strong>
-                        <ul>
-                            <li>"Por que empresas usam Python para backend"</li>
-                            <li>"Vantagens e desvantagens do Python"</li>
-                            <li>"Backend do Netflix com Python"</li>
-                        </ul>
+                        <p>Agora você é um(a) consultor(a) para a startup <strong>InovaTech</strong>. A equipe precisa de uma recomendação clara sobre por que Python é a escolha certa para eles, considerando que têm <strong>prazo curto, orçamento limitado e precisam de uma tecnologia que escale</strong>.</p>
+                        
+                        <p>Sua missão é pesquisar e anotar abaixo os <strong>3 principais motivos</strong> pelos quais Python atende a essas necessidades. Sua resposta ajudará a InovaTech a tomar a decisão final!</p>
+                        
+                        <div id="useful-links-container" style="margin-top: 20px; margin-bottom: 15px; line-height: 1.6;">
+                            <p>Aqui vão 3 links confiáveis (com prós e contras de Python) — já com um resumo do que você encontra em cada um:</p>
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li style="margin-bottom: 15px;">
+                                    <strong>1. <a href="https://serokell.io/blog/python-pros-and-cons" target="_blank">Serokell – “Pros and Cons of Python”</a></strong><br>
+                                    <em>Resumo:</em> lista vantagens (comunidade, bibliotecas, prototipagem) e limitações (performance, GIL/multithreading, memória, tipagem dinâmica).
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <strong>2. <a href="https://www.linode.com/docs/guides/pros-and-cons-of-python/" target="_blank">Linode Docs – “The Pros and Cons of Python”</a></strong><br>
+                                    <em>Resumo:</em> visão didática com quando usar/evitar Python; destaca rapidez de desenvolvimento e portabilidade, mas aponta menor velocidade e erros em runtime.
+                                </li>
+                                <li style="margin-bottom: 15px;">
+                                    <strong>3. <a href="https://www.netguru.com/blog/python-pros-and-cons" target="_blank">Netguru – “Python Pros and Cons in 2025”</a></strong><br>
+                                    <em>Resumo:</em> panorama atualizado reforçando versatilidade e ecossistema, e cobrindo desvantagens como velocidade, GIL e não ser nativo em mobile.
+                                </li>
+                            </ul>
+                        </div>
 
-                        <strong>Links úteis para começar:</strong>
-                        <ul>
-                            <li><a href="https://www.tiobe.com/tiobe-index/" target="_blank">Índice TIOBE
-                                    (Popularidade de Linguagens)</a></li>
-                            <li><a href="https://barrazacarlos.com/pt-br/vantagens-e-desvantagens-do-python/#elementor-toc__heading-anchor-0" target="_blank">Vantagens e Desvantagens do Python</a></li>
-                        </ul>
-
-                        <p>Anote suas descobertas abaixo:</p>
                     </div>
                     <textarea id="research-notes" class="code-area"
-                        placeholder="Ex: Python é popular em ciência de dados por causa de bibliotecas como Pandas e NumPy..."></textarea>
+                        placeholder="Ex: 1. Desenvolvimento Rápido: A sintaxe simples permite criar um MVP (produto mínimo viável) em menos tempo. 2. ..."></textarea>
                     <button class="btn btn-primary" id="save-research-btn" style="margin-top: 10px;">Salvar
                         Anotações</button>
                     <div class="feedback" id="research-feedback"></div>
-
+                    <div class="text-center" style="margin-top: 15px;">
+                        <a href="{% url 'notes_dashboard' %}" target="_blank" class="link-styled">Ver o que outros alunos descobriram 🚀</a>
+                    </div>
                 </div>
                 <div class="nav-buttons">
                     <button class="btn btn-primary btn-unlock-next" data-step="5" disabled>Desbloquear Próxima
@@ -659,112 +664,64 @@
             </div>
 
             <!-- Etapa 7: Primeiros Passos (MOVIDO) -->
-            <div class="step" id="step-7" data-total-activities="5">
+            <div class="step" id="step-7" data-total-activities="2">
                 <!-- <span class="bloom-level">Nível 3: Aplicação Guiada</span> -->
                 <h2>Primeiros Passos em Python</h2>
 
                 <div class="interactive-exercise trackable-activity">
-                    <h3>1. Mostrando uma mensagem com `print()`</h3>
-                    <p>A primeira coisa que aprendemos em qualquer linguagem é como "falar". Em Python, usamos a
-                        função <code>print()</code> para exibir mensagens na tela. Clique em
-                        <strong>Executar</strong> para concluir esta atividade.
-                    </p>
+                    <h3>1. Saudações e Entradas Interativas</h3>
+                    <p>Vamos combinar tudo! Usaremos <code>print()</code> para exibir mensagens, variáveis para guardar dados e <code>input()</code> para interagir com o usuário. Execute o código e veja a mágica acontecer!</p>
                     <div class="code-playground">
                         <div class="code-header">
-                            <span>passo1.py</span>
-                            <button class="btn btn-primary" id="run-code-step1">Executar</button>
+                            <span>saudacao_interativa.py</span>
+                            <button class="btn btn-primary" onclick="runInteractivePythonCode(document.getElementById('code-step7-1').value, 'output-step7-1')">Executar</button>
                         </div>
-                        <textarea class="code-area" id="code-step1"># Meu primeiro programa em Python
+                        <textarea class="code-area" id="code-step7-1"># 1. A função print() exibe mensagens
 print("Olá, Mundo!")
-print("Bem-vindo ao Python!")
 
-# Experimente outras mensagens usando print()
+# 2. Variáveis guardam informações
+saudacao = "Bem-vindo(a) ao Python!"
+print(saudacao)
+
+# 3. A função input() torna o programa interativo
+nome = input("Qual é o seu nome? ")
+print("Olá, " + nome + "! É um prazer ter você aqui.")
+
+# Desafio: Pergunte também a cidade do usuário e exiba uma mensagem!
 </textarea>
-                        <div class="exercise-output" id="output-step1"></div>
+                        <div class="exercise-output" id="output-step7-1"></div>
                     </div>
                 </div>
 
                 <div class="interactive-exercise trackable-activity">
-                    <h3>2. Guardando informações com Variáveis</h3>
-                    <p>Podemos guardar informações em "caixas" chamadas variáveis. Aqui, guardamos o texto "Maria"
-                        na variável <code>nome</code> e depois o exibimos.</p>
+                    <h3>2. Python como Calculadora</h3>
+                    <p>Python é excelente com números! Ele entende números inteiros (<code>int</code>) e com casas decimais (<code>float</code>). Veja como realizar operações matemáticas básicas.</p>
                     <div class="code-playground">
                         <div class="code-header">
-                            <span>passo2.py</span>
-                            <button class="btn btn-primary" id="run-code-step2">Executar</button>
+                            <span>calculadora.py</span>
+                            <button class="btn btn-primary" onclick="runPythonCode(document.getElementById('code-step7-2').value, 'output-step7-2')">Executar</button>
                         </div>
-                        <textarea class="code-area" id="code-step2">nome = "Maria"
-print("Olá, " + nome)
+                        <textarea class="code-area" id="code-step7-2"># Variáveis numéricas
+ano_atual = 2024
+sua_idade = 25
+preco_produto = 49.99 # float
 
-# Experimente trocar o valor da variável "nome"
+ano_nascimento = ano_atual - sua_idade
+print(f"Você nasceu por volta de {ano_nascimento}.")
+
+print("\n--- Operações Matemáticas ---")
+a = 15
+b = 4
+
+print(f"Soma: {a + b}")
+print(f"Subtração: {a - b}")
+print(f"Multiplicação: {a * b}")
+print(f"Divisão: {a / b}")
+print(f"Divisão Inteira (quantas vezes 4 cabe em 15?): {a // b}")
+print(f"Resto da Divisão (o que sobra?): {a % b}")
+print(f"Potência (15 elevado a 4): {a ** b}")
 </textarea>
-                        <div class="exercise-output" id="output-step2"></div>
-                    </div>
-                </div>
-
-                <div class="interactive-exercise trackable-activity">
-                    <h3>3. Interagindo com o usuário com `input()`</h3>
-                    <p>Agora, vamos tornar o programa interativo! A função <code>input()</code> pausa o programa e
-                        espera que o usuário digite algo. <strong>Sua vez:</strong> mude o texto dentro do
-                        <code>input()</code> para perguntar a cidade do usuário e clique em Executar.
-                    </p>
-                    <div class="code-playground">
-                        <div class="code-header">
-                            <span>passo3.py</span>
-                            <button class="btn btn-primary"
-                                onclick="runInteractiveCode('code-step3', 'output-step3')">Executar</button>
-                        </div>
-                        <textarea class="code-area" id="code-step3">nome = input("Qual é o seu nome? ")
-print("Bem-vindo(a), " + nome + "!")</textarea>
-                        <div class="exercise-output" id="output-step3"></div>
-                    </div>
-                </div>
-
-                <div class="interactive-exercise trackable-activity">
-                    <h3>4. Trabalhando com Números</h3>
-                    <p>Python lida com diferentes tipos de números, como inteiros (<code>int</code>) e números com
-                        casas decimais (<code>float</code>). Clique em <strong>Executar</strong> para ver como
-                        funcionam.</p>
-                    <div class="code-playground">
-                        <div class="code-header">
-                            <span>passo4.py</span>
-                            <button class="btn btn-primary" id="run-code-step4">Executar</button>
-                        </div>
-                        <textarea class="code-area" id="code-step4"># Variáveis numéricas
-idade = 25         # Um número inteiro (int)
-altura = 1.75      # Um número de ponto flutuante (float)
-
-print("Idade:", idade)
-print("Altura:", altura)
-
-# Experimente mudar os valores de idade e altura</textarea>
-                        <div class="exercise-output" id="output-step4"></div>
-                    </div>
-                </div>
-
-                <div class="interactive-exercise trackable-activity">
-                    <h3>5. Operações Matemáticas</h3>
-                    <p>Você pode usar Python como uma calculadora poderosa. Experimente mudar os valores de
-                        <code>a</code> e <code>b</code> e executar o código novamente.
-                    </p>
-                    <div class="code-playground">
-                        <div class="code-header">
-                            <span>passo5.py</span>
-                            <button class="btn btn-primary" id="run-code-step5">Executar</button>
-                        </div>
-                        <textarea class="code-area" id="code-step5">a = 10
-b = 3
-
-print("Soma:", a + b)
-print("Subtração:", a - b)
-print("Multiplicação:", a * b)
-print("Divisão:", a / b)
-print("Divisão Inteira:", a // b)
-print("Resto da Divisão:", a % b)
-print("Potência:", a ** b)
-
-# Experimente mudar os valores de a e b</textarea>
-                        <div class="exercise-output" id="output-step5"></div>
+                        <div class="exercise-output" id="output-step7-2"></div>
                     </div>
                 </div>
                 <div class="nav-buttons">
@@ -833,26 +790,20 @@ for tarefa in tarefas:
                 <div class="flip-card-grid">
                     <div class="flip-card">
                         <div class="flip-card-inner">
-                            <div class="flip-card-front">O "Else" de um Loop</div>
-                            <div class="flip-card-back">Em Python, um loop `for` ou `while` pode ter um `else`! O
-                                bloco `else` é executado quando o loop termina normalmente (sem ser interrompido por
-                                um `break`).</div>
+                            <div class="flip-card-front">A Verdade por Trás do `if` 🤔</div>
+                            <div class="flip-card-back">Em Python, não só `True` e `False` são avaliados. Listas vazias `[]`, o número `0`, `None` e strings vazias `""` são considerados `False` (Falsy). Quase todo o resto é `True` (Truthy)!</div>
                         </div>
                     </div>
                     <div class="flip-card">
                         <div class="flip-card-inner">
-                            <div class="flip-card-front">O Operador Morsa `:=`</div>
-                            <div class="flip-card-back">Introduzido no Python 3.8, o "operador morsa" `:=` permite
-                                atribuir um valor a uma variável como parte de uma expressão. Útil para simplificar
-                                alguns loops `while`.</div>
+                            <div class="flip-card-front">`if/else` em uma Linha ⚡</div>
+                            <div class="flip-card-back">Cansado de `if/else` longos? Use o operador ternário! Exemplo: `status = "Aprovado" if nota >= 7 else "Reprovado"`. Tudo em uma única linha, de forma limpa e direta.</div>
                         </div>
                     </div>
                     <div class="flip-card">
                         <div class="flip-card-inner">
-                            <div class="flip-card-front">Compreensão de Listas</div>
-                            <div class="flip-card-back">Python permite criar listas de forma concisa com "List
-                                Comprehensions". Ex: `quadrados = [x*x for x in range(10)]` cria uma lista com os
-                                quadrados de 0 a 9 em uma única linha!</div>
+                            <div class="flip-card-front">Desempacotando no `for` 🎁</div>
+                            <div class="flip-card-back">Você pode "desempacotar" itens diretamente no loop `for`. Ex: `for nome, idade in [("Ana", 28), ("Bia", 32)]:` acessa `nome` e `idade` separadamente a cada iteração.</div>
                         </div>
                     </div>
                 </div>
@@ -1155,19 +1106,38 @@ print("Profissão:", usuario["profissao"])</textarea>
                     <div class="exercise-instructions">
                         <h3>🚀 Construindo o Módulo de Cadastro da InovaTech</h3>
                         <p>Para ajudar a InovaTech a começar, vamos construir o primeiro protótipo funcional da
-                            plataforma deles: um sistema de cadastro de usuários. Este é o primeiro passo para
+                            plataforma deles: um sistema de cadastro de usuários. Este é um passo fundamental para
                             qualquer aplicação web! Conclua o desafio para desbloquear a emissão do seu certificado.
                         </p>
                         <hr style="margin: 10px 0;">
 
                         <h4>Sua Missão:</h4>
                         <p>Crie um programa que:</p>
-                        <ul>
-                            <li>Pergunte o nome, idade e e-mail do novo usuário.</li>
-                            <li>Calcule o ano de nascimento (aproximado).</li>
-                            <li>Exiba uma mensagem de boas-vindas personalizada com todos os dados.</li>
-                            <li>Verifique se o funcionário é maior de idade e informe o status.</li>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li>✅ <strong>Coleta de Dados:</strong> Peça ao usuário para digitar seu <strong>nome</strong>, <strong>idade</strong> e <strong>e-mail</strong>.</li>
+                            <li>✅ <strong>Cálculo:</strong> Calcule o <strong>ano de nascimento aproximado</strong> do usuário (considere o ano atual como 2024).</li>
+                            <li>✅ <strong>Exibição Personalizada:</strong> Imprima uma <strong>mensagem de boas-vindas</strong> que inclua todos os dados coletados e o ano de nascimento calculado.</li>
+                            <li>✅ <strong>Verificação de Idade:</strong> Verifique se o usuário é <strong>maior de idade</strong> (18 anos ou mais) e exiba o status ("MAIOR de idade" ou "MENOR de idade").</li>
                         </ul>
+                        <p><strong>Exemplo de Interação e Saída Esperada:</strong></p>
+                        <div class="code-example-output">
+                            <pre>
+Digite seu nome de usuário: Ana
+Digite sua idade: 22
+Digite seu e-mail: ana@email.com
+
+--- Perfil Criado na InovaTech ---
+Usuário cadastrado com sucesso!
+Nome: Ana
+Idade: 22 anos
+E-mail: ana@email.com
+Ano de nascimento: 2002
+Status: MAIOR de idade
+
+Bem-vindo(a) à plataforma InovaTech!
+                            </pre>
+                        </div>
+                        <p>Use tudo o que você aprendeu sobre <code>input()</code>, variáveis, operações matemáticas, <code>print()</code> com f-strings e condicionais <code>if/else</code>!</p>
                     </div>
 
                     <div class="code-playground trackable-activity">
@@ -1181,7 +1151,7 @@ print("Profissão:", usuario["profissao"])</textarea>
                     </div>
 
                     <div class="nav-buttons">
-                        <button class="btn btn-secondary" id="reveal-rh360-solution">💡 Ver Dicas / Solução</button>
+                        <button class="btn btn-secondary" id="reveal-rh360-solution">💡 Ver Solução (com dicas)</button>
                         <button class="btn btn-primary btn-unlock-next" data-step="12" disabled>Desbloquear
                             Conclusão</button>
                     </div>

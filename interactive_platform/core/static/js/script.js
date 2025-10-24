@@ -343,33 +343,6 @@ document.querySelectorAll('.btn-reveal').forEach(button => {
     });
 });
 
-function runInteractiveCode(codeId, outputId) {
-    const code = document.getElementById(codeId).value;
-    const output = document.getElementById(outputId);
-
-    // Extrai a pergunta do input()
-    const questionMatch = code.match(/input\("([^"]+)"\)/);
-    const question = questionMatch ? questionMatch[1] : "Digite um valor: ";
-
-    const userInput = prompt(question);
-
-    if (userInput !== null) {
-        output.textContent = "Executando...";
-        setTimeout(() => {
-            // Simula a saída do print
-            const welcomeMessage = `Bem-vindo(a), ${userInput}!`;
-
-            // Marca a atividade como concluída APÓS a interação do usuário
-            const exerciseContainer = output.closest('.interactive-exercise');
-            if (exerciseContainer && !exerciseContainer.classList.contains('completed')) {
-                exerciseContainer.classList.add('completed');
-                checkStepCompletion(currentStep);
-            }
-            output.textContent = welcomeMessage;
-        }, 500);
-    }
-}
-
 async function runInteractivePythonCode(code, outputId) {
     const output = document.getElementById(outputId);
     if (!pyodideReady) {
