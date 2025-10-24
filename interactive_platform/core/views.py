@@ -31,9 +31,6 @@ def galaga_game(request):
 def pacman_game(request):
     return render(request, 'pacmanGame.html')
 
-def ludo_game(request):
-    return render(request, 'ludoGame.html')
-
 # --- Views para a API ---
 
 def get_hall_of_fame(request):
