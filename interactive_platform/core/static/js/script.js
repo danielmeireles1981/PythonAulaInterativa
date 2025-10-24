@@ -80,7 +80,7 @@ sys.stdout = io.StringIO()
 
 // Controle de navegação entre etapas
 let currentStep = 1;
-const totalSteps = 17;
+const totalSteps = 15;
 
 function saveAndNotifyProgress(stepNumber) {
     // Salva o progresso no localStorage. Desbloqueia a PRÓXIMA etapa.
@@ -113,6 +113,27 @@ function showStep(stepNumber) {
 }
 
 /**
+ * NOVO: Preenche o painel de resultados finais na Etapa 15.
+ */
+function populateFinalResults() {
+    const scoreEl = document.getElementById('result-score');
+    const timeEl = document.getElementById('result-time');
+
+    if (!scoreEl || !timeEl) return;
+
+    const score = localStorage.getItem('playerScore') || '0';
+    const timeInSeconds = localStorage.getItem('completionTimeSeconds');
+
+    scoreEl.textContent = `${score} Pontos`;
+
+    if (timeInSeconds) {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = timeInSeconds % 60;
+        timeEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
+
+/**
  * Verifica se todas as atividades de uma etapa foram concluídas.
  * Se sim, dispara um evento 'step:completed'.
  * @param {number} stepNumber - O número da etapa a ser verificada.
@@ -134,6 +155,9 @@ function checkStepCompletion(stepNumber) {
     if (completedActivities >= totalActivities) {
         // Dispara um evento para indicar que a etapa foi concluída.
         stepElement.dispatchEvent(new CustomEvent('step:completed', { detail: { step: stepNumber } }));
+        // Habilita o botão de desbloqueio diretamente
+        const unlockBtn = stepElement.querySelector('.btn-unlock-next');
+        if (unlockBtn) unlockBtn.disabled = false;
     }
 }
 
@@ -201,6 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (activityContainer && !activityContainer.classList.contains('completed')) {
                 activityContainer.classList.add('completed');
                 checkStepCompletion(currentStep);
+
+                // Habilita o botão de desbloqueio da Etapa 1 diretamente
+                const unlockBtn = document.querySelector('#step-1 .btn-unlock-next');
+                if (unlockBtn) unlockBtn.disabled = false;
             }
         });
     }
@@ -730,6 +758,14 @@ if (showPythonModalBtn) {
     });
 }
 
+// NOVO: Botão para o modal sobre comentários
+const showCommentsModalBtn = document.getElementById('show-comments-modal-btn');
+if (showCommentsModalBtn) {
+    showCommentsModalBtn.addEventListener('click', () => {
+        openGenericModal('💡 A Importância dos Comentários', 'Um código bem comentado é um presente para sua equipe e para o seu "eu" do futuro. Comentários explicam o <strong>"porquê"</strong> de uma lógica complexa, não apenas o "o quê". Eles transformam um código funcional em um código compreensível e fácil de manter. Lembre-se: <strong>código claro é bom, código comentado é excelente!</strong>');
+    });
+}
+
 // --- Lógica do Caça-Palavras ---
 function setupWordSearch() {
     const gridElement = document.getElementById('word-search-grid');
@@ -927,18 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 isCorrect = code.includes('idade') && code.includes('>= 18') && code.includes('if') && code.includes('else');
                 expectedOutput = "Maior de idade";
                 break;
-            case 3: // Loop
-                isCorrect = code.includes('for') && (code.includes('range(1, 6)') || code.includes('range(1,5)')); // Aceita ambas as lógicas
-                expectedOutput = "1\n2\n3\n4\n5";
-                break;
-            case 4: // Lista
-                isCorrect = code.includes('frutas') && (code.includes('[-1]') || code.includes('[2]'));
-                expectedOutput = "Uva";
-                break;
-            case 5: // Dicionário
-                isCorrect = code.includes('carro') && (code.includes('["marca"]') || code.includes("['marca']"));
-                expectedOutput = "Tesla";
-                break;
         }
 
         if (isCorrect) {
@@ -976,9 +1000,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const solutions = [
                 "a = 15\nb = 30\nprint(a + b)",
                 "idade = 25\nif idade >= 18:\n    print('Maior de idade')\nelse:\n    print('Menor de idade')",
-                "for i in range(1, 6):\n    print(i)",
-                "frutas = ['Maçã', 'Banana', 'Uva']\nprint(frutas[-1])",
-                "carro = {'marca': 'Tesla', 'ano': 2023}\nprint(carro['marca'])"
             ];
             codeArea.value = solutions[challengeNum - 1];
             
@@ -1039,10 +1060,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            const quizScore = (correctQuizAnswers * 10) + codeChallengesScore;
-            const totalPointsFromQuiz = quizScore / 10; // Converte para a escala de 10 questões
+            const totalPointsFromQuiz = (correctQuizAnswers * 10) + codeChallengesScore;
             const finalFeedback = document.getElementById('final-quiz-feedback');
-            finalFeedback.textContent = `Sua pontuação nesta etapa é: ${totalPointsFromQuiz}/10.`;
+            finalFeedback.textContent = `Sua pontuação nesta etapa é: ${totalPointsFromQuiz}/50.`;
             finalFeedback.className = 'feedback correct'; // Usando a classe 'correct' para um visual positivo
             finalFeedback.style.display = 'block';
 
@@ -1054,13 +1074,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Adiciona a pontuação ao total da trilha
-            const currentTotalScore = parseInt(localStorage.getItem('playerScore') || '0');
-            const newTotalScore = currentTotalScore + quizScore;
-            localStorage.setItem('playerScore', newTotalScore);
+            // const currentTotalScore = parseInt(localStorage.getItem('playerScore') || '0');
+            // const newTotalScore = currentTotalScore + totalPointsFromQuiz;
+            // localStorage.setItem('playerScore', newTotalScore);
 
             // Notifica a página pai (mapa) para atualizar a pontuação total
             if (window.parent) {
-                window.parent.postMessage({ type: 'ADD_POINTS', points: quizScore }, '*');
+                window.parent.postMessage({ type: 'ADD_POINTS', points: totalPointsFromQuiz }, '*');
             }
 
             finalQuizBtn.textContent = 'Pontuação Calculada!';
@@ -1112,6 +1132,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const endTime = new Date().getTime();
         const durationSeconds = Math.floor((endTime - startTime) / 1000);
         const minutes = Math.floor(durationSeconds / 60);
+
+        // Salva o tempo total em segundos para ser enviado ao backend
+        localStorage.setItem('completionTimeSeconds', durationSeconds);
         const seconds = durationSeconds % 60;
 
         let bonus = { points: 0, title: '', icon: '', timeString: `${minutes}m ${seconds}s` };
@@ -1172,8 +1195,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const points = 10;
 
-            // NOVO: Se estiver concluindo a etapa 15, calcula o bônus de tempo
-            if (step === 15) {
+            // NOVO: Se estiver concluindo a etapa 12 (Desafio Final), calcula o bônus de tempo
+            if (step === 12) {
                 calculateAndTimeBonus();
             }
 
@@ -1188,12 +1211,28 @@ document.addEventListener('DOMContentLoaded', () => {
             this.textContent = '✅ Desbloqueado!';
             this.disabled = true; // Desabilita após o clique para evitar múltiplos envios
 
-            // Envia uma mensagem para a página do mapa para mostrar a recompensa e atualizar o progresso
-            if (window.parent) {
-                window.parent.postMessage({ type: 'STEP_UNLOCKED', points: points, step: step }, '*');
-            }
+            // A mensagem 'UPDATE_PROGRESS' já é suficiente e é enviada por saveAndNotifyProgress
+            // A página pai agora lida com pontos e atualização do mapa a partir dela.
         });
     });
+
+    // NOVO: Lógica para o botão de finalizar na Etapa 15
+    const finalRestartBtn = document.getElementById('restart-course-btn');
+    if (finalRestartBtn) {
+        finalRestartBtn.addEventListener('click', function(e) {
+            e.preventDefault(); // Impede a ação padrão
+            this.disabled = true;
+            this.textContent = 'Finalizando...';
+
+            // 1. Preenche os resultados na tela
+            populateFinalResults();
+
+            // 2. Envia mensagem para parar o cronômetro e fechar o modal
+            if (window.parent) {
+                window.parent.postMessage({ type: 'COURSE_FINISHED' }, '*');
+            }
+        });
+    }
 
     // =========================
     //   CERTIFICADO (PATCH)

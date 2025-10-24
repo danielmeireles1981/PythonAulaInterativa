@@ -184,8 +184,8 @@ body::before {
     position: relative;
     width: 100%;
     max-width: 1000px;
-    margin: 40px auto 80px; /* Adiciona margem inferior */
-    height: 1800px;
+    margin: 0 auto;
+    height: 1600px; /* Altura reduzida */
 }
 
 .map-path-svg {

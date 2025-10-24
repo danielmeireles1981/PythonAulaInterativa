@@ -37,10 +37,10 @@ def ludo_game(request):
 # --- Views para a API ---
 
 def get_hall_of_fame(request):
-    """Retorna os 10 melhores jogadores, com desempate por tempo."""
+    """Retorna todos os jogadores em ordem de pontuação, com desempate por tempo."""
     # Ordena por pontuação (maior primeiro) e depois por tempo (menor primeiro).
     # Jogadores sem tempo de conclusão (null) são colocados no final do seu grupo de pontuação.
-    players = Player.objects.order_by('-score', F('completion_time_seconds').asc(nulls_last=True))[:10]
+    players = Player.objects.order_by('-score', F('completion_time_seconds').asc(nulls_last=True))
 
     # Adicionamos 'completion_time_seconds' para que o frontend possa exibi-lo
     data = list(players.values('name', 'avatar', 'score', 'completion_time_seconds'))

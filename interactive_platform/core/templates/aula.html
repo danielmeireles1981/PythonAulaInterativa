@@ -37,7 +37,17 @@
             <div class="step active" id="step-1" data-total-activities="1">
                 <h2>Quem é você?</h2>
                 <p>Antes de começarmos, gostaria de conhecer um pouco mais sobre vocês. Por favor, respondam às
-                    perguntas no quadro abaixo para que eu possa adaptar a aula da melhor forma possível!</p>
+                    perguntas no quadro abaixo!</p>
+
+                <div class="interactive-exercise highlight-box" style="display: flex; align-items: center; gap: 15px;">
+                    <span style="font-size: 2.5rem;">⏱️</span>
+                    <div>
+                        <strong style="font-size: 1.1rem; color: var(--primary);">Tempo Estimado: 25 minutos</strong>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9em; color: var(--text-muted);">
+                            Uma jornada rápida e intensa para despertar seu potencial em Python!
+                        </p>
+                    </div>
+                </div>
 
                 <div class="interactive-exercise trackable-activity">
                     <form id="student-info-form">
@@ -402,9 +412,10 @@
                         sistemas complexos e reutilizáveis, como blocos de montar.</li>
                 </ul>
                 <br>
-                <!-- Botão para abrir o modal sobre Python -->
-                <div class="text-center" style="margin: 20px 0;">
+                <!-- Botões para modais -->
+                <div class="text-center" style="margin: 20px 0; display: flex; justify-content: center; gap: 15px;">
                     <button class="btn btn-secondary" id="show-python-modal-btn" style="padding: 15px 30px; font-size: 1.2rem;">E o Python? 🐍</button>
+                    <button class="btn btn-primary" id="show-comments-modal-btn" style="padding: 15px 30px; font-size: 1.2rem;">💡 Fique Ligado!</button>
                 </div>
 
                 <div class="interactive-exercise trackable-activity" id="matching-exercise-1">
@@ -983,101 +994,8 @@ print("Profissão:", usuario["profissao"])</textarea>
                 </div>
             </div>
 
-            <!-- Etapa 10: Boas Práticas -->
-            <div class="step" id="step-10" data-total-activities="0">
-                <!-- <span class="bloom-level">Nível 5: Síntese</span> -->
-                <h2>Boas Práticas: Código que Conta uma História</h2>
-                <p>Um bom código não apenas funciona, ele se comunica! Veja a diferença entre um código misterioso e
-                    um código que é um livro aberto.</p>
-
-                <div class="code-comparison">
-                    <!-- Coluna do Código Ruim -->
-                    <div class="comparison-column bad-code">
-                        <div class="comparison-header">
-                            <span class="comparison-emoji">🤯</span>
-                            <h3>Código Confuso</h3>
-                        </div>
-                        <p class="comparison-description">"O que isso faz mesmo?"</p>
-                        <div class="code-editor">
-                            n = [10, 20, 30, 40]<br>
-                            s = 0<br>
-                            for x in n:<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;s = s + x<br>
-                            m = s / len(n)<br>
-                            print(m)
-                        </div>
-                    </div>
-
-                    <!-- Coluna do Código Bom -->
-                    <div class="comparison-column good-code">
-                        <div class="comparison-header">
-                            <span class="comparison-emoji">😎</span>
-                            <h3>Código Limpo</h3>
-                        </div>
-                        <p class="comparison-description">"Ah, entendi na hora!"</p>
-                        <div class="code-editor">
-                            <span class="code-comment"># Lista de notas dos alunos</span><br>
-                            notas_alunos = [10, 20, 30, 40]<br><br>
-                            <span class="code-comment"># Inicializa a soma</span><br>
-                            soma_total = 0<br><br>
-                            <span class="code-comment"># Loop para somar as notas</span><br>
-                            for nota in notas_alunos:<br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;soma_total += nota<br><br>
-                            <span class="code-comment"># Calcula e exibe a média</span><br>
-                            media = soma_total / len(notas_alunos)<br>
-                            print(f"A média é: {media}")
-                        </div>
-                    </div>
-                </div>
-
-                <div class="benefits-section">
-                    <h3>✨ As Vantagens do Código Limpo ✨</h3>
-                    <div class="benefits-grid">
-                        <div class="benefit-item">🤝<br>Facilita a Colaboração</div>
-                        <div class="benefit-item">🔧<br>Simplifica a Manutenção</div>
-                        <div class="benefit-item">♻️<br>Promove a Reutilização</div>
-                    </div>
-                </div>
-
-                <div class="nav-buttons">
-                    <button class="btn btn-primary btn-unlock-next" data-step="10">Desbloquear Próxima
-                        Etapa</button>
-                </div>
-
-            </div>
-
-            <!-- Etapa 11: Caça-Palavras (NOVA) -->
-            <div class="step" id="step-11" data-total-activities="1">
-                <!-- <span class="bloom-level">Nível 4: Memorização</span> -->
-                <h2>Caça-Palavras Python</h2>
-                <p>Vamos fazer uma pausa divertida para reforçar os termos que aprendemos. Leia o conceito na lista e
-                    encontre a palavra correspondente na grade. Clique e arraste para selecionar.</p>
-
-                <div class="interactive-exercise trackable-activity">
-                    <div class="word-search-container">
-                        <div class="word-search-grid" id="word-search-grid">
-                            <!-- Células serão geradas pelo JS -->
-                        </div>
-                        <div class="word-search-list-container">
-                            <h3>Conceitos para Encontrar:</h3>
-                            <ul class="word-search-list" id="word-search-list">
-                                <!-- Palavras serão geradas pelo JS -->
-                            </ul>
-                            <button class="btn btn-secondary" id="reveal-word-btn" style="margin-top: 15px;">💡
-                                Revelar Palavra</button>
-                            <div class="feedback" id="word-search-feedback"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="nav-buttons">
-                    <button class="btn btn-primary btn-unlock-next" data-step="11" disabled>Desbloquear Próxima
-                        Etapa</button>
-                </div>
-            </div>
-
-            <!-- Etapa 12: Construtor de Código (Unificado) -->
-            <div class="step" id="step-12" data-total-activities="5">
+            <!-- Etapa 10: Construtor de Código (Simplificado) -->
+            <div class="step" id="step-10" data-total-activities="2">
                 <!-- <span class="bloom-level">Nível 5: Aplicação</span> -->
                 <h2>Construtor de Código: Desafios</h2>
                 <p>Hora de colocar a mão na massa! Organize os blocos de código para resolver os desafios.</p>
@@ -1123,78 +1041,17 @@ print("Profissão:", usuario["profissao"])</textarea>
                     <div class="feedback"></div>
                 </div>
 
-                <!-- Desafio 3: Loop -->
-                <div class="interactive-exercise trackable-activity" id="dd-exercise-3">
-                    <h3>Desafio 3: Contagem com Loop</h3>
-                    <p>Faça um programa que use um loop `for` para contar e imprimir os números de 1 a 3.</p>
-                    <div class="drag-drop-container">
-                        <div class="code-drop-zone"></div>
-                        <div class="code-block-source">
-                            <div class="code-block" draggable="true" data-order="0">for numero in range(1, 4):</div>
-                            <div class="code-block" draggable="true" data-order="1"> print(numero)</div>
-                        </div>
-                    </div>
-                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
-                        <button class="btn btn-primary check-btn">Verificar</button>
-                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
-                    </div>
-                    <div class="feedback"></div>
-                </div>
-
-                <!-- Desafio 4: Lista -->
-                <div class="interactive-exercise trackable-activity" id="dd-exercise-4">
-                    <h3>Desafio 4: Acessando uma Lista</h3>
-                    <p>Crie uma lista de frutas e imprima o segundo item da lista (lembre-se que a contagem começa
-                        em 0).</p>
-                    <div class="drag-drop-container">
-                        <div class="code-drop-zone"></div>
-                        <div class="code-block-source">
-                            <div class="code-block" draggable="true" data-order="1">print(frutas[1])</div>
-                            <div class="code-block" draggable="true" data-order="0">frutas = ["Maçã", "Banana",
-                                "Uva"]</div>
-                        </div>
-                    </div>
-                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
-                        <button class="btn btn-primary check-btn">Verificar</button>
-                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
-                    </div>
-                    <div class="feedback"></div>
-                </div>
-
-                <!-- Desafio 5: Função -->
-                <div class="interactive-exercise trackable-activity" id="dd-exercise-5">
-                    <h3>Desafio 5: Verificador de Par ou Ímpar</h3>
-                    <p>Monte um programa que verifica se um número é par ou ímpar usando o operador de resto da
-                        divisão (%).</p>
-                    <div class="drag-drop-container">
-                        <div class="code-drop-zone"></div>
-                        <div class="code-block-source">
-                            <div class="code-block" draggable="true" data-order="0">numero = 7</div>
-                            <div class="code-block" draggable="true" data-order="1">if numero % 2 == 0:</div>
-                            <div class="code-block" draggable="true" data-order="2"> print("O número é par.")</div>
-                            <div class="code-block" draggable="true" data-order="3">else:</div>
-                            <div class="code-block" draggable="true" data-order="4"> print("O número é ímpar.")
-                            </div>
-                        </div>
-                    </div>
-                    <div class="nav-buttons" style="justify-content: center; margin-top: 10px;">
-                        <button class="btn btn-primary check-btn">Verificar</button>
-                        <button class="btn btn-secondary reset-btn" style="margin-left: 10px;">Resetar</button>
-                    </div>
-                    <div class="feedback"></div>
-                </div>
-
                 <div class="nav-buttons">
-                    <button class="btn btn-primary btn-unlock-next" data-step="12" disabled>Desbloquear Próxima
+                    <button class="btn btn-primary btn-unlock-next" data-step="10" disabled>Desbloquear Próxima
                         Etapa</button>
                 </div>
             </div>
 
-            <!-- Etapa 13: Exercícios -->
-            <div class="step" id="step-13" data-total-activities="1">
+            <!-- Etapa 11: Avaliação -->
+            <div class="step" id="step-11" data-total-activities="1">
                 <!-- <span class="bloom-level">Nível 6: Avaliação</span> -->
                 <h2>Avaliação: Exercícios Práticos</h2>
-                <p>Vamos testar tudo o que você aprendeu! Responda às 10 perguntas abaixo. Cada acerto vale 1 ponto.
+                <p>Vamos testar tudo o que você aprendeu! Responda às 5 perguntas abaixo. Cada acerto vale 10 pontos.
                 </p>
 
                 <div id="final-quiz-container" class="trackable-activity">
@@ -1242,37 +1099,9 @@ print("Profissão:", usuario["profissao"])</textarea>
                         </div>
                         <div class="feedback"></div>
                     </div>
-                    <!-- Q4 -->
-                    <div class="quiz-container">
-                        <div class="quiz-question">4. Qual será a saída do código: `idade = 17; if idade >= 18:
-                            print("Maior") else: print("Menor")`?</div>
-                        <div class="quiz-options">
-                            <div class="quiz-option" data-correct="false">Maior</div>
-                            <div class="quiz-option" data-correct="true">Menor</div>
-                            <div class="quiz-option" data-correct="false">Nenhuma saída.</div>
-                        </div>
-                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
-                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
-                        </div>
-                        <div class="feedback"></div>
-                    </div>
-                    <!-- Q5 -->
-                    <div class="quiz-container">
-                        <div class="quiz-question">5. Qual estrutura de dados é imutável, ou seja, não pode ser
-                            alterada após sua criação?</div>
-                        <div class="quiz-options">
-                            <div class="quiz-option" data-correct="false">Lista 🚂</div>
-                            <div class="quiz-option" data-correct="true">Tupla 💎</div>
-                            <div class="quiz-option" data-correct="false">Dicionário 📖</div>
-                        </div>
-                        <div class="nav-buttons" style="justify-content: flex-start; margin-top: 10px;">
-                            <button class="btn btn-secondary btn-reveal-answer">💡 Revelar Resposta</button>
-                        </div>
-                        <div class="feedback"></div>
-                    </div>
                     <!-- Q6 -->
                     <div class="interactive-exercise" id="code-challenge-1">
-                        <p><strong>6. Desafio de Código:</strong> Declare duas variáveis, `a` e `b`, com valores 15
+                        <p><strong>4. Desafio de Código:</strong> Declare duas variáveis, `a` e `b`, com valores 15
                             e 30, e imprima a soma delas.</p>
                         <div class="code-playground">
                             <div class="code-header"><span>soma.py</span>
@@ -1288,62 +1117,13 @@ print("Profissão:", usuario["profissao"])</textarea>
                     </div>
                     <!-- Q7 -->
                     <div class="interactive-exercise" id="code-challenge-2">
-                        <p><strong>7. Desafio de Código:</strong> Crie uma variável `idade` com o valor 25. Use
+                        <p><strong>5. Desafio de Código:</strong> Crie uma variável `idade` com o valor 25. Use
                             `if/else` para imprimir "Maior de idade" se a idade for 18 ou mais, e "Menor de idade"
                             caso contrário.</p>
                         <div class="code-playground">
                             <div class="code-header"><span>idade.py</span>
                                 <div>
                                     <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="2" style="margin-right: 10px;">💡 Revelar Solução</button>
-                                    <button class="btn btn-primary check-code-btn">Verificar</button>
-                                </div>
-                            </div>
-                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
-                            <div class="exercise-output"></div>
-                            <div class="feedback"></div>
-                        </div>
-                    </div>
-                    <!-- Q8 -->
-                    <div class="interactive-exercise" id="code-challenge-3">
-                        <p><strong>8. Desafio de Código:</strong> Use um loop `for` e a função `range()` para
-                            imprimir os números de 1 a 5 (inclusive).</p>
-                        <div class="code-playground">
-                            <div class="code-header"><span>loop.py</span>
-                                <div>
-                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="3" style="margin-right: 10px;">💡 Revelar Solução</button>
-                                    <button class="btn btn-primary check-code-btn">Verificar</button>
-                                </div>
-                            </div>
-                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
-                            <div class="exercise-output"></div>
-                            <div class="feedback"></div>
-                        </div>
-                    </div>
-                    <!-- Q9 -->
-                    <div class="interactive-exercise" id="code-challenge-4">
-                        <p><strong>9. Desafio de Código:</strong> Crie uma lista chamada `frutas` com "Maçã",
-                            "Banana" e "Uva". Em seguida, imprima o último item da lista.</p>
-                        <div class="code-playground">
-                            <div class="code-header"><span>lista.py</span>
-                                <div>
-                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="4" style="margin-right: 10px;">💡 Revelar Solução</button>
-                                    <button class="btn btn-primary check-code-btn">Verificar</button>
-                                </div>
-                            </div>
-                            <textarea class="code-area" placeholder="# Escreva seu código aqui..."></textarea>
-                            <div class="exercise-output"></div>
-                            <div class="feedback"></div>
-                        </div>
-                    </div>
-                    <!-- Q10 -->
-                    <div class="interactive-exercise" id="code-challenge-5">
-                        <p><strong>10. Desafio de Código:</strong> Crie um dicionário chamado `carro` com as chaves
-                            "marca" e "ano", e valores "Tesla" e 2023. Imprima o valor associado à chave "marca".
-                        </p>
-                        <div class="code-playground">
-                            <div class="code-header"><span>dicionario.py</span>
-                                <div>
-                                    <button class="btn btn-secondary btn-reveal-solution" data-challenge-id="5" style="margin-right: 10px;">💡 Revelar Solução</button>
                                     <button class="btn btn-primary check-code-btn">Verificar</button>
                                 </div>
                             </div>
@@ -1361,58 +1141,13 @@ print("Profissão:", usuario["profissao"])</textarea>
                 </div>
 
                 <div class="nav-buttons">
-                    <button class="btn btn-primary btn-unlock-next" data-step="13" disabled>Desbloquear Próxima
+                    <button class="btn btn-primary btn-unlock-next" data-step="11" disabled>Desbloquear Próxima
                         Etapa</button>
                 </div>
             </div>
 
-            <!-- Etapa 14: Jogos Interativos (NOVA) -->
-            <div class="step" id="step-14" data-total-activities="0">
-                <!-- <span class="bloom-level">Prática Lúdica</span> -->
-                <h2>Jogos Interativos</h2>
-                <p>Hora de relaxar e praticar o que você aprendeu de uma forma divertida! Clique em um dos jogos
-                    abaixo para começar. Eles abrirão em uma nova aba.</p>
-
-                <div class="interactive-exercise">
-                    <h3>🐍 Jogo da Memória Python</h3>
-                    <p>Teste sua memória e reforce os conceitos básicos de Python. Combine os termos com suas
-                        definições corretas antes que o tempo acabe!</p>
-                    <br>
-                    <a href="{% url 'memory_game' %}" target="_blank" class="btn btn-primary">Jogar Jogo da Memória</a>
-                </div>
-
-                <div class="interactive-exercise">
-                    <h3>🕹️ Snake Quiz</h3>
-                    <p>Jogue o clássico jogo da cobrinha enquanto responde a perguntas de múltipla escolha sobre
-                        Python. Coma a resposta certa para crescer!</p>
-                    <br>
-                    <a href="{% url 'snake_game' %}" target="_blank" class="btn btn-primary">Jogar Snake Quiz</a>
-                </div>
-
-                <div class="interactive-exercise">
-                    <h3>🚀 Python Galaga</h3>
-                    <p>Defenda a galáxia dos inimigos e mostre seu conhecimento em Python neste jogo de nave. Colete
-                        itens para responder perguntas e ganhar power-ups!</p>
-                    <br>
-                    <a href="{% url 'galaga_game' %}" target="_blank" class="btn btn-primary">Jogar Python Galaga</a>
-                </div>
-
-                <div class="interactive-exercise">
-                    <h3>🥠 Pac-Python</h3>
-                    <p>Uma versão do clássico Pac-Man com tema de Python. Colete todos os "pac-dots", fuja dos
-                        "bugs" e use a "energia de otimização" para virar o jogo!</p>
-                    <br>
-                    <a href="{% url 'pacman_game' %}" target="_blank" class="btn btn-primary">Jogar Pac-Python</a>
-                </div>
-
-                <div class="nav-buttons">
-                    <button class="btn btn-primary btn-unlock-next" data-step="14">Desbloquear Próxima
-                        Etapa</button>
-                </div>
-            </div>
-
-            <!-- Etapa 15: Projeto Final -->
-            <div class="step" id="step-15" data-total-activities="1">
+            <!-- Etapa 12: Desafio Final -->
+            <div class="step" id="step-12" data-total-activities="1">
                 <!-- <span class="bloom-level">Nível 7: Criação</span> -->
                 <h2>🏆 Desafio Final - Protótipo InovaTech</h2>
 
@@ -1447,14 +1182,14 @@ print("Profissão:", usuario["profissao"])</textarea>
 
                     <div class="nav-buttons">
                         <button class="btn btn-secondary" id="reveal-rh360-solution">💡 Ver Dicas / Solução</button>
-                        <button class="btn btn-primary btn-unlock-next" data-step="15" disabled>Desbloquear
+                        <button class="btn btn-primary btn-unlock-next" data-step="12" disabled>Desbloquear
                             Conclusão</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Etapa 16: Conclusão -->
-            <div class="step" id="step-16" data-total-activities="0">
+            <!-- Etapa 13: Conclusão -->
+            <div class="step" id="step-13" data-total-activities="1">
                 <div class="conclusion-banner">
                     <div class="conclusion-icon">🏆</div>
                     <h2>Missão Cumprida!</h2>
@@ -1640,12 +1375,12 @@ print("Profissão:", usuario["profissao"])</textarea>
                 <!-- Fim da Pesquisa de Satisfação -->
 
                 <div class="nav-buttons">
-                    <button class="btn btn-primary btn-unlock-next" data-step="16">Desbloquear Certificado</button>
+                    <button class="btn btn-primary btn-unlock-next" data-step="13">Desbloquear Certificado</button>
                 </div>
             </div>
 
-            <!-- Etapa 17: Certificado -->
-            <div class="step" id="step-17">
+            <!-- Etapa 14: Certificado -->
+            <div class="step" id="step-14">
                 <!-- <span class="bloom-level">Nível Final: Conquista</span> -->
                 <h2>🎉 Parabéns, Mestre Python! 🎉</h2>
                 <p>Você completou com sucesso a jornada de introdução ao Python! Você demonstrou para a InovaTech o
@@ -1664,7 +1399,51 @@ print("Profissão:", usuario["profissao"])</textarea>
 
                 
                 <div class="nav-buttons">
-                    <button class="btn btn-secondary" id="restart-course-btn">Reiniciar Curso</button>
+                    <button class="btn btn-primary btn-unlock-next" data-step="14">Ver Conteúdo Extra</button>
+                </div>
+            </div>
+
+            <!-- Etapa 15: Jogos (Conteúdo Extra) -->
+            <div class="step" id="step-15" data-total-activities="0">
+                <h2>🎮 Conteúdo Extra: Jogos Interativos</h2>
+                <p>Parabéns por finalizar a trilha! Como bônus, pratique o que você aprendeu de uma forma divertida!
+                    Clique em um dos jogos abaixo para começar. Eles abrirão em uma nova aba.</p>
+
+                <div class="interactive-exercise">
+                    <h3>🐍 Jogo da Memória Python</h3>
+                    <p>Teste sua memória e reforce os conceitos básicos de Python. Combine os termos com suas
+                        definições corretas antes que o tempo acabe!</p>
+                    <br>
+                    <a href="{% url 'memory_game' %}" target="_blank" class="btn btn-primary">Jogar Jogo da Memória</a>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🕹️ Snake Quiz</h3>
+                    <p>Jogue o clássico jogo da cobrinha enquanto responde a perguntas de múltipla escolha sobre
+                        Python. Coma a resposta certa para crescer!</p>
+                    <br>
+                    <a href="{% url 'snake_game' %}" target="_blank" class="btn btn-primary">Jogar Snake Quiz</a>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🚀 Python Galaga</h3>
+                    <p>Defenda a galáxia dos inimigos e mostre seu conhecimento em Python neste jogo de nave. Colete
+                        itens para responder perguntas e ganhar power-ups!</p>
+                    <br>
+                    <a href="{% url 'galaga_game' %}" target="_blank" class="btn btn-primary">Jogar Python Galaga</a>
+                </div>
+
+                <div class="interactive-exercise">
+                    <h3>🥠 Pac-Python</h3>
+                    <p>Uma versão do clássico Pac-Man com tema de Python. Colete todos os "pac-dots", fuja dos
+                        "bugs" e use a "energia de otimização" para virar o jogo!</p>
+                    <br>
+                    <a href="{% url 'pacman_game' %}" target="_blank" class="btn btn-primary">Jogar Pac-Python</a>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="restart-course-btn">Finalizar e Voltar ao Mapa</button>
+                </div>
             </div>
         </div>
     </div>

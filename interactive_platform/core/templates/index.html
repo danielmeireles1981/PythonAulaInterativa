@@ -50,7 +50,7 @@
     </header>
 
     <main class="map-container">
-        <svg class="map-path-svg" viewBox="0 0 800 1800" preserveAspectRatio="none">
+        <svg class="map-path-svg" viewBox="0 0 800 1600" preserveAspectRatio="none">
             <defs>
                 <linearGradient id="snakeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" style="stop-color:#FFD43B;" />
@@ -74,8 +74,7 @@
                 S 700 1250, 400 1300
                 S 100 1350, 100 1400
                 S 100 1450, 400 1500
-                S 700 1550, 700 1600
-                S 700 1650, 400 1700
+                
                 " />
             <!-- Caminho de preenchimento (frente) -->
             <path class="snake-path-fill" d="M 400 50 
@@ -90,101 +89,29 @@
                 S 100 950, 100 1000
                 S 100 1050, 400 1100
                 S 700 1150, 700 1200
-                S 700 1250, 400 1300
+                S 700 1250, 400 1300 
                 S 100 1350, 100 1400
                 S 100 1450, 400 1500
-                S 700 1550, 700 1600
-                S 700 1650, 400 1700
                 " />
         </svg>
 
         <div class="map-stops">
             <!-- As paradas do mapa agora estão diretamente no HTML -->
-            <div class="map-stop" data-step="1" style="left: 50%; top: 50px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 1</span><span class="stop-title">🤔 Quem é
-                        você?</span></div>
-            </div>
-            <div class="map-stop" data-step="2" style="left: 12.5%; top: 200px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 2</span><span class="stop-title">🎯
-                        Situação-Problema</span></div>
-            </div>
-            <div class="map-stop" data-step="3" style="left: 50%; top: 300px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 3</span><span class="stop-title">⚙️ O que é
-                        Backend?</span></div>
-            </div>
-            <div class="map-stop" data-step="4" style="left: 87.5%; top: 400px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 4</span><span class="stop-title">📚
-                        Linguagens</span></div>
-            </div>
-            <div class="map-stop" data-step="5" style="left: 50%; top: 500px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 5</span><span class="stop-title">🐍 Por que
-                        Python?</span></div>
-            </div>
-            <div class="map-stop" data-step="6" style="left: 12.5%; top: 600px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 6</span><span class="stop-title">📦
-                        Variáveis</span></div>
-            </div>
-            <div class="map-stop" data-step="7" style="left: 50%; top: 700px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 7</span><span class="stop-title">▶️ Primeiros
-                        Passos</span></div>
-            </div>
-            <div class="map-stop" data-step="8" style="left: 87.5%; top: 800px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 8</span><span class="stop-title">🚦 Controlando o
-                        Fluxo</span></div>
-            </div>
-            <div class="map-stop" data-step="9" style="left: 50%; top: 900px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 9</span><span class="stop-title">🧰 Estruturas de
-                        Dados</span></div>
-            </div>
-            <div class="map-stop" data-step="10" style="left: 12.5%; top: 1000px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 10</span><span class="stop-title">✨ Boas
-                        Práticas</span></div>
-            </div>
-            <div class="map-stop" data-step="11" style="left: 50%; top: 1100px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 11</span><span class="stop-title">🔍
-                        Caça-Palavras</span></div>
-            </div>
-            <div class="map-stop" data-step="12" style="left: 87.5%; top: 1200px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 12</span><span class="stop-title">🧩 Construtor de
-                        Código</span></div>
-            </div>
-            <div class="map-stop" data-step="13" style="left: 50%; top: 1300px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 13</span><span class="stop-title">📝
-                        Avaliação</span></div>
-            </div>
-            <div class="map-stop" data-step="14" style="left: 12.5%; top: 1400px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 14</span><span class="stop-title">🎮 Jogos
-                        Interativos</span></div>
-            </div>
-            <div class="map-stop" data-step="15" style="left: 50%; top: 1500px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 15</span><span class="stop-title">🏆 Desafio
-                        Final</span></div>
-            </div>
-            <div class="map-stop" data-step="16" style="left: 87.5%; top: 1600px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 16</span><span class="stop-title">🏁
-                        Conclusão</span></div>
-            </div>
-            <div class="map-stop" data-step="17" style="left: 50%; top: 1700px;">
-                <div class="stop-icon"></div>
-                <div class="stop-label"><span class="stop-step">Etapa 17</span><span class="stop-title">📜
-                        Certificado</span></div>
-            </div>
+            <div class="map-stop" data-step="1" style="left: 50%; top: 50px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 1</span><span class="stop-title">🤔 Quem é você?</span></div></div>
+            <div class="map-stop" data-step="2" style="left: 12.5%; top: 200px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 2</span><span class="stop-title">🎯 Situação-Problema</span></div></div>
+            <div class="map-stop" data-step="3" style="left: 50%; top: 300px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 3</span><span class="stop-title">⚙️ O que é Backend?</span></div></div>
+            <div class="map-stop" data-step="4" style="left: 87.5%; top: 400px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 4</span><span class="stop-title">📚 Linguagens</span></div></div>
+            <div class="map-stop" data-step="5" style="left: 50%; top: 500px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 5</span><span class="stop-title">🐍 Por que Python?</span></div></div>
+            <div class="map-stop" data-step="6" style="left: 12.5%; top: 600px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 6</span><span class="stop-title">📦 Variáveis</span></div></div>
+            <div class="map-stop" data-step="7" style="left: 50%; top: 700px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 7</span><span class="stop-title">▶️ Primeiros Passos</span></div></div>
+            <div class="map-stop" data-step="8" style="left: 87.5%; top: 800px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 8</span><span class="stop-title">🚦 Controlando o Fluxo</span></div></div>
+            <div class="map-stop" data-step="9" style="left: 50%; top: 900px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 9</span><span class="stop-title">🧰 Estruturas de Dados</span></div></div>
+            <div class="map-stop" data-step="10" style="left: 12.5%; top: 1000px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 10</span><span class="stop-title">🧩 Construtor de Código</span></div></div>
+            <div class="map-stop" data-step="11" style="left: 50%; top: 1100px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 11</span><span class="stop-title">📝 Avaliação</span></div></div>
+            <div class="map-stop" data-step="12" style="left: 87.5%; top: 1200px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 12</span><span class="stop-title">🏆 Desafio Final</span></div></div>
+            <div class="map-stop" data-step="13" style="left: 50%; top: 1300px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 13</span><span class="stop-title">🏁 Conclusão</span></div></div>
+            <div class="map-stop" data-step="14" style="left: 12.5%; top: 1400px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 14</span><span class="stop-title">📜 Certificado</span></div></div>
+            <div class="map-stop" data-step="15" style="left: 50%; top: 1500px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 15</span><span class="stop-title">🎮 Jogos (Extra)</span></div></div>
         </div>
 
         <!-- Modal para exibir a aula -->
@@ -275,14 +202,12 @@
                 { step: 7, title: '▶️ Primeiros Passos', icon: '▶️' },
                 { step: 8, 'title': '🚦 Controlando o Fluxo', icon: '🚦' },
                 { step: 9, 'title': '🧰 Estruturas de Dados', icon: '🧰' },
-                { step: 10, 'title': '✨ Boas Práticas', icon: '✨' },
-                { step: 11, 'title': '🔍 Caça-Palavras', icon: '🔍' },
-                { step: 12, 'title': '🧩 Construtor de Código', icon: '🧩' },
-                { step: 13, 'title': '📝 Avaliação', icon: '📝' },
-                { step: 14, 'title': '🎮 Jogos Interativos', icon: '🎮' },
-                { step: 15, 'title': '🏆 Desafio Final', icon: '🏆' },
-                { step: 16, 'title': '🏁 Conclusão', icon: '🏁' },
-                { step: 17, 'title': '📜 Certificado', icon: '📜' }
+                { step: 10, 'title': '🧩 Construtor de Código', icon: '🧩' },
+                { step: 11, 'title': '📝 Avaliação', icon: '📝' },
+                { step: 12, 'title': '🏆 Desafio Final', icon: '🏆' },
+                { step: 13, 'title': '🏁 Conclusão', icon: '🏁' },
+                { step: 14, 'title': '📜 Certificado', icon: '📜' },
+                { step: 15, 'title': '🎮 Jogos (Extra)', icon: '🎮' }
             ];
 
             function updatePlayerInfo() {
@@ -359,9 +284,7 @@
                 // Adiciona um listener para o evento 'load' do iframe
                 iframe.addEventListener('load', function scrollToTop() {
                     // Rola o conteúdo do iframe para o topo
-                    iframe.contentWindow.scrollTo(0, 0);
-                    // Remove o listener para não ser chamado novamente em recargas
-                    iframe.removeEventListener('load', scrollToTop);
+                    if (iframe.contentWindow) iframe.contentWindow.scrollTo(0, 0);
                 });
 
                 modal.style.display = 'flex';
@@ -372,13 +295,10 @@
                 modal.style.display = 'none';
                 iframe.src = ''; // Limpa o iframe para parar a execução
                 document.body.style.overflow = 'auto';
-                updatePlayerInfo(); // Atualiza avatar e pontos
-                
-                // --- NOVO: Sincroniza com o backend ao fechar ---
-                updatePlayerInBackend();
-                updateAndRenderHallOfFame(); // Atualiza o Hall da Fama
 
-                renderMap();      // Redesenha o mapa para refletir o progresso
+                // Sincroniza com o backend e depois recarrega a página para garantir que o progresso seja exibido.
+                updatePlayerInBackend();
+                window.location.reload();
             }
 
             closeModalBtn.addEventListener('click', closeModal);
@@ -391,18 +311,21 @@
             // Ouve mensagens do iframe (da página da aula)
             window.addEventListener('message', (event) => {
                 // Verificamos a origem por segurança, mas para arquivos locais pode ser 'null'
-                const data = event.data;
+                const { type, unlockedStep, points = 10 } = event.data;
 
-                // Nova lógica centralizada para quando uma etapa é desbloqueada
-                if (data?.type === 'STEP_UNLOCKED') {
-                    const points = data.points || 10;
-                    const completedStep = data.step;
-                    const newlyUnlockedStep = completedStep + 1;
+                if (type === 'UPDATE_PROGRESS' && unlockedStep) {
+                    const completedStep = unlockedStep - 1;
 
                     // Adiciona pontos e dispara animações
                     triggerPointsAnimation(points);
                     addPoints(points);
                     triggerConfetti();
+
+                    // Atualiza o progresso localmente
+                    localStorage.setItem('unlockedStep', unlockedStep);
+
+                    // Redesenha o mapa para refletir o novo estado
+                    renderMap();
 
                     // Mostra a notificação de recompensa
                     const stepTitle = stopsData.find(s => s.step === completedStep)?.title || `Etapa ${completedStep}`;
@@ -624,7 +547,7 @@
                 const data = event.data;
 
                 // Quando a etapa 15 (desafio final) é concluída, o iframe envia uma mensagem
-                if (data?.type === 'STEP_UNLOCKED' && data.step === 15) {
+                if (data?.type === 'STEP_UNLOCKED' && data.step === 12) { // Ajustado para a nova numeração
                     const startTime = parseInt(localStorage.getItem('courseStartTime') || '0');
                      if (startTime > 0) {
                         const endTime = new Date().getTime();
@@ -633,6 +556,9 @@
                     }
                 } else if (data?.type === 'START_TIMER') { // NOVO: Ouve a mensagem para iniciar o cronômetro
                     startCourseTimer();
+                } else if (data?.type === 'COURSE_FINISHED') { // NOVO: Ouve a mensagem de finalização
+                    if (courseTimerInterval) clearInterval(courseTimerInterval);
+                    setTimeout(closeModal, 1500); // Fecha o modal após 1.5s
                 }
             });
 
