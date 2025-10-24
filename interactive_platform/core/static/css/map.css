@@ -50,7 +50,8 @@ body::before {
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
-    background: radial-gradient(1200px 800px at 50% 0%, #0c2a4a 0%, #0a213b 40%, #061729 100%);
+    /* Gradiente levemente mais claro para um visual mais suave */
+    background: radial-gradient(1200px 800px at 50% 0%, #154a7a 0%, #123a63 40%, #0d2f4f 100%);
 }
 
 #background-animation canvas {
@@ -92,7 +93,8 @@ body::before {
 .map-header {
     text-align: center;
     padding: 20px;
-    background-color: rgba(13, 43, 78, 0.85);
+    /* Levemente mais claro para combinar com o fundo */
+    background-color: rgba(21, 74, 122, 0.85);
     border-bottom: 3px solid var(--python-yellow);
     position: sticky;
     top: 0;
@@ -216,9 +218,8 @@ body::before {
     stroke: var(--path-outline);
     stroke-width: 18;
     stroke-linecap: round;
-    stroke-dasharray: 30 20;
-    animation: slither 40s linear infinite;
-    filter: drop-shadow(0 0 3px var(--path-outline));
+    /* Linha contínua com brilho suave */
+    filter: url(#softGlow);
 }
 
 .snake-path-fill {
@@ -226,8 +227,8 @@ body::before {
     stroke: url(#snakeGradient);
     stroke-width: 12;
     stroke-linecap: round;
-    stroke-dasharray: 30 20;
-    animation: slither 40s linear infinite;
+    /* Linha contínua com gradiente animado e brilho */
+    filter: url(#softGlow);
 }
 
 @keyframes slither {
@@ -246,6 +247,12 @@ body::before {
     width: 100%;
     height: 100%;
     z-index: 2;
+}
+
+/* Ponto luminoso que percorre o caminho */
+.runner-dot {
+    filter: drop-shadow(0 0 6px #ffffff);
+    pointer-events: none;
 }
 
 .map-stop {

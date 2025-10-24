@@ -37,7 +37,7 @@
 
     <header class="map-header">
         <h1>🐍 Trilha de Aprendizagem Python 🐍</h1>
-        <p>Siga o caminho da serpente e desbloqueie as etapas para se tornar um mestre em Python!</p>
+        
         <div class="gamification-stats">
             <div class="player-info">
                 <span id="player-avatar" class="player-avatar"></span>
@@ -56,7 +56,17 @@
                     <stop offset="0%" style="stop-color:#FFD43B;" />
                     <stop offset="50%" style="stop-color:#3776AB;" />
                     <stop offset="100%" style="stop-color:#FFD43B;" />
+                    <!-- Anima o gradiente para criar sensação de fluxo -->
+                    <animateTransform attributeName="gradientTransform" type="translate" from="-1 0" to="1 0" dur="8s" repeatCount="indefinite" />
                 </linearGradient>
+                <!-- Filtro de brilho suave para a trilha -->
+                <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
             </defs>
             <!-- Caminho de contorno (atrás) -->
             <path class="snake-path-outline" d="M 400 50 
@@ -77,7 +87,7 @@
                 
                 " />
             <!-- Caminho de preenchimento (frente) -->
-            <path class="snake-path-fill" d="M 400 50 
+            <path id="snakePath" class="snake-path-fill" d="M 400 50 
                 C 400 100, 100 150, 100 200
                 S 100 250, 400 300
                 S 700 350, 700 400
@@ -93,6 +103,12 @@
                 S 100 1350, 100 1400
                 S 100 1450, 400 1500
                 " />
+            <!-- Ponto luminoso viajando pela trilha -->
+            <circle class="runner-dot" r="6" fill="#ffffff">
+                <animateMotion dur="10s" repeatCount="indefinite" rotate="auto">
+                    <mpath href="#snakePath" />
+                </animateMotion>
+            </circle>
         </svg>
 
         <div class="map-stops">
