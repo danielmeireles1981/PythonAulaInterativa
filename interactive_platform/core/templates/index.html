@@ -341,6 +341,17 @@
                     // Atualiza o progresso localmente
                     localStorage.setItem('unlockedStep', unlockedStep);
 
+                    // Animação de pulsação da trilha
+                    const pathFill = document.querySelector('.snake-path-fill');
+                    if (pathFill) {
+                        pathFill.classList.add('pulsing');
+                        // Remove a classe após a animação para não interferir com outras interações
+                        // Duração da animação (1.5s * 2 iterações = 3s)
+                        setTimeout(() => {
+                            pathFill.classList.remove('pulsing');
+                        }, 3000);
+                    }
+
                     // Redesenha o mapa para refletir o novo estado
                     renderMap();
 
@@ -637,12 +648,12 @@
             const styles = getComputedStyle(document.documentElement);
             const PY_BLUE = (styles.getPropertyValue('--python-blue') || '#3776AB').trim();
             const PY_YELLOW = (styles.getPropertyValue('--python-yellow') || '#FFD43B').trim();
-            // Maior opacidade para reduzir cauda e poluição visual
-            const HAZE = 'rgba(13, 43, 78, 0.12)';
+            // Cor de fundo para o efeito de "rastro", usando o azul oficial com baixa opacidade
+            const HAZE = 'rgba(55, 118, 171, 0.05)';
 
-            const glyphs = ['def','class','import','print','lambda','for','if','else','try','[]','{}','()','=>',':','#','🐍','True','False','__init__','0','1'];
-            const BASE_ALPHA = 0.28; // opacidade base mais discreta
-            const HEAD_ALPHA = 0.45; // cabeças levemente mais visíveis
+            const glyphs = ['def','class','import','print','lambda','for','if','else','try','[]','{}','()','=>',':','#','True','False','__init__','0','1'];
+            const BASE_ALPHA = 0.4; // opacidade base para os glifos azuis
+            const HEAD_ALPHA = 0.9; // opacidade para os glifos amarelos (destaques)
 
             let fontSize;
             let columns;
@@ -682,7 +693,7 @@
                     const x = Math.floor(i * columnSpacing);
                     const y = drops[i] * fontSize;
 
-                    const isHead = Math.random() < 0.02; // menos destaques para reduzir ruído
+                    const isHead = Math.random() < 0.015; // Destaques amarelos mais raros para um visual mais limpo
                     ctx.globalAlpha = isHead ? HEAD_ALPHA : BASE_ALPHA;
                     ctx.fillStyle = isHead ? PY_YELLOW : PY_BLUE;
                     ctx.save();

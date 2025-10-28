@@ -50,8 +50,8 @@ body::before {
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
-    /* Gradiente mais claro mantendo o clima noturno */
-    background: radial-gradient(1200px 800px at 50% 0%, #1e6fb0 0%, #185a93 40%, #134d7a 100%);
+    /* Fundo sólido usando a cor escura principal para um visual mais limpo */
+    background-color: var(--python-dark);
 }
 
 #background-animation canvas {
@@ -229,6 +229,23 @@ body::before {
     stroke-linecap: round;
     /* Linha contínua com gradiente animado e brilho */
     filter: url(#softGlow);
+}
+
+/* Animação de pulsação para quando uma nova etapa é desbloqueada */
+@keyframes pulse-path {
+    0%, 100% {
+        /* Retorna ao brilho normal */
+        filter: url(#softGlow);
+        stroke: url(#snakeGradient);
+    }
+    50% {
+        /* Pulsa com um brilho amarelo intenso */
+        filter: drop-shadow(0 0 12px var(--python-yellow));
+        stroke: var(--python-yellow);
+    }
+}
+.snake-path-fill.pulsing {
+    animation: pulse-path 1.5s ease-in-out 2; /* Executa a animação duas vezes */
 }
 
 @keyframes slither {
