@@ -341,6 +341,9 @@
                     // Atualiza o progresso localmente
                     localStorage.setItem('unlockedStep', unlockedStep);
 
+                    // Sincroniza imediatamente com o backend para refletir no Hall da Fama
+                    try { updatePlayerInBackend(); } catch (e) { console.warn('Sync falhou:', e); }
+
                     // Animação de pulsação da trilha
                     const pathFill = document.querySelector('.snake-path-fill');
                     if (pathFill) {

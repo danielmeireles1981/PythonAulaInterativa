@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^-qhjvnv*b&3z01n2yg^a4$5$yz0kttdi*ym1fjm7-fdhbun28
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -137,3 +137,9 @@ TEMPLATES[0]['DIRS'] = [BASE_DIR / 'core' / 'templates']
 
 # Permite que as páginas sejam exibidas em iframes, desde que sejam do mesmo site.
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+# Em desenvolvimento, evita erros de CSRF para testes via LAN.
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
