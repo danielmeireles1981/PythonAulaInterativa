@@ -9,6 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --primary: #3776AB;
+            --secondary: #FFD43B;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --danger: #dc3545;
+            --info: #0dcaf0;
+            --text-muted: #6c757d;
             --primary: #2c3e50;
             --secondary: #1abc9c;
             --success: #2ecc71;
@@ -249,6 +257,42 @@
             border-radius: 50%;
         }
 
+        /* Estilos do Rodapé */
+        .site-footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            background: linear-gradient(to bottom, #061e38, #306998);
+            border-top: 3px solid var(--secondary);
+        }
+
+        .site-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .site-footer a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+
+        .site-footer a:hover {
+            text-shadow: 0 0 5px var(--secondary);
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -317,6 +361,11 @@
             <button id="restart-btn">🔄 Jogar Novamente</button>
         </div>
     </div>
+
+    <!-- NOVO: Rodapé -->
+    <footer class="site-footer">
+      <p>Desenvolvido com 🐍 por <a href="https://github.com/danielmeireles1981" target="_blank" rel="noopener noreferrer">Prof. Daniel Meireles do Rego</a></p>
+    </footer>
 
     <script>
         // Configuração do jogo

@@ -1,8 +1,8 @@
 :root {
-    --python-blue: #3776AB;
+    --python-blue: #2d618b;
     --python-yellow: #FFD43B;
     --python-light: #4B8BBE;
-    --python-dark: #0D2B4E;
+    --python-dark: #061e38;
     --python-green: #45824B;
     --python-gray: #646464;
     --python-light-bg: #f8f9fa;
@@ -65,6 +65,24 @@ body::before {
     display: block;
 }
 
+/* NOVO: Efeito de Scanlines para um visual retrô */
+#background-animation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+}
+
 .floating-symbol {
     position: absolute;
     font-family: 'Courier New', monospace;
@@ -93,17 +111,20 @@ body::before {
 .map-header {
     text-align: center;
     padding: 20px;
-    /* Levemente mais claro para combinar com o fundo */
-    background-color: rgba(21, 74, 122, 0.85);
+    /* Gradiente vertical (de cima para baixo) e mais escuro */
+    background: linear-gradient(to bottom, var(--python-dark), var(--path-outline));
     border-bottom: 3px solid var(--python-yellow);
     position: sticky;
     top: 0;
     z-index: 10;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
+/* Garante que o conteúdo do header fique na frente das scanlines */
+.map-header > * {
+    position: relative;
+    z-index: 1;
+}
 
 .map-header h1 {
     color: var(--python-yellow);
@@ -118,6 +139,16 @@ body::before {
     color: #bdc3c7;
     max-width: 600px;
     margin: 0 auto;
+}
+
+.map-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    color: var(--python-blue);
+    text-shadow: 0 0 8px rgba(75, 139, 190, 0.7);
+    margin-top: -5px !important;
+    margin-bottom: 20px;
+    font-weight: 500;
 }
 
 .gamification-stats {
@@ -311,17 +342,20 @@ body::before {
 }
 
 .next-to-unlock .stop-icon {
-    animation: glow 1.5s infinite ease-in-out;
+    animation: glow 1.2s infinite ease-in-out; /* Animação mais rápida e intensa */
 }
 
 @keyframes glow {
     0%, 100% {
         box-shadow: 0 0 10px rgba(255, 212, 59, 0.5), 0 4px 10px rgba(0,0,0,0.3);
         transform: scale(1);
+        border-color: var(--python-yellow);
     }
     50% {
-        box-shadow: 0 0 25px rgba(255, 212, 59, 1), 0 4px 10px rgba(0,0,0,0.3);
-        transform: scale(1.05);
+        /* Brilho mais forte e borda branca para um efeito de "flash" */
+        box-shadow: 0 0 35px rgba(255, 212, 59, 1), 0 0 15px rgba(255, 255, 255, 0.5);
+        transform: scale(1.1);
+        border-color: #fff;
     }
 }
 
@@ -349,6 +383,22 @@ body::before {
 .map-stop:not(.locked) .stop-icon:has(+ .completed) {
     border-color: var(--completed);
     background-color: var(--completed);
+}
+
+/* NOVO: Efeito de brilho para etapas concluídas */
+.map-stop.completed .stop-icon {
+    background-color: var(--completed);
+    border-color: var(--completed);
+    animation: completed-glow 2.5s infinite ease-in-out;
+}
+
+@keyframes completed-glow {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(39, 174, 96, 0.5), 0 4px 10px rgba(0,0,0,0.3);
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(39, 174, 96, 1), 0 4px 10px rgba(0,0,0,0.3);
+    }
 }
 
 .map-stop:hover .stop-icon {
@@ -623,3 +673,47 @@ body::before {
 .rank-1 .rank { color: #FFD700; }
 .rank-2 .rank { color: #C0C0C0; }
 .rank-3 .rank { color: #CD7F32; }
+
+/* NOVO: Estilos do Rodapé */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: #bdc3c7;
+    font-size: 0.9rem;
+    /* Gradiente igual ao do header */
+    background: linear-gradient(to bottom, var(--python-dark), var(--path-outline));
+    border-top: 3px solid var(--python-yellow);
+}
+
+.site-footer a {
+    color: var(--python-light); /* Um azul mais suave para o estado normal */
+    text-decoration: none;
+    font-weight: bold;
+    position: relative;
+    padding: 2px 4px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.site-footer a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--python-yellow);
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+.site-footer a:hover {
+    color: var(--python-yellow);
+    text-shadow: 0 0 8px rgba(255, 212, 59, 0.7);
+}
+
+.site-footer a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}

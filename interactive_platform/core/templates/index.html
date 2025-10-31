@@ -1,75 +1,218 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Trilha de Aprendizagem Python</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐍</text></svg>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/map.css' %}">
-</head>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐍</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/map.css' %}" />
+  </head>
 
-<body>
-
+  <body>
     <!-- Contêiner para a animação de fundo dinâmica -->
     <div id="background-animation"></div>
 
     <!-- SVG para definir o padrão de grama do fundo -->
     <svg width="0" height="0" style="position:absolute; z-index: -1;">
-        <defs>
-            <pattern id="grass-pattern" patternUnits="userSpaceOnUse" width="100" height="100">
-                <!-- Fundo mais claro para o padrão -->
-                <rect width="100" height="100" fill="#2c3e50" />
-                <!-- Lâminas de grama com cores e posições variadas -->
-                <path d="M 0 100 C 10 80, 15 40, 20 0" stroke="#2a9d8f" stroke-width="1.5" fill="none" opacity="0.3" />
-                <path d="M 25 100 C 35 80, 40 40, 45 0" stroke="#34495e" stroke-width="2" fill="none" opacity="0.4" />
-                <path d="M 50 100 C 60 80, 65 40, 70 0" stroke="#2a9d8f" stroke-width="1" fill="none" opacity="0.2" />
-                <path d="M 75 100 C 85 80, 90 40, 95 0" stroke="#34495e" stroke-width="1.5" fill="none" opacity="0.3" />
-            </pattern>
-        </defs>
+      <defs>
+        <pattern id="grass-pattern" patternUnits="userSpaceOnUse" width="100" height="100">
+          <!-- Fundo mais claro para o padrão -->
+          <rect width="100" height="100" fill="#2c3e50" />
+          <!-- Lâminas de grama com cores e posições variadas -->
+          <path d="M 0 100 C 10 80, 15 40, 20 0" stroke="#2a9d8f" stroke-width="1.5" fill="none" opacity="0.3" />
+          <path d="M 25 100 C 35 80, 40 40, 45 0" stroke="#34495e" stroke-width="2" fill="none" opacity="0.4" />
+          <path d="M 50 100 C 60 80, 65 40, 70 0" stroke="#2a9d8f" stroke-width="1" fill="none" opacity="0.2" />
+          <path d="M 75 100 C 85 80, 90 40, 95 0" stroke="#34495e" stroke-width="1.5" fill="none" opacity="0.3" />
+        </pattern>
+      </defs>
     </svg>
 
     <header class="map-header">
-        <h1>🐍 Trilha de Aprendizagem Python 🐍</h1>
-        
-        <div class="gamification-stats">
-            <div class="player-info">
-                <span id="player-avatar" class="player-avatar"></span>
-                <span id="player-name" class="player-name"></span>
-            </div>
-            <span id="player-score">🏆 Pontos: 0</span>
-            <span id="course-timer" class="player-score" style="display: none;">⏰ Tempo: 00:00</span>
-            <button id="reset-progress-btn" title="Resetar todo o progresso e pontos">🔄 Resetar</button>
+      <h1>🐍 Trilha de Aprendizagem Python 🐍</h1>
+      <p class="map-subtitle">Aprenda <strong>Python</strong> do zero com uma jornada interativa e gamificada!</p>
+      <div class="gamification-stats">
+        <div class="player-info">
+          <span id="player-avatar" class="player-avatar"></span>
+          <span id="player-name" class="player-name"></span>
         </div>
+        <span id="player-score">🏆 Pontos: 0</span>
+        <span id="course-timer" class="player-score" style="display: none;">⏰ Tempo: 00:00</span>
+        <button id="reset-progress-btn" title="Resetar todo o progresso e pontos">🔄 Resetar</button>
+      </div>
     </header>
 
+    <!-- NOVO: Botão flutuante para os pré-requisitos -->
+    <button id="prerequisites-toggle-btn" class="floating-prereq-btn">
+      <span class="icon">💡</span>
+      <span class="text">Leia antes de começar</span>
+    </button>
+
+    <!-- Modal de Pré-requisitos (NOVO) -->
+    <div id="prerequisites-modal" class="prerequisites-overlay">
+      <div class="prerequisites-content">
+        <h2>🐍 Bem-vindo(a) à Trilha Python!</h2>
+        <p>Antes de mergulhar no código, vamos garantir que você está no lugar certo.</p>
+
+        <div class="prerequisites-sections">
+          <div class="prereq-section">
+            <h3>✅ Pré-requisitos Essenciais:</h3>
+            <ul>
+              <li><strong>Conhecimentos Básicos de Informática:</strong> Saber usar um computador e navegar na internet.</li>
+              <li><strong>Raciocínio Lógico Básico:</strong> Gostar de resolver quebra-cabeças ou seguir instruções.</li>
+              <li><strong>Curiosidade e Vontade de Aprender:</strong> A motivação para experimentar, errar e aprender é sua principal ferramenta.</li>
+            </ul>
+          </div>
+
+          <div class="prereq-section">
+            <h3>❌ O que você NÃO precisa saber:</h3>
+            <ul>
+              <li><strong>Nenhuma experiência com programação:</strong> A trilha começa do absoluto zero.</li>
+              <li><strong>Ser um gênio da matemática:</strong> A matemática usada é básica. O foco é na lógica.</li>
+              <li><strong>Ter um computador superpotente:</strong> Tudo roda no seu navegador.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="recommendation"><strong>Recomendável (mas não obrigatório):</strong> Ter um inglês básico para leitura ajudará muito no seu futuro como dev!</p>
+
+        <button id="start-journey-btn" class="btn-start-journey">Estou pronto para começar! 🚀</button>
+      </div>
+    </div>
+    <style>
+      .prerequisites-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(13, 43, 78, 0.95); backdrop-filter: blur(10px); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: opacity 0.5s ease; }
+      .prerequisites-overlay.show { display: flex; opacity: 1; }
+      .prerequisites-content { background-color: var(--python-dark); color: var(--light); padding: 30px 40px; border-radius: 15px; border: 2px solid var(--python-yellow); max-width: 800px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+      .prerequisites-content h2 { color: var(--python-yellow); font-family: 'Poppins', sans-serif; margin-bottom: 15px; }
+      .prerequisites-sections { display: flex; gap: 30px; text-align: left; margin: 25px 0; }
+      .prereq-section { flex: 1; background-color: rgba(0,0,0,0.2); padding: 20px; border-radius: 10px; }
+      .prereq-section h3 { color: var(--python-light); margin-bottom: 15px; }
+      .prereq-section ul { list-style: none; padding-left: 0; }
+      .prereq-section li { margin-bottom: 10px; line-height: 1.5; }
+      .recommendation { font-style: italic; color: var(--text-muted); margin-bottom: 25px; }
+      .btn-start-journey { background: var(--python-yellow); color: var(--python-dark); border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+      .btn-start-journey:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--python-yellow); }
+    </style>
+    <style>
+      /* Estilos para o novo botão flutuante */
+      .floating-prereq-btn { display: none; position: fixed; bottom: 20px; left: 20px; background: linear-gradient(135deg, var(--python-yellow), #ffb700); color: var(--python-dark); border: none; border-radius: 50px; padding: 12px 20px; font-size: 1rem; font-weight: bold; cursor: pointer; z-index: 1500; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: pulse-prereq 2s infinite; }
+      .floating-prereq-btn .icon { margin-right: 8px; }
+      .floating-prereq-btn:hover { animation-play-state: paused; transform: scale(1.05); }
+      @keyframes pulse-prereq {
+        0% { transform: scale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 212, 59, 0.7); }
+        100% { transform: scale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+      }
+    </style>
+
+    <!-- Player de Música -->
+    <div id="music-player">
+      <div class="player-controls">
+        <button id="prev-track-btn">⏮️</button>
+        <button id="play-pause-btn">▶️</button>
+        <button id="next-track-btn">⏭️</button>
+      </div>
+      <div class="track-info">
+        <span id="current-track-title">Carregando...</span>
+      </div>
+      <button id="toggle-playlist-btn">🎵</button>
+      <ul id="playlist">
+        <!-- A lista de músicas será preenchida pelo JavaScript -->
+      </ul>
+      <audio id="audio-player" src=""></audio>
+
+      <!-- NOVO: Som de conquista -->
+      <audio id="achievement-sound" src="{% static 'audio/achievement.mp3' %}" preload="auto"></audio>
+    </div>
+
+    <style>
+      #music-player {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        /* Estilo "Glassmorphism" para mais destaque */
+        background-color: rgba(13, 43, 78, 0.85); /* Azul escuro semitransparente */
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--python-light);
+        border-radius: 12px;
+        padding: 10px 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        cursor: move; /* Indica que o player é arrastável */
+      }
+      #music-player button {
+        background: transparent;
+        border: none;
+        color: var(--light); /* Cor do texto clara para contrastar */
+        font-size: 1.2rem;
+        cursor: pointer;
+        user-select: none; /* Impede a seleção de texto nos botões */
+      }
+      #track-info {
+        font-size: 0.9rem;
+        color: #bdc3c7; /* Cinza claro para o título da música */
+      }
+      #playlist {
+        display: none;
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        background-color: rgba(13, 43, 78, 0.95); /* Fundo da playlist consistente */
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--python-light);
+        list-style: none;
+        padding: 10px;
+        margin: 0 0 10px 0;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      #playlist.show {
+        display: block;
+      }
+      #playlist li {
+        padding: 8px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      #playlist li:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+      #playlist li.playing {
+        background-color: var(--python-yellow);
+        color: var(--python-dark);
+      }
+    </style>
+    <!-- Fim do Player de Música -->
+
     <main class="map-container">
-        <svg class="map-path-svg" viewBox="0 0 800 1600" preserveAspectRatio="none">
-            <defs>
-                <linearGradient id="snakeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#FFD43B;" />
-                    <stop offset="50%" style="stop-color:#3776AB;" />
-                    <stop offset="100%" style="stop-color:#FFD43B;" />
-                    <!-- Anima o gradiente para criar sensação de fluxo -->
-                    <animateTransform attributeName="gradientTransform" type="translate" from="-1 0" to="1 0" dur="8s" repeatCount="indefinite" />
-                </linearGradient>
-                <!-- Filtro de brilho suave para a trilha -->
-                <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-                    <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
-            </defs>
-            <!-- Caminho de contorno (atrás) -->
-            <path class="snake-path-outline" d="M 400 50 
+      <svg class="map-path-svg" viewBox="0 0 800 1600" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="snakeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#FFD43B;" />
+            <stop offset="50%" style="stop-color:#3776AB;" />
+            <stop offset="100%" style="stop-color:#FFD43B;" />
+            <!-- Anima o gradiente para criar sensação de fluxo -->
+            <animateTransform attributeName="gradientTransform" type="translate" from="-1 0" to="1 0" dur="8s" repeatCount="indefinite" />
+          </linearGradient>
+          <!-- Filtro de brilho suave para a trilha -->
+          <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Caminho de contorno (atrás) -->
+        <path class="snake-path-outline" d="M 400 50 
                 C 400 100, 100 150, 100 200
                 S 100 250, 400 300
                 S 700 350, 700 400
@@ -86,8 +229,8 @@
                 S 100 1450, 400 1500
                 
                 " />
-            <!-- Caminho de preenchimento (frente) -->
-            <path id="snakePath" class="snake-path-fill" d="M 400 50 
+        <!-- Caminho de preenchimento (frente) -->
+        <path id="snakePath" class="snake-path-fill" d="M 400 50 
                 C 400 100, 100 150, 100 200
                 S 100 250, 400 300
                 S 700 350, 700 400
@@ -103,662 +246,915 @@
                 S 100 1350, 100 1400
                 S 100 1450, 400 1500
                 " />
-            <!-- Ponto luminoso viajando pela trilha -->
-            <circle class="runner-dot" r="6" fill="#ffffff">
-                <animateMotion dur="10s" repeatCount="indefinite" rotate="auto">
-                    <mpath href="#snakePath" />
-                </animateMotion>
-            </circle>
-        </svg>
+        <!-- Ponto luminoso viajando pela trilha -->
+        <circle class="runner-dot" r="6" fill="#ffffff">
+          <animateMotion dur="10s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#snakePath" />
+          </animateMotion>
+        </circle>
+      </svg>
 
-        <div class="map-stops">
-            <!-- As paradas do mapa agora estão diretamente no HTML -->
-            <div class="map-stop" data-step="1" style="left: 50%; top: 50px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 1</span><span class="stop-title">🤔 Quem é você?</span></div></div>
-            <div class="map-stop" data-step="2" style="left: 12.5%; top: 200px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 2</span><span class="stop-title">🎯 Situação-Problema</span></div></div>
-            <div class="map-stop" data-step="3" style="left: 50%; top: 300px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 3</span><span class="stop-title">⚙️ O que é Backend?</span></div></div>
-            <div class="map-stop" data-step="4" style="left: 87.5%; top: 400px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 4</span><span class="stop-title">📚 Linguagens</span></div></div>
-            <div class="map-stop" data-step="5" style="left: 50%; top: 500px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 5</span><span class="stop-title">🐍 Por que Python?</span></div></div>
-            <div class="map-stop" data-step="6" style="left: 12.5%; top: 600px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 6</span><span class="stop-title">📦 Variáveis</span></div></div>
-            <div class="map-stop" data-step="7" style="left: 50%; top: 700px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 7</span><span class="stop-title">▶️ Primeiros Passos</span></div></div>
-            <div class="map-stop" data-step="8" style="left: 87.5%; top: 800px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 8</span><span class="stop-title">🚦 Controlando o Fluxo</span></div></div>
-            <div class="map-stop" data-step="9" style="left: 50%; top: 900px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 9</span><span class="stop-title">🧰 Estruturas de Dados</span></div></div>
-            <div class="map-stop" data-step="10" style="left: 12.5%; top: 1000px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 10</span><span class="stop-title">🧩 Construtor de Código</span></div></div>
-            <div class="map-stop" data-step="11" style="left: 50%; top: 1100px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 11</span><span class="stop-title">📝 Avaliação</span></div></div>
-            <div class="map-stop" data-step="12" style="left: 87.5%; top: 1200px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 12</span><span class="stop-title">🏆 Desafio Final</span></div></div>
-            <div class="map-stop" data-step="13" style="left: 50%; top: 1300px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 13</span><span class="stop-title">🏁 Conclusão</span></div></div>
-            <div class="map-stop" data-step="14" style="left: 12.5%; top: 1400px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 14</span><span class="stop-title">📜 Certificado</span></div></div>
-            <div class="map-stop" data-step="15" style="left: 50%; top: 1500px;"><div class="stop-icon"></div><div class="stop-label"><span class="stop-step">Etapa 15</span><span class="stop-title">🎮 Jogos (Extra)</span></div></div>
+      <div class="map-stops">
+        <!-- As paradas do mapa agora estão diretamente no HTML -->
+        <div class="map-stop" data-step="1" style="left: 50%; top: 50px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 1</span><span class="stop-title">🤔 Quem é você?</span>
+          </div>
         </div>
-
-        <!-- Modal para exibir a aula -->
-        <div class="modal-overlay" id="lesson-modal">
-            <div class="modal-content">
-                <button class="modal-close-btn" id="modal-close-btn">&times;</button>
-                <div class="iframe-container">
-                    <iframe id="lesson-iframe" src="" frameborder="0"></iframe>
-                </div>
-            </div>
+        <div class="map-stop" data-step="2" style="left: 12.5%; top: 200px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 2</span><span class="stop-title">🎯 Situação-Problema</span>
+          </div>
         </div>
+        <div class="map-stop" data-step="3" style="left: 50%; top: 300px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 3</span><span class="stop-title">⚙️ O que é Backend?</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="4" style="left: 87.5%; top: 400px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 4</span><span class="stop-title">📚 Linguagens</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="5" style="left: 50%; top: 500px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 5</span><span class="stop-title">🐍 Por que Python?</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="6" style="left: 12.5%; top: 600px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 6</span><span class="stop-title">📦 Variáveis</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="7" style="left: 50%; top: 700px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 7</span><span class="stop-title">▶️ Primeiros Passos</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="8" style="left: 87.5%; top: 800px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 8</span><span class="stop-title">🚦 Controlando o Fluxo</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="9" style="left: 50%; top: 900px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 9</span><span class="stop-title">🧰 Estruturas de Dados</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="10" style="left: 12.5%; top: 1000px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 10</span><span class="stop-title">🧩 Construtor de Código</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="11" style="left: 50%; top: 1100px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 11</span><span class="stop-title">📝 Avaliação</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="12" style="left: 87.5%; top: 1200px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 12</span><span class="stop-title">🏆 Desafio Final</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="13" style="left: 50%; top: 1300px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 13</span><span class="stop-title">🏁 Conclusão</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="14" style="left: 12.5%; top: 1400px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 14</span><span class="stop-title">📜 Certificado</span>
+          </div>
+        </div>
+        <div class="map-stop" data-step="15" style="left: 50%; top: 1500px;">
+          <div class="stop-icon"></div>
+          <div class="stop-label">
+            <span class="stop-step">Etapa 15</span><span class="stop-title">🎮 Jogos (Extra)</span>
+          </div>
+        </div>
+      </div>
 
-        <!-- Notificação de Recompensa (Toast) -->
-        <div id="toast-notification" class="toast"></div>
+      <!-- Modal para exibir a aula -->
+      <div class="modal-overlay" id="lesson-modal">
+        <div class="modal-content">
+          <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+          <div class="iframe-container">
+            <iframe id="lesson-iframe" src="" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
 
-        <!-- Animação de Pontos Ganhos -->
-        <div id="points-animation" class="points-animation">+10 Pontos!</div>
+      <!-- Notificação de Recompensa (Toast) -->
+      <div id="toast-notification" class="toast"></div>
 
+      <!-- Animação de Pontos Ganhos -->
+      <div id="points-animation" class="points-animation">+10 Pontos!</div>
     </main>
 
     <!-- Seção Hall da Fama -->
     <section class="hall-of-fame">
-        <h2>🏆 Hall da Fama 🏆</h2>
-        <p>Os melhores aventureiros da Trilha Python!</p>
-        <ul class="hall-of-fame-list" id="hall-of-fame-list">
-            <!-- O ranking será preenchido pelo JavaScript -->
-            <li>Carregando ranking...</li>
-            <style>
-                .player-time {
-                    color: var(--muted);
-                    font-size: 0.9em;
-                }
-            </style>
-        </ul>
+      <h2>🏆 Hall da Fama 🏆</h2>
+      <p>Os melhores aventureiros da Trilha Python!</p>
+      <ul class="hall-of-fame-list" id="hall-of-fame-list">
+        <!-- O ranking será preenchido pelo JavaScript -->
+        <li>Carregando ranking...</li>
+        <style>
+          .player-time {
+            color: var(--muted);
+            font-size: 0.9em;
+          }
+        </style>
+      </ul>
     </section>
 
+    <!-- NOVO: Rodapé -->
+    <footer class="site-footer">
+      <p>Desenvolvido com 🐍 por <a href="https://github.com/danielmeireles1981" target="_blank" rel="noopener noreferrer">Prof. Daniel Meireles do Rego</a></p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
-        // --- Script para Animação de Fundo Dinâmica ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const backgroundContainer = document.getElementById('background-animation');
-            if (!backgroundContainer) return;
+      // --- Script para Animação de Fundo Dinâmica ---
+      document.addEventListener('DOMContentLoaded', () => {
+        const backgroundContainer = document.getElementById('background-animation')
+        if (!backgroundContainer) return
+      
+        const symbols = ['def', 'class', 'import', 'print()', 'for in', 'if else', '()', '{}', '[]', '=>', '🐍', '<>', '"""', '#', 'lambda', 'True', 'False', '__init__']
+        const colors = ['var(--python-blue)', 'var(--python-yellow)', 'var(--python-green)']
+        // Menos elementos no mobile para melhor performance
+        const numberOfSymbols = window.matchMedia('(max-width: 768px)').matches ? 24 : 50
+      
+        for (let i = 0; i < numberOfSymbols; i++) {
+          const symbolEl = document.createElement('div')
+          symbolEl.classList.add('floating-symbol')
+          symbolEl.textContent = symbols[Math.floor(Math.random() * symbols.length)]
+      
+          // Posição e tamanho aleatórios
+          symbolEl.style.left = `${Math.random() * 100}vw`
+          symbolEl.style.top = `${Math.random() * 100}vh`
+          symbolEl.style.fontSize = `${Math.random() * 1.5 + 0.5}rem` // Tamanho entre 0.5rem e 2.0rem
+          symbolEl.style.color = colors[Math.floor(Math.random() * colors.length)]
+      
+          // Duração e atraso da animação aleatórios
+          const duration = Math.random() * 20 + 15 // Duração entre 15s e 35s
+          const delay = Math.random() * -35 // Atraso negativo para começar em pontos diferentes
+          symbolEl.style.animation = `floatAndDrift ${duration}s ${delay}s linear infinite`
+      
+          backgroundContainer.appendChild(symbolEl)
+        }
+      })
+      
+      document.addEventListener('DOMContentLoaded', () => {
+        const stopsContainer = document.querySelector('.map-stops')
 
-            const symbols = ['def', 'class', 'import', 'print()', 'for in', 'if else', '()', '{}', '[]', '=>', '🐍', '<>', '"""', '#', 'lambda', 'True', 'False', '__init__'];
-            const colors = ['var(--python-blue)', 'var(--python-yellow)', 'var(--python-green)'];
-            // Menos elementos no mobile para melhor performance
-            const numberOfSymbols = window.matchMedia('(max-width: 768px)').matches ? 24 : 50;
+        // --- Lógica do Modal de Pré-requisitos (MODIFICADO) ---
+        const prereqModal = document.getElementById('prerequisites-modal');
+        const startJourneyBtn = document.getElementById('start-journey-btn');
+        const prereqToggleButton = document.getElementById('prerequisites-toggle-btn');
 
-            for (let i = 0; i < numberOfSymbols; i++) {
-                const symbolEl = document.createElement('div');
-                symbolEl.classList.add('floating-symbol');
-                symbolEl.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        // Mostra o botão de pré-requisitos
+        prereqToggleButton.style.display = 'flex';
 
-                // Posição e tamanho aleatórios
-                symbolEl.style.left = `${Math.random() * 100}vw`;
-                symbolEl.style.top = `${Math.random() * 100}vh`;
-                symbolEl.style.fontSize = `${Math.random() * 1.5 + 0.5}rem`; // Tamanho entre 0.5rem e 2.0rem
-                symbolEl.style.color = colors[Math.floor(Math.random() * colors.length)];
+        // Se o usuário já leu, remove a animação e atualiza o ícone
+        if (!localStorage.getItem('hasSeenPrerequisites')) {
+            prereqToggleButton.style.animation = 'pulse-prereq 2s infinite';
+        } else {
+            prereqToggleButton.style.animation = 'none';
+            prereqToggleButton.querySelector('.icon').textContent = '✅';
+        }
 
-                // Duração e atraso da animação aleatórios
-                const duration = Math.random() * 20 + 15; // Duração entre 15s e 35s
-                const delay = Math.random() * -35; // Atraso negativo para começar em pontos diferentes
-                symbolEl.style.animation = `floatAndDrift ${duration}s ${delay}s linear infinite`;
-
-                backgroundContainer.appendChild(symbolEl);
-            }
+        // O botão piscante abre o modal
+        prereqToggleButton.addEventListener('click', () => {
+            prereqModal.classList.add('show');
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const stopsContainer = document.querySelector('.map-stops');
-            const scoreDisplay = document.getElementById('player-score');
-            const avatarDisplay = document.getElementById('player-avatar');
-            const playerNameDisplay = document.getElementById('player-name');
-            const hallOfFameList = document.getElementById('hall-of-fame-list');
-            const toast = document.getElementById('toast-notification');
-
-            const modal = document.getElementById('lesson-modal');
-            const iframe = document.getElementById('lesson-iframe');
-            const closeModalBtn = document.getElementById('modal-close-btn');
-
-            const stopsData = [
-                { step: 1, title: '🤔 Quem é você?', icon: '❓' },
-                { step: 2, title: '🎯 Situação-Problema', icon: '🎯' },
-                { step: 3, title: '⚙️ O que é Backend?', icon: '⚙️' },
-                { step: 4, title: '📚 Linguagens', icon: '📚' },
-                { step: 5, title: '🐍 Por que Python?', icon: '🐍' },
-                { step: 6, title: '📦 Variáveis', icon: '📦' },
-                { step: 7, title: '▶️ Primeiros Passos', icon: '▶️' },
-                { step: 8, 'title': '🚦 Controlando o Fluxo', icon: '🚦' },
-                { step: 9, 'title': '🧰 Estruturas de Dados', icon: '🧰' },
-                { step: 10, 'title': '🧩 Construtor de Código', icon: '🧩' },
-                { step: 11, 'title': '📝 Avaliação', icon: '📝' },
-                { step: 12, 'title': '🏆 Desafio Final', icon: '🏆' },
-                { step: 13, 'title': '🏁 Conclusão', icon: '🏁' },
-                { step: 14, 'title': '📜 Certificado', icon: '📜' },
-                { step: 15, 'title': '🎮 Jogos (Extra)', icon: '🎮' }
-            ];
-
-            function updatePlayerInfo() {
-                // Atualiza a pontuação
-                const currentScore = parseInt(localStorage.getItem('playerScore') || '0');
-                scoreDisplay.textContent = `🏆 Pontos: ${currentScore}`;
-
-                // Atualiza o avatar
-                const studentDataRaw = localStorage.getItem('studentData');
-                if (studentDataRaw) {
-                    const studentData = JSON.parse(studentDataRaw);
-                    const currentAvatar = avatarDisplay.textContent;
-                    const newAvatar = studentData.avatar || '🐍';
-
-                    // Anima o avatar apenas se ele for novo ou diferente
-                    if (newAvatar && currentAvatar !== newAvatar) {
-                        avatarDisplay.textContent = newAvatar;
-                        avatarDisplay.classList.add('animate-in');
-                        // Remove a classe após a animação para não repetir
-                        avatarDisplay.addEventListener('animationend', () => {
-                            avatarDisplay.classList.remove('animate-in');
-                        }, { once: true });
-                    }
-
-                    playerNameDisplay.textContent = studentData.name || '';
-                }
-            }
-
-            function renderMap() {
-                // Pega o progresso salvo. O padrão é 1 (primeira etapa desbloqueada).
-                const unlockedUntil = parseInt(localStorage.getItem('unlockedStep') || '1');
-                const allStops = document.querySelectorAll('.map-stop');
-
-                allStops.forEach((stopElement, index) => {
-                    const step = parseInt(stopElement.dataset.step);
-                    const data = stopsData.find(d => d.step === step);
-                    if (!data) return;
-
-                    const isLocked = data.step > unlockedUntil;
-                    const stopIcon = stopElement.querySelector('.stop-icon');
-
-                    // Limpa classes antigas e adiciona as novas
-                    stopElement.classList.remove('locked', 'next-to-unlock');
-
-                    if (isLocked) {
-                        stopElement.classList.add('locked');
-                    } else if (data.step === unlockedUntil) {
-                        stopElement.classList.add('next-to-unlock');
-                    }
-
-                    stopElement.style.animationDelay = `${index * 0.1}s`;
-
-                    // Define o ícone correto
-                    if (stopIcon) {
-                        stopIcon.textContent = isLocked ? '🔒' : (data.step < unlockedUntil ? '✅' : data.icon);
-                    }
-
-                    if (!isLocked) {
-                        stopElement.addEventListener('click', () => {
-                            openModal(data.step, data.title);
-                        });
-                    } else {
-                        stopElement.replaceWith(stopElement.cloneNode(true)); // Remove event listeners antigos
-                    }
-                });
-            }
-
-            function openModal(step, title) {
-                // Gera a URL base para a view 'aula' usando a tag de template do Django.
-                const baseUrl = "{% url 'aula' %}";
-                // Carrega a página da aula no iframe, já na âncora correta
-                iframe.src = `${baseUrl}#step-${step}`;
-
-                // Adiciona um listener para o evento 'load' do iframe
-                iframe.addEventListener('load', function scrollToTop() {
-                    // Rola o conteúdo do iframe para o topo
-                    if (iframe.contentWindow) iframe.contentWindow.scrollTo(0, 0);
-                });
-
-                modal.style.display = 'flex';
-                document.body.style.overflow = 'hidden'; // Impede o scroll do mapa
-            }
-
-            function closeModal() {
-                modal.style.display = 'none';
-                iframe.src = ''; // Limpa o iframe para parar a execução
-                document.body.style.overflow = 'auto';
-
-                // Sincroniza com o backend e depois recarrega a página para garantir que o progresso seja exibido.
-                updatePlayerInBackend();
-                window.location.reload();
-            }
-
-            closeModalBtn.addEventListener('click', closeModal);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeModal();
-                }
-            });
-
-            // Ouve mensagens do iframe (da página da aula)
-            window.addEventListener('message', (event) => {
-                // Verificamos a origem por segurança, mas para arquivos locais pode ser 'null'
-                const { type, unlockedStep, points = 10 } = event.data;
-
-                if (type === 'UPDATE_PROGRESS' && unlockedStep) {
-                    const completedStep = unlockedStep - 1;
-
-                    // Adiciona pontos e dispara animações
-                    triggerPointsAnimation(points);
-                    addPoints(points);
-                    triggerConfetti();
-
-                    // Atualiza o progresso localmente
-                    localStorage.setItem('unlockedStep', unlockedStep);
-
-                    // Sincroniza imediatamente com o backend para refletir no Hall da Fama
-                    try { updatePlayerInBackend(); } catch (e) { console.warn('Sync falhou:', e); }
-
-                    // Animação de pulsação da trilha
-                    const pathFill = document.querySelector('.snake-path-fill');
-                    if (pathFill) {
-                        pathFill.classList.add('pulsing');
-                        // Remove a classe após a animação para não interferir com outras interações
-                        // Duração da animação (1.5s * 2 iterações = 3s)
-                        setTimeout(() => {
-                            pathFill.classList.remove('pulsing');
-                        }, 3000);
-                    }
-
-                    // Redesenha o mapa para refletir o novo estado
-                    renderMap();
-
-                    // Mostra a notificação de recompensa
-                    const stepTitle = stopsData.find(s => s.step === completedStep)?.title || `Etapa ${completedStep}`;
-                    showReward(`Parabéns! Você concluiu: ${stepTitle}`);
-                }
-
-            });
-
-            // --- NOVO: Função para formatar o tempo para o Hall da Fama ---
-            function formatTime(seconds) {
-                if (!seconds || seconds <= 0) {
-                    return '';
-                }
-                const hrs = Math.floor(seconds / 3600);
-                const mins = Math.floor((seconds % 3600) / 60);
-                const secs = seconds % 60;
-                // Exibe HH:MM:SS quando houver horas; caso contrário, MM:SS
-                return hrs > 0
-                    ? `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-                    : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-            }
-
-            // --- NOVO: Função para buscar e renderizar o Hall da Fama ---
-            async function updateAndRenderHallOfFame() {
-                hallOfFameList.innerHTML = '<li>Carregando ranking...</li>';
-                try {
-                    const response = await fetch("{% url 'get_hall_of_fame' %}");
-                    if (!response.ok) {
-                        throw new Error(`Erro na API: ${response.statusText}`);
-                    }
-                    const hallOfFame = await response.json();
-
-                    hallOfFameList.innerHTML = ''; // Limpa a lista
-                    if (hallOfFame.length === 0) {
-                        hallOfFameList.innerHTML = '<li>O ranking ainda está vazio. Seja o primeiro a pontuar!</li>';
-                        return;
-                    }
-
-                    hallOfFame.forEach((player, index) => {
-                        const rank = index + 1;
-                        const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`;
-                        const timeString = formatTime(player.completion_time_seconds);
-                        const timeHtml = timeString ? `<span class="player-time">• Tempo: ${timeString}</span>` : '';
-
-                        const li = document.createElement('li');
-                        li.className = `rank-${rank}`;
-                        li.innerHTML = `<div class="player-rank-info"><span class="rank">${medal}</span><span class="player-avatar">${player.avatar}</span> <span class="player-name">${player.name}</span></div><span class="player-score-hof">${player.score} Pontos ${timeHtml}</span>`;
-                        hallOfFameList.appendChild(li);
-                    });
-                } catch (error) {
-                    console.error("Falha ao buscar Hall da Fama:", error);
-                    hallOfFameList.innerHTML = '<li>Erro ao carregar o ranking. Tente novamente mais tarde.</li>';
-                }
-            }
-
-            // --- NOVO: Função para enviar dados ao backend ---
-            async function updatePlayerInBackend() {
-                const studentDataRaw = localStorage.getItem('studentData');
-                const score = parseInt(localStorage.getItem('playerScore') || '0');
-                const unlockedStep = parseInt(localStorage.getItem('unlockedStep') || '1');
-                const completionTime = localStorage.getItem('completionTimeSeconds');
-                const researchNotes = localStorage.getItem('pythonResearchNotes'); // Pega as anotações
-
-                if (!studentDataRaw) return; // Não faz nada se não houver dados do aluno
-
-                const studentData = JSON.parse(studentDataRaw);
-                const payload = {
-                    name: studentData.name,
-                    avatar: studentData.avatar,
-                    score: score,
-                    unlocked_step: unlockedStep,
-                    completion_time_seconds: completionTime ? parseInt(completionTime) : null,
-                    research_notes: researchNotes // Adiciona ao payload
-                };
-
-                try {
-                    await fetch("{% url 'update_player' %}", {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    console.log("Progresso do jogador sincronizado com o backend.");
-                } catch (error) {
-                    console.error("Falha ao sincronizar dados do jogador:", error);
-                    // Opcional: mostrar um aviso ao usuário de que o progresso não foi salvo online.
-                }
-            }
-
-            function animateScore(startScore, endScore) {
-                const duration = 1500; // Duração da animação em milissegundos (1.5s)
-                let startTime = null;
-
-                function animation(currentTime) {
-                    if (!startTime) startTime = currentTime;
-                    const progress = Math.min((currentTime - startTime) / duration, 1);
-                    const easeOutProgress = 1 - Math.pow(1 - progress, 3); // Efeito de desaceleração
-
-                    const currentDisplayScore = Math.floor(easeOutProgress * (endScore - startScore) + startScore);
-                    scoreDisplay.textContent = `🏆 Pontos: ${currentDisplayScore}`;
-
-                    if (progress < 1) {
-                        requestAnimationFrame(animation);
-                    }
-                }
-                requestAnimationFrame(animation);
-            }
-
-            function addPoints(amount) {
-                const startScore = parseInt(localStorage.getItem('playerScore') || '0');
-                const endScore = startScore + amount;
-                localStorage.setItem('playerScore', endScore);
-                animateScore(startScore, endScore);
-            }
-
-            function showReward(message) {
-                toast.textContent = message;
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 4000); // A notificação some após 4 segundos
-            }
-
-            function triggerPointsAnimation(points) {
-                const pointsEl = document.getElementById('points-animation');
-                pointsEl.textContent = `+${points} Pontos!`;
-                pointsEl.classList.add('show');
-                setTimeout(() => pointsEl.classList.remove('show'), 2000); // Remove a animação após 2s
-            }
-
-            function triggerConfetti() {
-                confetti({
-                    particleCount: 150,
-                    spread: 90,
-                    origin: { y: 0.6 }
-                });
-            }
-
-            function scrollToStep(stepNumber) {
-                const targetStop = document.querySelector(`.map-stop[data-step="${stepNumber}"]`);
-                if (targetStop) {
-                    targetStop.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }
-
-            // Para limpar o progresso e recomeçar do zero, descomente as linhas abaixo:
-            // localStorage.removeItem('unlockedStep');
-            // localStorage.removeItem('playerScore');
-
-            const resetBtn = document.getElementById('reset-progress-btn');
-            resetBtn.addEventListener('click', () => {
-                if (confirm('Você tem certeza que deseja resetar todo o seu progresso e pontos? Esta ação não pode ser desfeita.')) {
-                    // Limpa os dados do mapa
-                    localStorage.removeItem('unlockedStep');
-                    localStorage.removeItem('playerScore');
-
-                    // Limpa dados relacionados às aulas
-                    localStorage.removeItem('studentData');
-                    localStorage.removeItem('pythonResearchNotes');
-                    localStorage.removeItem('courseStartTime');
-                    localStorage.removeItem('completionTimeSeconds');
-                    localStorage.removeItem('timeBonus');
-                    localStorage.removeItem('finalQuizCompleted');
-                    localStorage.removeItem('satisfactionRating');
-
-                    // Limpa o registro de certificados para forçar a recriação
-                    // (Opcional, mas bom para testes)
-                    localStorage.removeItem('certificateRegistry');
-
-                    localStorage.removeItem('theme'); // Limpa também o tema
-
-                    // Recarrega a página para aplicar as mudanças
-                    window.location.reload();
-                }
-            });
-
-            // --- NOVO: Função para carregar o progresso do backend ---
-            async function loadPlayerProgressFromBackend() {
-                const studentDataRaw = localStorage.getItem('studentData');
-                if (!studentDataRaw) {
-                    console.log("Nenhum dado de aluno encontrado localmente. O aluno precisa se registrar primeiro.");
-                    return; // Encerra se não houver aluno logado
-                }
-
-                const studentData = JSON.parse(studentDataRaw);
-                const playerName = studentData.name;
-
-                if (!playerName) return;
-
-                try {
-                    const response = await fetch(`/api/player/${encodeURIComponent(playerName)}/`); // Esta URL já está correta com a nova rota
-                    if (!response.ok) {
-                        if (response.status === 404) {
-                            console.log("Jogador novo. O progresso será criado no backend na primeira sincronização.");
-                        } else {
-                            throw new Error(`Erro na API: ${response.statusText}`);
-                        }
-                        return; // Não faz nada se o jogador não for encontrado
-                    }
-
-                    const playerData = await response.json();
-                    
-                    // Atualiza o localStorage com os dados do backend
-                    localStorage.setItem('playerScore', playerData.score);
-                    localStorage.setItem('unlockedStep', playerData.unlocked_step);
-
-                    console.log("Progresso do jogador carregado do backend:", playerData);
-
-                } catch (error) {
-                    console.error("Falha ao carregar progresso do jogador do backend:", error);
-                }
-            }
-
-            // --- Lógica de Inicialização da Página ---
-            loadPlayerProgressFromBackend().then(() => {
-                updatePlayerInfo(); // Atualiza avatar e pontuação
-                updateAndRenderHallOfFame(); // Renderiza o Hall da Fama ao carregar
-                renderMap(); // Renderiza o mapa
-            });
-
-            // --- Lógica para salvar o tempo de conclusão ---
-            // Ouve a mensagem do iframe da aula
-            window.addEventListener('message', (event) => {
-                const data = event.data;
-
-                // Quando a etapa 15 (desafio final) é concluída, o iframe envia uma mensagem
-                if (data?.type === 'STEP_UNLOCKED' && data.step === 12) { // Ajustado para a nova numeração
-                    const startTime = parseInt(localStorage.getItem('courseStartTime') || '0');
-                     if (startTime > 0) {
-                        const endTime = new Date().getTime();
-                        const durationSeconds = Math.floor((endTime - startTime) / 1000);
-                        localStorage.setItem('completionTimeSeconds', durationSeconds);
-                    }
-                } else if (data?.type === 'START_TIMER') { // NOVO: Ouve a mensagem para iniciar o cronômetro
-                    startCourseTimer();
-                } else if (data?.type === 'COURSE_FINISHED') { // NOVO: Ouve a mensagem de finalização
-                    if (courseTimerInterval) clearInterval(courseTimerInterval);
-                    setTimeout(closeModal, 1500); // Fecha o modal após 1.5s
-                }
-            });
-
-            // --- NOVO: Lógica do Cronômetro do Curso ---
-            let courseTimerInterval;
-            const timerDisplay = document.getElementById('course-timer');
-
-            function startCourseTimer() {
-                const startTime = localStorage.getItem('courseStartTime');
-                if (!startTime) {
-                    timerDisplay.style.display = 'none';
-                    return;
-                }
-
-                timerDisplay.style.display = 'inline'; // Mostra o cronômetro
-
-                // Limpa qualquer intervalo anterior para evitar duplicação
-                if (courseTimerInterval) {
-                    clearInterval(courseTimerInterval);
-                }
-
-                courseTimerInterval = setInterval(() => {
-                    const now = new Date().getTime();
-                    const elapsed = Math.floor((now - startTime) / 1000);
-                    const minutes = Math.floor(elapsed / 60);
-                    const seconds = elapsed % 60;
-
-                    timerDisplay.textContent = `⏰ Tempo: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-                }, 1000);
-            }
-
-            // Inicia o cronômetro ao carregar a página se o tempo já tiver começado
-            startCourseTimer();
-
+        // O botão dentro do modal fecha o modal e atualiza o estado do botão principal
+        startJourneyBtn.addEventListener('click', () => {
+            // Salva a confirmação e esconde o modal permanentemente
+            localStorage.setItem('hasSeenPrerequisites', 'true');
+            prereqModal.style.opacity = '0'; // Inicia a transição de fade-out
+            setTimeout(() => { prereqModal.style.display = 'none'; }, 500); // Remove da tela após a transição
+            
+            // Para a animação de pulso e atualiza o ícone para indicar que foi lido
+            prereqToggleButton.style.animation = 'none';
+            prereqToggleButton.querySelector('.icon').textContent = '✅';
         });
-        
-        // --- Matrix Python Rain (canvas) ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('background-animation');
-            if (!container) return;
+        // --- Fim da Lógica do Modal ---
 
-            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            const canvas = document.createElement('canvas');
-            canvas.id = 'matrix-canvas';
-            // Garante cobertura total do fundo em CSS pixels
-            canvas.style.width = '100%';
-            canvas.style.height = '100%';
-            canvas.style.display = 'block';
-            // Limpa qualquer conteúdo anterior (símbolos flutuantes) e instala o canvas
-            container.innerHTML = '';
-            container.appendChild(canvas);
-            const ctx = canvas.getContext('2d');
-
-            const styles = getComputedStyle(document.documentElement);
-            const PY_BLUE = (styles.getPropertyValue('--python-blue') || '#3776AB').trim();
-            const PY_YELLOW = (styles.getPropertyValue('--python-yellow') || '#FFD43B').trim();
-            // Cor de fundo para o efeito de "rastro", usando o azul oficial com baixa opacidade
-            const HAZE = 'rgba(55, 118, 171, 0.05)';
-
-            const glyphs = ['def','class','import','print','lambda','for','if','else','try','[]','{}','()','=>',':','#','True','False','__init__','0','1'];
-            const BASE_ALPHA = 0.4; // opacidade base para os glifos azuis
-            const HEAD_ALPHA = 0.9; // opacidade para os glifos amarelos (destaques)
-
-            let fontSize;
-            let columns;
-            let columnSpacing;
-            let drops;
-            let rafId = null;
-            let tick = 0;
-            const advanceEvery = 3; // avança a queda a cada 3 frames (≈ 1/3 da velocidade)
-
-            function resizeCanvas() {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                const cssW = container.clientWidth || container.offsetWidth || window.innerWidth;
-                const cssH = container.clientHeight || container.offsetHeight || window.innerHeight;
-                canvas.width = Math.floor(cssW * dpr);
-                canvas.height = Math.floor(cssH * dpr);
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-                const base = Math.max(16, Math.min(24, Math.floor(cssW / 70)));
-                fontSize = base;
-                ctx.font = `${fontSize}px Courier New, monospace`;
-
-                // Espaçamento das colunas levando em conta o alargamento horizontal
-                columnSpacing = Math.max(fontSize, Math.floor(fontSize * 1.25 * 1.05));
-                columns = Math.max(1, Math.ceil(cssW / columnSpacing) + 2);
-                const maxRows = Math.max(1, Math.ceil(cssH / fontSize) + 2);
-                drops = new Array(columns).fill(0).map(() => Math.floor(Math.random() * maxRows));
+        const scoreDisplay = document.getElementById('player-score')
+        const avatarDisplay = document.getElementById('player-avatar')
+        const playerNameDisplay = document.getElementById('player-name')
+        const hallOfFameList = document.getElementById('hall-of-fame-list')
+        const toast = document.getElementById('toast-notification')
+      
+        const modal = document.getElementById('lesson-modal')
+        const iframe = document.getElementById('lesson-iframe')
+        const closeModalBtn = document.getElementById('modal-close-btn')
+      
+        const stopsData = [
+          { step: 1, title: '🤔 Quem é você?', icon: '❓' },
+          { step: 2, title: '🎯 Situação-Problema', icon: '🎯' },
+          { step: 3, title: '⚙️ O que é Backend?', icon: '⚙️' },
+          { step: 4, title: '📚 Linguagens', icon: '📚' },
+          { step: 5, title: '🐍 Por que Python?', icon: '🐍' },
+          { step: 6, title: '📦 Variáveis', icon: '📦' },
+          { step: 7, title: '▶️ Primeiros Passos', icon: '▶️' },
+          { step: 8, title: '🚦 Controlando o Fluxo', icon: '🚦' },
+          { step: 9, title: '🧰 Estruturas de Dados', icon: '🧰' },
+          { step: 10, title: '🧩 Construtor de Código', icon: '🧩' },
+          { step: 11, title: '📝 Avaliação', icon: '📝' },
+          { step: 12, title: '🏆 Desafio Final', icon: '🏆' },
+          { step: 13, title: '🏁 Conclusão', icon: '🏁' },
+          { step: 14, title: '📜 Certificado', icon: '📜' },
+          { step: 15, title: '🎮 Jogos (Extra)', icon: '🎮' }
+        ]
+      
+        function updatePlayerInfo() {
+          // Atualiza a pontuação
+          const currentScore = parseInt(localStorage.getItem('playerScore') || '0')
+          scoreDisplay.textContent = `🏆 Pontos: ${currentScore}`
+      
+          // Atualiza o avatar
+          const studentDataRaw = localStorage.getItem('studentData')
+          if (studentDataRaw) {
+            const studentData = JSON.parse(studentDataRaw)
+            const currentAvatar = avatarDisplay.textContent
+            const newAvatar = studentData.avatar || '🐍'
+      
+            // Anima o avatar apenas se ele for novo ou diferente
+            if (newAvatar && currentAvatar !== newAvatar) {
+              avatarDisplay.textContent = newAvatar
+              avatarDisplay.classList.add('animate-in')
+              // Remove a classe após a animação para não repetir
+              avatarDisplay.addEventListener(
+                'animationend',
+                () => {
+                  avatarDisplay.classList.remove('animate-in')
+                },
+                { once: true }
+              )
             }
-
-            function drawFrame(advance) {
-                ctx.fillStyle = HAZE;
-                const cssW = container.clientWidth || container.offsetWidth || window.innerWidth;
-                const cssH = container.clientHeight || container.offsetHeight || window.innerHeight;
-                ctx.fillRect(0, 0, cssW, cssH);
-
-                for (let i = 0; i < columns; i++) {
-                    const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
-                    const x = Math.floor(i * columnSpacing);
-                    const y = drops[i] * fontSize;
-
-                    const isHead = Math.random() < 0.015; // Destaques amarelos mais raros para um visual mais limpo
-                    ctx.globalAlpha = isHead ? HEAD_ALPHA : BASE_ALPHA;
-                    ctx.fillStyle = isHead ? PY_YELLOW : PY_BLUE;
-                    ctx.save();
-                    ctx.translate(x, y);
-                    ctx.scale(1.25, 1);
-                    ctx.fillText(glyph, 0, 0);
-                    ctx.restore();
-
-                    if (advance) {
-                        if (y > (container.clientHeight || window.innerHeight) && Math.random() > 0.985) {
-                            drops[i] = 0;
-                        }
-                        drops[i]++;
-                    }
-                }
-                ctx.globalAlpha = 1;
-            }
-
-            function loop() {
-                tick = (tick + 1) % 60;
-                const advance = tick % advanceEvery === 0;
-                drawFrame(advance);
-                rafId = requestAnimationFrame(loop);
-            }
-
-            function start() {
-                if (rafId == null) rafId = requestAnimationFrame(loop);
-            }
-
-            function stop() {
-                if (rafId != null) {
-                    cancelAnimationFrame(rafId);
-                    rafId = null;
-                }
-            }
-
-            resizeCanvas();
-            window.addEventListener('resize', () => {
-                stop();
-                resizeCanvas();
-                if (!prefersReduced) start();
-            });
-
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) stop(); else if (!prefersReduced) start();
-            });
-
-            if (!prefersReduced) {
-                start();
+      
+            playerNameDisplay.textContent = studentData.name || ''
+          }
+        }
+      
+        function renderMap() {
+          // Pega o progresso salvo. O padrão é 1 (primeira etapa desbloqueada).
+          const unlockedUntil = parseInt(localStorage.getItem('unlockedStep') || '1')
+          const allStops = document.querySelectorAll('.map-stop')
+      
+          allStops.forEach((stopElement, index) => {
+            const step = parseInt(stopElement.dataset.step)
+            const data = stopsData.find((d) => d.step === step)
+            if (!data) return
+      
+            const isLocked = data.step > unlockedUntil
+            const stopIcon = stopElement.querySelector('.stop-icon')
+      
+            // Limpa classes antigas e adiciona as novas
+            stopElement.classList.remove('locked', 'next-to-unlock', 'completed')
+      
+            if (isLocked) {
+              stopElement.classList.add('locked')
+            } else if (data.step === unlockedUntil) {
+              stopElement.classList.add('next-to-unlock')
             } else {
-                ctx.fillStyle = 'rgba(13, 43, 78, 0.25)';
-                ctx.fillRect(0, 0, container.clientWidth, container.clientHeight);
-                ctx.fillStyle = PY_BLUE;
-                for (let i = 0; i < 80; i++) {
-                    const glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
-                    const x = Math.random() * container.clientWidth;
-                    const y = Math.random() * container.clientHeight;
-                    ctx.fillText(glyph, x, y);
-                }
+              stopElement.classList.add('completed')
             }
-        });
-    </script>
-</body>
+      
+            stopElement.style.animationDelay = `${index * 0.1}s`
+      
+            // Define o ícone correto
+            if (stopIcon) {
+              stopIcon.textContent = isLocked ? '🔒' : data.step < unlockedUntil ? '✅' : data.icon
+            }
+      
+            if (!isLocked) {
+              stopElement.addEventListener('click', () => {
+                openModal(data.step, data.title)
+              })
+            } else {
+              stopElement.replaceWith(stopElement.cloneNode(true)) // Remove event listeners antigos
+            }
+          })
+        }
+      
+        function openModal(step, title) {
+          // Gera a URL base para a view 'aula' usando a tag de template do Django.
+          const baseUrl = "{% url 'aula' %}"
+          // Carrega a página da aula no iframe, já na âncora correta
+          iframe.src = `${baseUrl}#step-${step}`
+      
+          // Adiciona um listener para o evento 'load' do iframe
+          iframe.addEventListener('load', function scrollToTop() {
+            // Rola o conteúdo do iframe para o topo
+            if (iframe.contentWindow) iframe.contentWindow.scrollTo(0, 0)
+          })
+      
+          modal.style.display = 'flex'
+          document.body.style.overflow = 'hidden' // Impede o scroll do mapa
+        }
+      
+        function closeModal() {
+          modal.style.display = 'none'
+          iframe.src = '' // Limpa o iframe para parar a execução
+          document.body.style.overflow = 'auto'
+      
+          // Sincroniza com o backend e depois recarrega a página para garantir que o progresso seja exibido.
+          updatePlayerInBackend()
+          window.location.reload()
+        }
+      
+        closeModalBtn.addEventListener('click', closeModal)
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeModal()
+          }
+        })
+      
+        // Ouve mensagens do iframe (da página da aula)
+        window.addEventListener('message', (event) => {
+          // Verificamos a origem por segurança, mas para arquivos locais pode ser 'null'
+          const { type, unlockedStep, points = 10 } = event.data
+      
+          if (type === 'UPDATE_PROGRESS' && unlockedStep) {
+            const completedStep = unlockedStep - 1
+      
+            // Adiciona pontos e dispara animações
+            triggerPointsAnimation(points)
+            addPoints(points)
+            triggerConfetti()
 
+            // Toca o som de conquista
+            const achievementSound = document.getElementById('achievement-sound');
+            if (achievementSound) {
+              achievementSound.currentTime = 0; // Garante que o som toque do início
+              achievementSound.play().catch(e => console.error("Erro ao tocar som:", e));
+            }
+      
+            // Atualiza o progresso localmente
+            localStorage.setItem('unlockedStep', unlockedStep)
+      
+            // Sincroniza imediatamente com o backend para refletir no Hall da Fama
+            try {
+              updatePlayerInBackend()
+
+              // Animação de pulsação da trilha
+              const pathFill = document.querySelector('.snake-path-fill')
+              if (pathFill) {
+                pathFill.classList.add('pulsing')
+                // Remove a classe após a animação para não interferir com outras interações
+                setTimeout(() => {
+                  pathFill.classList.remove('pulsing')
+                }, 3000) // Duração da animação (1.5s * 2 iterações)
+              }
+            } catch (e) {
+              console.warn('Sync falhou:', e)
+            }
+      
+            // Animação de pulsação da trilha
+            const pathFill = document.querySelector('.snake-path-fill')
+            if (pathFill) {
+              pathFill.classList.add('pulsing')
+              // Remove a classe após a animação para não interferir com outras interações
+              // Duração da animação (1.5s * 2 iterações = 3s)
+              setTimeout(() => {
+                pathFill.classList.remove('pulsing')
+              }, 3000)
+            }
+      
+            // Redesenha o mapa para refletir o novo estado
+            renderMap()
+      
+            // Mostra a notificação de recompensa
+            const stepTitle = stopsData.find((s) => s.step === completedStep)?.title || `Etapa ${completedStep}`
+            showReward(`Parabéns! Você concluiu: ${stepTitle}`)
+          }
+        })
+      
+        // --- NOVO: Função para formatar o tempo para o Hall da Fama ---
+        function formatTime(seconds) {
+          if (!seconds || seconds <= 0) {
+            return ''
+          }
+          const hrs = Math.floor(seconds / 3600)
+          const mins = Math.floor((seconds % 3600) / 60)
+          const secs = seconds % 60
+          // Exibe HH:MM:SS quando houver horas; caso contrário, MM:SS
+          return hrs > 0 ? `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}` : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+        }
+      
+        // --- NOVO: Função para buscar e renderizar o Hall da Fama ---
+        async function updateAndRenderHallOfFame() {
+          hallOfFameList.innerHTML = '<li>Carregando ranking...</li>'
+          try {
+            const response = await fetch("{% url 'get_hall_of_fame' %}")
+            if (!response.ok) {
+              throw new Error(`Erro na API: ${response.statusText}`)
+            }
+            const hallOfFame = await response.json()
+      
+            hallOfFameList.innerHTML = '' // Limpa a lista
+            if (hallOfFame.length === 0) {
+              hallOfFameList.innerHTML = '<li>O ranking ainda está vazio. Seja o primeiro a pontuar!</li>'
+              return
+            }
+      
+            hallOfFame.forEach((player, index) => {
+              const rank = index + 1
+              const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `${rank}.`
+              const timeString = formatTime(player.completion_time_seconds)
+              const timeHtml = timeString ? `<span class="player-time">• Tempo: ${timeString}</span>` : ''
+      
+              const li = document.createElement('li')
+              li.className = `rank-${rank}`
+              li.innerHTML = `<div class="player-rank-info"><span class="rank">${medal}</span><span class="player-avatar">${player.avatar}</span> <span class="player-name">${player.name}</span></div><span class="player-score-hof">${player.score} Pontos ${timeHtml}</span>`
+              hallOfFameList.appendChild(li)
+            })
+          } catch (error) {
+            console.error('Falha ao buscar Hall da Fama:', error)
+            hallOfFameList.innerHTML = '<li>Erro ao carregar o ranking. Tente novamente mais tarde.</li>'
+          }
+        }
+      
+        // --- NOVO: Função para enviar dados ao backend ---
+        async function updatePlayerInBackend() {
+          const studentDataRaw = localStorage.getItem('studentData')
+          const score = parseInt(localStorage.getItem('playerScore') || '0')
+          const unlockedStep = parseInt(localStorage.getItem('unlockedStep') || '1')
+          const completionTime = localStorage.getItem('completionTimeSeconds')
+          const researchNotes = localStorage.getItem('pythonResearchNotes') // Pega as anotações
+      
+          if (!studentDataRaw) return // Não faz nada se não houver dados do aluno
+      
+          const studentData = JSON.parse(studentDataRaw)
+          const payload = {
+            name: studentData.name,
+            avatar: studentData.avatar,
+            score: score,
+            unlocked_step: unlockedStep,
+            completion_time_seconds: completionTime ? parseInt(completionTime) : null,
+            research_notes: researchNotes // Adiciona ao payload
+          }
+      
+          try {
+            await fetch("{% url 'update_player' %}", {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            })
+            console.log('Progresso do jogador sincronizado com o backend.')
+          } catch (error) {
+            console.error('Falha ao sincronizar dados do jogador:', error)
+            // Opcional: mostrar um aviso ao usuário de que o progresso não foi salvo online.
+          }
+        }
+      
+        function animateScore(startScore, endScore) {
+          const duration = 1500 // Duração da animação em milissegundos (1.5s)
+          let startTime = null
+      
+          function animation(currentTime) {
+            if (!startTime) startTime = currentTime
+            const progress = Math.min((currentTime - startTime) / duration, 1)
+            const easeOutProgress = 1 - Math.pow(1 - progress, 3) // Efeito de desaceleração
+      
+            const currentDisplayScore = Math.floor(easeOutProgress * (endScore - startScore) + startScore)
+            scoreDisplay.textContent = `🏆 Pontos: ${currentDisplayScore}`
+      
+            if (progress < 1) {
+              requestAnimationFrame(animation)
+            }
+          }
+          requestAnimationFrame(animation)
+        }
+      
+        function addPoints(amount) {
+          const startScore = parseInt(localStorage.getItem('playerScore') || '0')
+          const endScore = startScore + amount
+          localStorage.setItem('playerScore', endScore)
+          animateScore(startScore, endScore)
+        }
+      
+        function showReward(message) {
+          toast.textContent = message
+          toast.classList.add('show')
+          setTimeout(() => {
+            toast.classList.remove('show')
+          }, 4000) // A notificação some após 4 segundos
+        }
+      
+        function triggerPointsAnimation(points) {
+          const pointsEl = document.getElementById('points-animation')
+          pointsEl.textContent = `+${points} Pontos!`
+          pointsEl.classList.add('show')
+          setTimeout(() => pointsEl.classList.remove('show'), 2000) // Remove a animação após 2s
+        }
+      
+        function triggerConfetti() {
+          confetti({
+            particleCount: 150,
+            spread: 90,
+            origin: { y: 0.6 }
+          })
+        }
+      
+        function scrollToStep(stepNumber) {
+          const targetStop = document.querySelector(`.map-stop[data-step="${stepNumber}"]`)
+          if (targetStop) {
+            targetStop.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+        }
+      
+        // Para limpar o progresso e recomeçar do zero, descomente as linhas abaixo:
+        // localStorage.removeItem('unlockedStep');
+        // localStorage.removeItem('playerScore');
+      
+        const resetBtn = document.getElementById('reset-progress-btn')
+        resetBtn.addEventListener('click', () => {
+          if (confirm('Você tem certeza que deseja resetar todo o seu progresso e pontos? Esta ação não pode ser desfeita.')) {
+            // Limpa os dados do mapa
+            localStorage.removeItem('unlockedStep')
+            localStorage.removeItem('playerScore')
+      
+            // Limpa dados relacionados às aulas
+            localStorage.removeItem('studentData')
+            localStorage.removeItem('pythonResearchNotes')
+            localStorage.removeItem('courseStartTime')
+            localStorage.removeItem('completionTimeSeconds')
+            localStorage.removeItem('timeBonus')
+            localStorage.removeItem('finalQuizCompleted')
+            localStorage.removeItem('satisfactionRating')
+      
+            // Limpa o registro de certificados para forçar a recriação
+            // (Opcional, mas bom para testes)
+            localStorage.removeItem('certificateRegistry')
+      
+            localStorage.removeItem('theme') // Limpa também o tema
+      
+            // Recarrega a página para aplicar as mudanças
+            window.location.reload()
+          }
+        })
+      
+        // --- NOVO: Função para carregar o progresso do backend ---
+        async function loadPlayerProgressFromBackend() {
+          const studentDataRaw = localStorage.getItem('studentData')
+          if (!studentDataRaw) {
+            console.log('Nenhum dado de aluno encontrado localmente. O aluno precisa se registrar primeiro.')
+            return // Encerra se não houver aluno logado
+          }
+      
+          const studentData = JSON.parse(studentDataRaw)
+          const playerName = studentData.name
+      
+          if (!playerName) return
+      
+          try {
+            const response = await fetch(`/api/player/${encodeURIComponent(playerName)}/`) // Esta URL já está correta com a nova rota
+            if (!response.ok) {
+              if (response.status === 404) {
+                console.log('Jogador novo. O progresso será criado no backend na primeira sincronização.')
+              } else {
+                throw new Error(`Erro na API: ${response.statusText}`)
+              }
+              return // Não faz nada se o jogador não for encontrado
+            }
+      
+            const playerData = await response.json()
+      
+            // Atualiza o localStorage com os dados do backend
+            localStorage.setItem('playerScore', playerData.score)
+            localStorage.setItem('unlockedStep', playerData.unlocked_step)
+      
+            console.log('Progresso do jogador carregado do backend:', playerData)
+          } catch (error) {
+            console.error('Falha ao carregar progresso do jogador do backend:', error)
+          }
+        }
+      
+        // --- Lógica de Inicialização da Página ---
+        loadPlayerProgressFromBackend().then(() => {
+          updatePlayerInfo() // Atualiza avatar e pontuação
+          updateAndRenderHallOfFame() // Renderiza o Hall da Fama ao carregar
+          renderMap() // Renderiza o mapa
+        })
+      
+        // --- Lógica para salvar o tempo de conclusão ---
+        // Ouve a mensagem do iframe da aula
+        window.addEventListener('message', (event) => {
+          const data = event.data
+      
+          // Quando a etapa 15 (desafio final) é concluída, o iframe envia uma mensagem
+          if (data?.type === 'STEP_UNLOCKED' && data.step === 12) {
+            // Ajustado para a nova numeração
+            const startTime = parseInt(localStorage.getItem('courseStartTime') || '0')
+            if (startTime > 0) {
+              const endTime = new Date().getTime()
+              const durationSeconds = Math.floor((endTime - startTime) / 1000)
+              localStorage.setItem('completionTimeSeconds', durationSeconds)
+            }
+          } else if (data?.type === 'START_TIMER') {
+            // NOVO: Ouve a mensagem para iniciar o cronômetro
+            startCourseTimer()
+          } else if (data?.type === 'COURSE_FINISHED') {
+            // NOVO: Ouve a mensagem de finalização
+            if (courseTimerInterval) clearInterval(courseTimerInterval)
+            setTimeout(closeModal, 1500) // Fecha o modal após 1.5s
+          }
+        })
+      
+        // --- NOVO: Lógica do Cronômetro do Curso ---
+        let courseTimerInterval
+        const timerDisplay = document.getElementById('course-timer')
+      
+        function startCourseTimer() {
+          const startTime = localStorage.getItem('courseStartTime')
+          if (!startTime) {
+            timerDisplay.style.display = 'none'
+            return
+          }
+      
+          timerDisplay.style.display = 'inline' // Mostra o cronômetro
+      
+          // Limpa qualquer intervalo anterior para evitar duplicação
+          if (courseTimerInterval) {
+            clearInterval(courseTimerInterval)
+          }
+      
+          courseTimerInterval = setInterval(() => {
+            const now = new Date().getTime()
+            const elapsed = Math.floor((now - startTime) / 1000)
+            const minutes = Math.floor(elapsed / 60)
+            const seconds = elapsed % 60
+      
+            timerDisplay.textContent = `⏰ Tempo: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+          }, 1000)
+        }
+      
+        // Inicia o cronômetro ao carregar a página se o tempo já tiver começado
+        startCourseTimer()
+      })
+      
+      // --- Matrix Python Rain (canvas) ---
+      document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('background-animation')
+        if (!container) return
+      
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      
+        const canvas = document.createElement('canvas')
+        canvas.id = 'matrix-canvas'
+        // Garante cobertura total do fundo em CSS pixels
+        canvas.style.width = '100%'
+        canvas.style.height = '100%'
+        canvas.style.display = 'block'
+        // Limpa qualquer conteúdo anterior (símbolos flutuantes) e instala o canvas
+        container.innerHTML = ''
+        container.appendChild(canvas)
+        const ctx = canvas.getContext('2d')
+      
+        const styles = getComputedStyle(document.documentElement)
+        const PY_BLUE = (styles.getPropertyValue('--python-blue') || '#3776AB').trim()
+        const PY_YELLOW = (styles.getPropertyValue('--python-yellow') || '#FFD43B').trim()
+        // Cor de fundo para o efeito de "rastro", usando o azul oficial com baixa opacidade
+        const HAZE = 'rgba(55, 118, 171, 0.05)'
+      
+        const glyphs = ['def', 'class', 'import', 'print', 'lambda', 'for', 'if', 'else', 'try', '[]', '{}', '()', '=>', ':', '#', 'True', 'False', '__init__', '0', '1']
+        const BASE_ALPHA = 0.4 // opacidade base para os glifos azuis
+        const HEAD_ALPHA = 0.9 // opacidade para os glifos amarelos (destaques)
+      
+        let fontSize
+        let columns
+        let columnSpacing
+        let drops
+        let rafId = null
+        let tick = 0
+        const advanceEvery = 3 // avança a queda a cada 3 frames (≈ 1/3 da velocidade)
+      
+        function resizeCanvas() {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2)
+          const cssW = container.clientWidth || container.offsetWidth || window.innerWidth
+          const cssH = container.clientHeight || container.offsetHeight || window.innerHeight
+          canvas.width = Math.floor(cssW * dpr)
+          canvas.height = Math.floor(cssH * dpr)
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      
+          const base = Math.max(16, Math.min(24, Math.floor(cssW / 70)))
+          fontSize = base
+          ctx.font = `${fontSize}px Courier New, monospace`
+      
+          // Espaçamento das colunas levando em conta o alargamento horizontal
+          columnSpacing = Math.max(fontSize, Math.floor(fontSize * 1.25 * 1.05))
+          columns = Math.max(1, Math.ceil(cssW / columnSpacing) + 2)
+          const maxRows = Math.max(1, Math.ceil(cssH / fontSize) + 2)
+          drops = new Array(columns).fill(0).map(() => Math.floor(Math.random() * maxRows))
+        }
+      
+        function drawFrame(advance) {
+          ctx.fillStyle = HAZE
+          const cssW = container.clientWidth || container.offsetWidth || window.innerWidth
+          const cssH = container.clientHeight || container.offsetHeight || window.innerHeight
+          ctx.fillRect(0, 0, cssW, cssH)
+      
+          for (let i = 0; i < columns; i++) {
+            const glyph = glyphs[Math.floor(Math.random() * glyphs.length)]
+            const x = Math.floor(i * columnSpacing)
+            const y = drops[i] * fontSize
+      
+            const isHead = Math.random() < 0.015 // Destaques amarelos mais raros para um visual mais limpo
+            ctx.globalAlpha = isHead ? HEAD_ALPHA : BASE_ALPHA
+            ctx.fillStyle = isHead ? PY_YELLOW : PY_BLUE
+            ctx.save()
+            ctx.translate(x, y)
+            ctx.scale(1.25, 1)
+            ctx.fillText(glyph, 0, 0)
+            ctx.restore()
+      
+            if (advance) {
+              if (y > (container.clientHeight || window.innerHeight) && Math.random() > 0.985) {
+                drops[i] = 0
+              }
+              drops[i]++
+            }
+          }
+          ctx.globalAlpha = 1
+        }
+      
+        function loop() {
+          tick = (tick + 1) % 60
+          const advance = tick % advanceEvery === 0
+          drawFrame(advance)
+          rafId = requestAnimationFrame(loop)
+        }
+      
+        function start() {
+          if (rafId == null) rafId = requestAnimationFrame(loop)
+        }
+      
+        function stop() {
+          if (rafId != null) {
+            cancelAnimationFrame(rafId)
+            rafId = null
+          }
+        }
+      
+        resizeCanvas()
+        window.addEventListener('resize', () => {
+          stop()
+          resizeCanvas()
+          if (!prefersReduced) start()
+        })
+      
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) stop()
+          else if (!prefersReduced) start()
+        })
+      
+        if (!prefersReduced) {
+          start()
+        } else {
+          ctx.fillStyle = 'rgba(13, 43, 78, 0.25)'
+          ctx.fillRect(0, 0, container.clientWidth, container.clientHeight)
+          ctx.fillStyle = PY_BLUE
+          for (let i = 0; i < 80; i++) {
+            const glyph = glyphs[Math.floor(Math.random() * glyphs.length)]
+            const x = Math.random() * container.clientWidth
+            const y = Math.random() * container.clientHeight
+            ctx.fillText(glyph, x, y)
+          }
+        }
+      })
+      
+      // --- Script para o Player de Música ---
+      document.addEventListener('DOMContentLoaded', () => {
+        // Passa o caminho base dos áudios para o JavaScript
+        const audioBasePath = "{% static 'audio/' %}"
+      
+        const audioPlayer = document.getElementById('audio-player')
+        const playPauseBtn = document.getElementById('play-pause-btn')
+        const prevBtn = document.getElementById('prev-track-btn')
+        const nextBtn = document.getElementById('next-track-btn')
+        const trackTitle = document.getElementById('current-track-title')
+        const playlistElement = document.getElementById('playlist')
+        const togglePlaylistBtn = document.getElementById('toggle-playlist-btn')
+      
+        // Defina suas músicas aqui. Elas devem estar em 'static/audio/'
+        const songs = [
+          { title: 'Neon Focus - Part One', file: 'Neon Focus - Part One.mp3' },
+          { title: 'Neon Focus - Part Two', file: 'Neon Focus - Part Two.mp3' },
+          { title: 'Neon Codex', file: 'Neon Codex.mp3' },
+          { title: 'Digital Voyage', file: 'Digital Voyage.mp3' }
+          // Adicione mais músicas aqui
+        ]
+      
+        let currentSongIndex = 0
+      
+        function loadSong(index) {
+          const song = songs[index]
+          trackTitle.textContent = song.title
+          audioPlayer.src = `${audioBasePath}${song.file}`
+      
+          // Atualiza a classe 'playing' na playlist
+          const playlistItems = playlistElement.querySelectorAll('li')
+          playlistItems.forEach((item, i) => {
+            item.classList.toggle('playing', i === index)
+          })
+        }
+      
+        function playSong() {
+          audioPlayer.play()
+          playPauseBtn.textContent = '⏸️'
+        }
+      
+        function pauseSong() {
+          audioPlayer.pause()
+          playPauseBtn.textContent = '▶️'
+        }
+      
+        // Preencher a playlist
+        songs.forEach((song, index) => {
+          const li = document.createElement('li')
+          li.textContent = song.title
+          li.addEventListener('click', () => {
+            currentSongIndex = index
+            loadSong(currentSongIndex)
+            playSong()
+          })
+          playlistElement.appendChild(li)
+        })
+      
+        playPauseBtn.addEventListener('click', () => (audioPlayer.paused ? playSong() : pauseSong()))
+        nextBtn.addEventListener('click', () => {
+          currentSongIndex = (currentSongIndex + 1) % songs.length
+          loadSong(currentSongIndex)
+          playSong()
+        })
+        prevBtn.addEventListener('click', () => {
+          currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length
+          loadSong(currentSongIndex)
+          playSong()
+        })
+        audioPlayer.addEventListener('ended', () => nextBtn.click())
+        togglePlaylistBtn.addEventListener('click', () => playlistElement.classList.toggle('show'))
+      
+        // Carregar a primeira música
+        loadSong(currentSongIndex)
+
+        // --- Lógica para tornar o player arrastável ---
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        const musicPlayer = document.getElementById('music-player');
+
+        musicPlayer.addEventListener('mousedown', (e) => {
+            // Não inicia o arraste se o clique for em um botão
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                return;
+            }
+
+            isDragging = true;
+            
+            // Calcula a diferença entre o clique do mouse e a posição do elemento
+            offsetX = e.clientX - musicPlayer.getBoundingClientRect().left;
+            offsetY = e.clientY - musicPlayer.getBoundingClientRect().top;
+
+            // Remove as propriedades 'bottom' e 'right' para que 'top' e 'left' funcionem
+            musicPlayer.style.right = 'auto';
+            musicPlayer.style.bottom = 'auto';
+            
+            // Impede a seleção de texto durante o arraste
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            // Define a nova posição do player
+            musicPlayer.style.left = `${e.clientX - offsetX}px`;
+            musicPlayer.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.userSelect = ''; // Restaura a seleção de texto
+        });
+      })
+    </script>
+  </body>
 </html>
