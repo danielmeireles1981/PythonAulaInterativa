@@ -518,6 +518,9 @@
           const unlockedUntil = parseInt(localStorage.getItem('unlockedStep') || '1')
           const allStops = document.querySelectorAll('.map-stop')
       
+          // NOVO: Verifica se a etapa extra foi visitada
+          const extraContentVisited = localStorage.getItem('extraContentVisited') === 'true';
+
           allStops.forEach((stopElement, index) => {
             const step = parseInt(stopElement.dataset.step)
             const data = stopsData.find((d) => d.step === step)
@@ -541,7 +544,11 @@
       
             // Define o ícone correto
             if (stopIcon) {
-              stopIcon.textContent = isLocked ? '🔒' : data.step < unlockedUntil ? '✅' : data.icon
+              if (data.step === 15 && extraContentVisited) {
+                stopIcon.textContent = '🌟'; // Ícone especial para etapa extra visitada
+              } else {
+                stopIcon.textContent = isLocked ? '🔒' : data.step < unlockedUntil ? '✅' : data.icon
+              }
             }
       
             if (!isLocked) {
@@ -570,14 +577,18 @@
           document.body.style.overflow = 'hidden' // Impede o scroll do mapa
         }
       
-        function closeModal() {
+        async function closeModal() {
           modal.style.display = 'none'
           iframe.src = '' // Limpa o iframe para parar a execução
           document.body.style.overflow = 'auto'
       
-          // Sincroniza com o backend e depois recarrega a página para garantir que o progresso seja exibido.
-          updatePlayerInBackend()
-          window.location.reload()
+          // Sincroniza com o backend
+          await updatePlayerInBackend();
+
+          // Atualiza a UI dinamicamente, sem recarregar a página
+          updatePlayerInfo();
+          renderMap();
+          updateAndRenderHallOfFame();
         }
       
         closeModalBtn.addEventListener('click', closeModal)
@@ -872,10 +883,20 @@
           } else if (data?.type === 'START_TIMER') {
             // NOVO: Ouve a mensagem para iniciar o cronômetro
             startCourseTimer()
-          } else if (data?.type === 'COURSE_FINISHED') {
-            // NOVO: Ouve a mensagem de finalização
+          } else if (data?.type === 'EXTRA_CONTENT_VISITED') {
+            // MODIFICADO: Ouve a mensagem de visita ao conteúdo extra
             if (courseTimerInterval) clearInterval(courseTimerInterval)
+            localStorage.setItem('extraContentVisited', 'true'); // Salva o estado
+            renderMap(); // Redesenha o mapa para mostrar o novo ícone
             setTimeout(closeModal, 1500) // Fecha o modal após 1.5s
+          } else if (data?.type === 'ADD_POINTS' && data.points) {
+            // NOVO: Ouve a mensagem para adicionar pontos (ex: da avaliação da Etapa 11)
+            triggerPointsAnimation(data.points);
+            addPoints(data.points);
+            updatePlayerInBackend(); // Sincroniza a nova pontuação
+          } else if (data?.type === 'CLOSE_MODAL') {
+            // NOVO: Ouve a mensagem para fechar o modal
+            closeModal();
           }
         })
       

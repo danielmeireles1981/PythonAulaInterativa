@@ -552,6 +552,21 @@
                         Anotações</button>
                     <div class="feedback" id="research-feedback"></div>
                     <div class="text-center" style="margin-top: 15px;">
+                        <!-- Estilos para os links da Etapa 5 -->
+                        <style>
+                            #step-5 a {
+                                color: var(--python-yellow); /* Cor amarela do tema */
+                                text-decoration: none;
+                                font-weight: bold;
+                                transition: all 0.2s ease-in-out;
+                            }
+                            #step-5 a:hover {
+                                text-decoration: underline;
+                                filter: brightness(1.1); /* Deixa o link um pouco mais brilhante ao passar o mouse */
+                                text-shadow: 0 0 5px var(--python-yellow);
+                            }
+                        </style>
+
                         <a href="{% url 'notes_dashboard' %}" target="_blank" class="link-styled">Ver o que outros alunos descobriram 🚀</a>
                     </div>
                 </div>
@@ -1000,14 +1015,22 @@ print("Profissão:", usuario["profissao"])</textarea>
 
             <!-- Etapa 11: Avaliação -->
             <div class="step" id="step-11" data-total-activities="1">
-                <!-- <span class="bloom-level">Nível 6: Avaliação</span> -->
                 <h2>Avaliação: Exercícios Práticos</h2>
                 <p>Vamos testar tudo o que você aprendeu! Responda às 5 perguntas abaixo. Cada acerto vale 10 pontos.
                 </p>
 
-                <div id="final-quiz-container" class="trackable-activity">
+                <!-- NOVO: Aviso sobre a avaliação -->
+                <p class="highlight-box" style="background-color: var(--warning-bg); border-color: var(--warning-border); color: var(--warning-text);">
+                    <strong>Atenção:</strong> Cada exercício só pode ser respondido <strong>uma vez</strong>.
+                    <br>
+                    Clicar em "Revelar Resposta" ou "Revelar Solução" completará a atividade, mas
+                    <strong>não concederá pontos</strong>.
+                </p>
+
+                <div id="final-quiz-container">
                     <!-- Q1 -->
-                    <div class="quiz-container">
+                    <!-- Cada quiz-container agora é uma atividade rastreável -->
+                    <div class="quiz-container trackable-activity">
                         <div class="quiz-question">1. Qual é uma responsabilidade principal do backend?</div>
                         <div class="quiz-options">
                             <div class="quiz-option" data-correct="false">Mudar a cor de um botão.</div>
@@ -1021,7 +1044,7 @@ print("Profissão:", usuario["profissao"])</textarea>
                         <div class="feedback"></div>
                     </div>
                     <!-- Q2 -->
-                    <div class="quiz-container">
+                    <div class="quiz-container trackable-activity">
                         <div class="quiz-question">2. Por que a sintaxe "limpa e legível" do Python é uma vantagem
                             para startups como a InovaTech?</div>
                         <div class="quiz-options">
@@ -1038,7 +1061,7 @@ print("Profissão:", usuario["profissao"])</textarea>
                         <div class="feedback"></div>
                     </div>
                     <!-- Q3 -->
-                    <div class="quiz-container">
+                    <div class="quiz-container trackable-activity">
                         <div class="quiz-question">3. Qual o resultado da operação `10 % 3` em Python?</div>
                         <div class="quiz-options">
                             <div class="quiz-option" data-correct="false">3</div>
@@ -1051,7 +1074,7 @@ print("Profissão:", usuario["profissao"])</textarea>
                         <div class="feedback"></div>
                     </div>
                     <!-- Q6 -->
-                    <div class="interactive-exercise" id="code-challenge-1">
+                    <div class="interactive-exercise trackable-activity" id="code-challenge-1">
                         <p><strong>4. Desafio de Código:</strong> Declare duas variáveis, `a` e `b`, com valores 15
                             e 30, e imprima a soma delas.</p>
                         <div class="code-playground">
@@ -1067,7 +1090,7 @@ print("Profissão:", usuario["profissao"])</textarea>
                         </div>
                     </div>
                     <!-- Q7 -->
-                    <div class="interactive-exercise" id="code-challenge-2">
+                    <div class="interactive-exercise trackable-activity" id="code-challenge-2">
                         <p><strong>5. Desafio de Código:</strong> Crie uma variável `idade` com o valor 25. Use
                             `if/else` para imprimir "Maior de idade" se a idade for 18 ou mais, e "Menor de idade"
                             caso contrário.</p>
@@ -1084,14 +1107,14 @@ print("Profissão:", usuario["profissao"])</textarea>
                         </div>
                     </div>
 
-                    <div class="nav-buttons" style="justify-content: center; margin-top: 20px;">
-                        <button class="btn btn-primary" id="check-final-quiz">Calcular Pontuação Final</button>
-                    </div>
-                    <div class="feedback" id="final-quiz-feedback" style="text-align: center; font-size: 1.2rem;">
-                    </div>
                 </div>
 
+                <!-- NOVO: Contêiner para exibir a pontuação final da etapa -->
+                <div class="feedback" id="step-11-final-score" style="display: none; text-align: center; font-size: 1.2rem; margin-top: 20px;"></div>
+
                 <div class="nav-buttons">
+                    <!-- NOVO: Botão para resetar a avaliação -->
+                    <button class="btn btn-secondary" id="reset-step-11-btn" style="display: none;">Refazer Avaliação</button>
                     <button class="btn btn-primary btn-unlock-next" data-step="11" disabled>Desbloquear Próxima
                         Etapa</button>
                 </div>

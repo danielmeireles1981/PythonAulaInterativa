@@ -158,7 +158,112 @@ function checkStepCompletion(stepNumber) {
         // Habilita o botão de desbloqueio diretamente
         const unlockBtn = stepElement.querySelector('.btn-unlock-next');
         if (unlockBtn) unlockBtn.disabled = false;
+        // NOVO: Mostra o botão de resetar a avaliação
+        const resetBtn = stepElement.querySelector('#reset-step-11-btn');
+        if (resetBtn) resetBtn.style.display = 'inline-block';
+
+        // NOVO: Lógica específica para exibir a pontuação final da Etapa 11
+        if (stepNumber === 11) {
+            let step11Score = 0;
+            const activities = stepElement.querySelectorAll('.trackable-activity.completed');
+
+            activities.forEach(activity => {
+                // Verifica quizzes
+                if (activity.classList.contains('quiz-container')) {
+                    const correctOption = activity.querySelector('.quiz-option[data-correct="true"]');
+                    const isRevealed = activity.querySelector('.btn-reveal-answer')?.classList.contains('revealed');
+                    if (correctOption && correctOption.classList.contains('selected') && !isRevealed) {
+                        step11Score += 10;
+                    }
+                }
+                // Verifica desafios de código
+                else if (activity.classList.contains('interactive-exercise')) {
+                    const isCorrect = activity.dataset.correct === "true";
+                    const isRevealed = activity.dataset.revealed === "true";
+                    if (isCorrect && !isRevealed) {
+                        step11Score += 10;
+                    }
+                }
+            });
+
+            const finalScoreFeedback = document.getElementById('step-11-final-score');
+            finalScoreFeedback.textContent = `🎉 Você concluiu a avaliação e fez ${step11Score} de 50 pontos! 🎉`;
+            finalScoreFeedback.className = 'feedback correct';
+            finalScoreFeedback.style.display = 'block';
+        }
     }
+}
+
+// NOVO: Função para resetar a Etapa 11
+function resetStep11() {
+    const stepElement = document.getElementById('step-11');
+    if (!stepElement) return;
+
+    let pointsToSubtract = 0;
+
+    // 1. Calcular os pontos a serem subtraídos
+    const activities = stepElement.querySelectorAll('.trackable-activity.completed');
+    activities.forEach(activity => {
+        if (activity.classList.contains('quiz-container')) {
+            const correctOption = activity.querySelector('.quiz-option[data-correct="true"]');
+            const isRevealed = activity.querySelector('.btn-reveal-answer')?.classList.contains('revealed');
+            if (correctOption && correctOption.classList.contains('selected') && !isRevealed) {
+                pointsToSubtract += 10;
+            }
+        } else if (activity.classList.contains('interactive-exercise')) {
+            const isCorrect = activity.dataset.correct === "true";
+            const isRevealed = activity.dataset.revealed === "true";
+            if (isCorrect && !isRevealed) {
+                pointsToSubtract += 10;
+            }
+        }
+    });
+
+    // 2. Enviar mensagem para subtrair os pontos
+    if (pointsToSubtract > 0 && window.parent) {
+        window.parent.postMessage({ type: 'ADD_POINTS', points: -pointsToSubtract }, '*');
+    }
+
+    // 3. Resetar o estado visual dos quizzes
+    stepElement.querySelectorAll('.quiz-container').forEach(quiz => {
+        quiz.classList.remove('completed', 'answered');
+        quiz.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect'));
+        const feedback = quiz.querySelector('.feedback');
+        if (feedback) feedback.style.display = 'none';
+        const revealBtn = quiz.querySelector('.btn-reveal-answer');
+        if (revealBtn) {
+            revealBtn.disabled = false;
+            revealBtn.classList.remove('revealed');
+        }
+    });
+
+    // 4. Resetar o estado visual dos desafios de código
+    stepElement.querySelectorAll('.interactive-exercise[id^="code-challenge-"]').forEach(challenge => {
+        challenge.classList.remove('completed');
+        challenge.dataset.correct = "false";
+        challenge.dataset.revealed = "false";
+        challenge.querySelector('.code-area').value = '';
+        const output = challenge.querySelector('.exercise-output');
+        if (output) output.textContent = '';
+        const feedback = challenge.querySelector('.feedback');
+        if (feedback) feedback.style.display = 'none';
+        const checkBtn = challenge.querySelector('.check-code-btn');
+        if (checkBtn) checkBtn.disabled = false;
+        const revealBtn = challenge.querySelector('.btn-reveal-solution');
+        if (revealBtn) revealBtn.disabled = false;
+    });
+
+    // 5. Esconder feedback final e resetar botões de navegação
+    const finalScoreFeedback = document.getElementById('step-11-final-score');
+    if (finalScoreFeedback) finalScoreFeedback.style.display = 'none';
+
+    const unlockBtn = stepElement.querySelector('.btn-unlock-next');
+    if (unlockBtn) unlockBtn.disabled = true;
+
+    const resetBtn = stepElement.querySelector('#reset-step-11-btn');
+    if (resetBtn) resetBtn.style.display = 'none';
+
+    console.log(`Etapa 11 resetada. ${pointsToSubtract} pontos foram subtraídos.`);
 }
 
 // Lógica para alternar o tema (Dark/Light Mode)
@@ -260,6 +365,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Garante que a lógica do exercício de associação da Etapa 4 seja carregada
     setupMatchingExercise('matching-exercise-1');
 
+    // NOVO: Adiciona o listener para o botão de reset da Etapa 11
+    const resetStep11Btn = document.getElementById('reset-step-11-btn');
+    if (resetStep11Btn) {
+        resetStep11Btn.addEventListener('click', resetStep11);
+    }
+
     // --- Configuração dos botões de execução da Etapa 7 ---
     // Adiciona listeners aos botões da Etapa 7 usando seus novos IDs.
     // A verificação `if (btn)` evita erros caso o elemento não seja encontrado.
@@ -290,6 +401,16 @@ document.querySelectorAll('.quiz-option').forEach(option => {
         const parent = this.parentElement;
         const quizContainer = this.closest('.quiz-container');
 
+        // NOVO: Bloqueia a interação se a questão já foi respondida.
+        // MODIFICADO: Exibe feedback visual para o usuário.
+        if (quizContainer.classList.contains('answered')) {
+            const feedback = quizContainer.querySelector('.feedback');
+            feedback.textContent = 'Você já respondeu esta questão.';
+            feedback.className = 'feedback incorrect';
+            feedback.style.display = 'block';
+            return;
+        }
+
         // NOVO: Bloqueio definitivo para a etapa 13 se já foi finalizada
         if (localStorage.getItem('finalQuizCompleted') === 'true' && this.closest('#step-13')) {
             return; // Impede qualquer interação se a avaliação final já foi respondida.
@@ -316,7 +437,8 @@ document.querySelectorAll('.quiz-option').forEach(option => {
             }
         } else {
             this.classList.add('incorrect');
-            feedback.textContent = '❌ Tente novamente!';
+            // MODIFICADO: Remove a mensagem "Tente novamente"
+            feedback.textContent = '❌ Resposta incorreta. A resposta certa foi destacada.';
             feedback.className = 'feedback incorrect';
 
             // Mostrar a resposta correta
@@ -327,6 +449,16 @@ document.querySelectorAll('.quiz-option').forEach(option => {
         }
 
         feedback.style.display = 'block';
+
+        // NOVO: Adiciona pontos apenas se a resposta for correta e não tiver sido revelada.
+        // MODIFICADO: Adiciona pontos apenas se o quiz estiver na Etapa 11.
+        if (quizContainer.closest('#step-11')) {
+            if (this.getAttribute('data-correct') === 'true' && !quizContainer.querySelector('.btn-reveal-answer')?.classList.contains('revealed')) {
+                if (window.parent) {
+                    window.parent.postMessage({ type: 'ADD_POINTS', points: 10 }, '*');
+                }
+            }
+        }
         quizContainer.classList.add('answered'); // Marca como respondido para evitar re-pontuação na mesma sessão
     });
 });
@@ -910,10 +1042,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para verificar um desafio de código individual
     setupMatchingExercise('matching-exercise-1');
     function checkCodeChallenge(challengeNum) {
+        const challengeContainer = document.getElementById(`code-challenge-${challengeNum}`);
+        const activityContainer = challengeContainer.closest('.trackable-activity');
+
+        // NOVO: Verifica se o desafio já foi concluído e exibe mensagem.
+        if (activityContainer && activityContainer.classList.contains('completed')) {
+            const feedbackDiv = challengeContainer.querySelector('.feedback');
+            feedbackDiv.textContent = 'Você já respondeu este desafio.';
+            feedbackDiv.className = 'feedback incorrect';
+            feedbackDiv.style.display = 'block';
+            return false;
+        }
         // NOVO: Bloqueio definitivo para a etapa 13 se já foi finalizada
         if (localStorage.getItem('finalQuizCompleted') === 'true') return false;
-
-        const challengeContainer = document.getElementById(`code-challenge-${challengeNum}`);
 
         if (!challengeContainer) return false;
 
@@ -928,11 +1069,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let isCorrect = false;
         let expectedOutput = "";
         switch (challengeNum) {
-            case 1: // Soma
+            case 1: // Soma (Etapa 11)
                 isCorrect = code.includes('15') && code.includes('30') && code.includes('+');
                 expectedOutput = "45";
                 break;
-            case 2: // Idade
+            case 2: // Idade (Etapa 11)
                 isCorrect = code.includes('idade') && code.includes('>= 18') && code.includes('if') && code.includes('else');
                 expectedOutput = "Maior de idade";
                 break;
@@ -943,6 +1084,19 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackDiv.textContent = '✅ Código correto!';
             feedbackDiv.className = 'feedback correct';
             challengeContainer.dataset.correct = "true"; // Marca como correto
+
+            // Adiciona a atividade como concluída e verifica o progresso da etapa
+            const activityContainer = challengeContainer.closest('.trackable-activity');
+            if (activityContainer && !activityContainer.classList.contains('completed')) {
+                activityContainer.classList.add('completed');
+                checkStepCompletion(currentStep);
+
+                // Adiciona pontos
+                const points = (challengeContainer.dataset.revealed === "true") ? 0 : 10;
+                if (window.parent) {
+                    window.parent.postMessage({ type: 'ADD_POINTS', points: points }, '*');
+                }
+            }
         } else {
             outputDiv.textContent = 'Saída incorreta.';
             feedbackDiv.textContent = '❌ Tente novamente. Verifique a lógica do seu código.';
@@ -983,6 +1137,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (checkBtn) checkBtn.disabled = true;
             this.disabled = true;
             checkCodeChallenge(challengeNum); // Valida, marca como completo e exibe a saída
+
+            // Se revelou, a atividade é considerada completa, mas com penalidade.
+            const activityContainer = this.closest('.trackable-activity');
+            if (activityContainer && !activityContainer.classList.contains('completed')) {
+                activityContainer.classList.add('completed');
+            }
         });
     });
 
@@ -1009,60 +1169,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         btn.addEventListener('click', () => checkCodeChallenge(index + 1));
     });
-
-    // Lógica para o Quiz Final
-    const finalQuizBtn = document.getElementById('check-final-quiz');
-    if (finalQuizBtn) {
-        finalQuizBtn.addEventListener('click', async () => {
-            // Desabilita o botão para evitar múltiplos cliques
-            finalQuizBtn.disabled = true;
-            finalQuizBtn.textContent = 'Calculando...';
-
-            const quizContainer = document.getElementById('final-quiz-container');
-            const correctQuizAnswers = quizContainer.querySelectorAll('.quiz-option.correct.selected').length;
-            
-            let codeChallengesScore = 0;
-            const codeChallenges = quizContainer.querySelectorAll('.interactive-exercise[id^="code-challenge-"]');
-            codeChallenges.forEach(challenge => {
-                if (challenge.dataset.correct === "true") {
-                    if (challenge.dataset.revealed === "true") {
-                        codeChallengesScore += 9; // 90% de 10 pontos
-                    } else {
-                        codeChallengesScore += 10; // 100% dos pontos
-                    }
-                }
-            });
-
-            const totalPointsFromQuiz = (correctQuizAnswers * 10) + codeChallengesScore;
-            const finalFeedback = document.getElementById('final-quiz-feedback');
-            finalFeedback.textContent = `Sua pontuação nesta etapa é: ${totalPointsFromQuiz}/50.`;
-            finalFeedback.className = 'feedback correct'; // Usando a classe 'correct' para um visual positivo
-            finalFeedback.style.display = 'block';
-
-            // Se o quiz final for concluído, marca a atividade
-            const activityContainer = quizContainer.closest('.trackable-activity');
-            if (activityContainer) {
-                activityContainer.classList.add('completed');
-                checkStepCompletion(currentStep);
-            }
-
-            // Adiciona a pontuação ao total da trilha
-            // const currentTotalScore = parseInt(localStorage.getItem('playerScore') || '0');
-            // const newTotalScore = currentTotalScore + totalPointsFromQuiz;
-            // localStorage.setItem('playerScore', newTotalScore);
-
-            // Notifica a página pai (mapa) para atualizar a pontuação total
-            if (window.parent) {
-                window.parent.postMessage({ type: 'ADD_POINTS', points: totalPointsFromQuiz }, '*');
-            }
-
-            finalQuizBtn.textContent = 'Pontuação Calculada!';
-
-            // Desabilita todas as interações no quiz final
-            localStorage.setItem('finalQuizCompleted', 'true'); // Salva o estado no localStorage
-            disableFinalQuizInteractions();
-        });
-    }
 
     // NOVO: Verifica no carregamento da página se o quiz final já foi concluído
     if (localStorage.getItem('finalQuizCompleted') === 'true') {
@@ -1186,6 +1292,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // A mensagem 'UPDATE_PROGRESS' já é suficiente e é enviada por saveAndNotifyProgress
             // A página pai agora lida com pontos e atualização do mapa a partir dela.
+
+            // Adicionado: Envia uma mensagem para fechar o modal após um curto atraso
+            setTimeout(() => {
+                window.parent.postMessage({ type: 'CLOSE_MODAL' }, '*');
+            }, 1000); // Atraso de 1 segundo para o usuário ver o feedback "Desbloqueado!"
         });
     });
 
@@ -1202,7 +1313,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 2. Envia mensagem para parar o cronômetro e fechar o modal
             if (window.parent) {
-                window.parent.postMessage({ type: 'COURSE_FINISHED' }, '*');
+                // MODIFICADO: Envia uma mensagem mais específica
+                window.parent.postMessage({ 
+                    type: 'EXTRA_CONTENT_VISITED' 
+                }, '*');
             }
         });
     }
@@ -1459,5 +1573,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
-
